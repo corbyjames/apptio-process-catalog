@@ -1,0 +1,382 @@
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_ApptioE2E" targetNamespace="http://cprime.com/apptio-e2e" exporter="Claude" exporterVersion="2.0">
+<bpmn:category id="Cat_uc3"><bpmn:categoryValue id="CatVal_uc3" value="UC3 — Portfolio Target Spend: IT Planning → ATP (incl. position management)" /></bpmn:category>
+<bpmn:category id="Cat_uc2"><bpmn:categoryValue id="CatVal_uc2" value="UC2 — Work Allocations: Rates back to ATP from Costing" /></bpmn:category>
+<bpmn:category id="Cat_uc1"><bpmn:categoryValue id="CatVal_uc1" value="UC1 — Labor Capitalization: ATP → Costing" /></bpmn:category>
+<bpmn:category id="Cat_uc4"><bpmn:categoryValue id="CatVal_uc4" value="UC4 — Cost Actuals up to App TCO" /></bpmn:category>
+<bpmn:collaboration id="Collab_1">
+<bpmn:participant id="Pool_Apptio" name="Apptio Platform — End-to-End Flow, 4 Use Cases (Cprime for MetLife)" processRef="Proc_E2E" />
+</bpmn:collaboration>
+<bpmn:process id="Proc_E2E" isExecutable="false">
+<bpmn:laneSet id="LaneSet_1">
+<bpmn:lane id="Lane_itp" name="IT Planning (Finance)">
+<bpmn:flowNodeRef>start1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_wfp</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_send1</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_norm</bpmn:flowNodeRef>
+</bpmn:lane>
+<bpmn:lane id="Lane_tp" name="Targetprocess / ATP (Portfolio &amp; Workforce Mgmt)">
+<bpmn:flowNodeRef>t_bud</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_pos</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_appr</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>g_appr</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>e_rej</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_send2</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_alloc</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_cmp</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_costwa</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_data</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_send3</bpmn:flowNodeRef>
+</bpmn:lane>
+<bpmn:lane id="Lane_cost" name="Costing — Apptio One / TBM Studio">
+<bpmn:flowNodeRef>t_rates</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_send4</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_calc</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>g_vis</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_work</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_tower</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>g_join</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_sap</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_tco</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>t_run</bpmn:flowNodeRef>
+<bpmn:flowNodeRef>end1</bpmn:flowNodeRef>
+</bpmn:lane>
+</bpmn:laneSet>
+<bpmn:startEvent id="start1" name="Planning cycle begins">
+<bpmn:outgoing>flow_0</bpmn:outgoing>
+</bpmn:startEvent>
+<bpmn:task id="t_wfp" name="Create workforce plan &amp; top-down target spend by department">
+<bpmn:incoming>flow_0</bpmn:incoming>
+<bpmn:outgoing>flow_1</bpmn:outgoing>
+</bpmn:task>
+<bpmn:sendTask id="t_send1" name="Send portfolio spend targets to ATP (data highway)">
+<bpmn:incoming>flow_1</bpmn:incoming>
+<bpmn:outgoing>flow_2</bpmn:outgoing>
+</bpmn:sendTask>
+<bpmn:task id="t_bud" name="Create top-down budget / target artifacts">
+<bpmn:incoming>flow_2</bpmn:incoming>
+<bpmn:outgoing>flow_3</bpmn:outgoing>
+</bpmn:task>
+<bpmn:userTask id="t_pos" name="Create position request (role, location, hours, type)">
+<bpmn:incoming>flow_3</bpmn:incoming>
+<bpmn:outgoing>flow_4</bpmn:outgoing>
+</bpmn:userTask>
+<bpmn:userTask id="t_appr" name="Run multi-level approval workflow (HR → Dept → Final, escalations)">
+<bpmn:incoming>flow_4</bpmn:incoming>
+<bpmn:outgoing>flow_5</bpmn:outgoing>
+</bpmn:userTask>
+<bpmn:exclusiveGateway id="g_appr" name="Approved?">
+<bpmn:incoming>flow_5</bpmn:incoming>
+<bpmn:outgoing>flow_6</bpmn:outgoing>
+<bpmn:outgoing>flow_7</bpmn:outgoing>
+</bpmn:exclusiveGateway>
+<bpmn:endEvent id="e_rej" name="Request rejected">
+<bpmn:incoming>flow_6</bpmn:incoming>
+</bpmn:endEvent>
+<bpmn:sendTask id="t_send2" name="Send approved positions to IT Planning (daily / weekly sync)">
+<bpmn:incoming>flow_7</bpmn:incoming>
+<bpmn:outgoing>flow_8</bpmn:outgoing>
+</bpmn:sendTask>
+<bpmn:task id="t_norm" name="Normalize &amp; budget open + filled positions (auto-updated when filled)">
+<bpmn:incoming>flow_8</bpmn:incoming>
+<bpmn:outgoing>flow_9</bpmn:outgoing>
+</bpmn:task>
+<bpmn:userTask id="t_alloc" name="Allocate users / teams / ARTs / solution trains to work (bottom-up demand)">
+<bpmn:incoming>flow_9</bpmn:incoming>
+<bpmn:outgoing>flow_10</bpmn:outgoing>
+</bpmn:userTask>
+<bpmn:task id="t_cmp" name="Compare demand rollup vs. target spend (capacity / FTE reports)">
+<bpmn:incoming>flow_10</bpmn:incoming>
+<bpmn:outgoing>flow_11</bpmn:outgoing>
+</bpmn:task>
+<bpmn:serviceTask id="t_rates" name="Maintain protected rates; compute blended team / ART-level rates">
+<bpmn:incoming>flow_11</bpmn:incoming>
+<bpmn:outgoing>flow_12</bpmn:outgoing>
+</bpmn:serviceTask>
+<bpmn:sendTask id="t_send4" name="Send blended rates back to ATP (Costing is source of truth)">
+<bpmn:incoming>flow_12</bpmn:incoming>
+<bpmn:outgoing>flow_13</bpmn:outgoing>
+</bpmn:sendTask>
+<bpmn:task id="t_costwa" name="Cost work allocations with blended rates; feed budget cycle">
+<bpmn:incoming>flow_13</bpmn:incoming>
+<bpmn:outgoing>flow_14</bpmn:outgoing>
+</bpmn:task>
+<bpmn:task id="t_data" name="Maintain involvements %, job profiles, CapEx/OpEx &amp; IT-tower mappings">
+<bpmn:incoming>flow_14</bpmn:incoming>
+<bpmn:outgoing>flow_15</bpmn:outgoing>
+</bpmn:task>
+<bpmn:sendTask id="t_send3" name="Send workforce &amp; completed work data to Costing (TBM Studio)">
+<bpmn:incoming>flow_15</bpmn:incoming>
+<bpmn:outgoing>flow_16</bpmn:outgoing>
+</bpmn:sendTask>
+<bpmn:serviceTask id="t_calc" name="Calculate monthly team cost &amp; blended CapEx % (protected rates)">
+<bpmn:incoming>flow_16</bpmn:incoming>
+<bpmn:outgoing>flow_17</bpmn:outgoing>
+</bpmn:serviceTask>
+<bpmn:exclusiveGateway id="g_vis" name="Team work visible?">
+<bpmn:incoming>flow_17</bpmn:incoming>
+<bpmn:outgoing>flow_18</bpmn:outgoing>
+<bpmn:outgoing>flow_19</bpmn:outgoing>
+</bpmn:exclusiveGateway>
+<bpmn:task id="t_work" name="Allocate team costs to completed work (story points, weightage)">
+<bpmn:incoming>flow_18</bpmn:incoming>
+<bpmn:outgoing>flow_20</bpmn:outgoing>
+</bpmn:task>
+<bpmn:task id="t_tower" name="Allocate team costs to IT towers / apps (fixed capacity)">
+<bpmn:incoming>flow_19</bpmn:incoming>
+<bpmn:outgoing>flow_21</bpmn:outgoing>
+</bpmn:task>
+<bpmn:exclusiveGateway id="g_join" name="">
+<bpmn:incoming>flow_20</bpmn:incoming>
+<bpmn:incoming>flow_21</bpmn:incoming>
+<bpmn:outgoing>flow_22</bpmn:outgoing>
+</bpmn:exclusiveGateway>
+<bpmn:serviceTask id="t_sap" name="Generate SAP-ready monthly actuals — CapEx / OpEx by user (deprecates time writing)">
+<bpmn:incoming>flow_22</bpmn:incoming>
+<bpmn:outgoing>flow_23</bpmn:outgoing>
+</bpmn:serviceTask>
+<bpmn:task id="t_tco" name="Roll cost actuals up to Application TCO">
+<bpmn:incoming>flow_23</bpmn:incoming>
+<bpmn:outgoing>flow_24</bpmn:outgoing>
+</bpmn:task>
+<bpmn:task id="t_run" name="Attribute labor cost to run vs. change in App TCO view">
+<bpmn:incoming>flow_24</bpmn:incoming>
+<bpmn:outgoing>flow_25</bpmn:outgoing>
+</bpmn:task>
+<bpmn:endEvent id="end1" name="Finance &amp; App TCO reporting">
+<bpmn:incoming>flow_25</bpmn:incoming>
+</bpmn:endEvent>
+<bpmn:group id="Group_uc3" categoryValueRef="CatVal_uc3" />
+<bpmn:group id="Group_uc2" categoryValueRef="CatVal_uc2" />
+<bpmn:group id="Group_uc1" categoryValueRef="CatVal_uc1" />
+<bpmn:group id="Group_uc4" categoryValueRef="CatVal_uc4" />
+<bpmn:sequenceFlow id="flow_0" sourceRef="start1" targetRef="t_wfp" />
+<bpmn:sequenceFlow id="flow_1" sourceRef="t_wfp" targetRef="t_send1" />
+<bpmn:sequenceFlow id="flow_2" name="ADM" sourceRef="t_send1" targetRef="t_bud" />
+<bpmn:sequenceFlow id="flow_3" sourceRef="t_bud" targetRef="t_pos" />
+<bpmn:sequenceFlow id="flow_4" sourceRef="t_pos" targetRef="t_appr" />
+<bpmn:sequenceFlow id="flow_5" sourceRef="t_appr" targetRef="g_appr" />
+<bpmn:sequenceFlow id="flow_6" sourceRef="g_appr" targetRef="e_rej" name="No" />
+<bpmn:sequenceFlow id="flow_7" sourceRef="g_appr" targetRef="t_send2" name="Yes" />
+<bpmn:sequenceFlow id="flow_8" name="ADM" sourceRef="t_send2" targetRef="t_norm" />
+<bpmn:sequenceFlow id="flow_9" name="ADM" sourceRef="t_norm" targetRef="t_alloc" />
+<bpmn:sequenceFlow id="flow_10" sourceRef="t_alloc" targetRef="t_cmp" />
+<bpmn:sequenceFlow id="flow_11" name="ADM" sourceRef="t_cmp" targetRef="t_rates" />
+<bpmn:sequenceFlow id="flow_12" sourceRef="t_rates" targetRef="t_send4" />
+<bpmn:sequenceFlow id="flow_13" name="ADM" sourceRef="t_send4" targetRef="t_costwa" />
+<bpmn:sequenceFlow id="flow_14" sourceRef="t_costwa" targetRef="t_data" />
+<bpmn:sequenceFlow id="flow_15" sourceRef="t_data" targetRef="t_send3" />
+<bpmn:sequenceFlow id="flow_16" name="ADM" sourceRef="t_send3" targetRef="t_calc" />
+<bpmn:sequenceFlow id="flow_17" sourceRef="t_calc" targetRef="g_vis" />
+<bpmn:sequenceFlow id="flow_18" sourceRef="g_vis" targetRef="t_work" name="Yes" />
+<bpmn:sequenceFlow id="flow_19" sourceRef="g_vis" targetRef="t_tower" name="No" />
+<bpmn:sequenceFlow id="flow_20" sourceRef="t_work" targetRef="g_join" />
+<bpmn:sequenceFlow id="flow_21" sourceRef="t_tower" targetRef="g_join" />
+<bpmn:sequenceFlow id="flow_22" sourceRef="g_join" targetRef="t_sap" />
+<bpmn:sequenceFlow id="flow_23" sourceRef="t_sap" targetRef="t_tco" />
+<bpmn:sequenceFlow id="flow_24" sourceRef="t_tco" targetRef="t_run" />
+<bpmn:sequenceFlow id="flow_25" sourceRef="t_run" targetRef="end1" />
+</bpmn:process>
+<bpmndi:BPMNDiagram id="Diagram_1">
+<bpmndi:BPMNPlane id="Plane_1" bpmnElement="Collab_1">
+<bpmndi:BPMNShape id="Pool_Apptio_di" bpmnElement="Pool_Apptio" isHorizontal="true"><dc:Bounds x="100" y="110" width="4675" height="780" /></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_itp_di" bpmnElement="Lane_itp" isHorizontal="true"><dc:Bounds x="130" y="110" width="4645" height="260" /></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_tp_di" bpmnElement="Lane_tp" isHorizontal="true"><dc:Bounds x="130" y="370" width="4645" height="260" /></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Lane_cost_di" bpmnElement="Lane_cost" isHorizontal="true"><dc:Bounds x="130" y="630" width="4645" height="260" /></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="start1_di" bpmnElement="start1"><dc:Bounds x="232" y="222" width="36" height="36" />
+<bpmndi:BPMNLabel><dc:Bounds x="205.0" y="262" width="90" height="27" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_wfp_di" bpmnElement="t_wfp"><dc:Bounds x="365" y="195" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_send1_di" bpmnElement="t_send1"><dc:Bounds x="555" y="195" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_bud_di" bpmnElement="t_bud"><dc:Bounds x="745" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_pos_di" bpmnElement="t_pos"><dc:Bounds x="935" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_appr_di" bpmnElement="t_appr"><dc:Bounds x="1125" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="g_appr_di" bpmnElement="g_appr"><dc:Bounds x="1365" y="475" width="50" height="50" />
+<bpmndi:BPMNLabel><dc:Bounds x="1345.0" y="529" width="90" height="27" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="e_rej_di" bpmnElement="e_rej"><dc:Bounds x="1372" y="562" width="36" height="36" />
+<bpmndi:BPMNLabel><dc:Bounds x="1345.0" y="602" width="90" height="27" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_send2_di" bpmnElement="t_send2"><dc:Bounds x="1505" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_norm_di" bpmnElement="t_norm"><dc:Bounds x="1695" y="195" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_alloc_di" bpmnElement="t_alloc"><dc:Bounds x="1885" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_cmp_di" bpmnElement="t_cmp"><dc:Bounds x="2075" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_rates_di" bpmnElement="t_rates"><dc:Bounds x="2265" y="715" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_send4_di" bpmnElement="t_send4"><dc:Bounds x="2455" y="715" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_costwa_di" bpmnElement="t_costwa"><dc:Bounds x="2645" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_data_di" bpmnElement="t_data"><dc:Bounds x="2835" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_send3_di" bpmnElement="t_send3"><dc:Bounds x="3025" y="455" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_calc_di" bpmnElement="t_calc"><dc:Bounds x="3215" y="715" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="g_vis_di" bpmnElement="g_vis"><dc:Bounds x="3455" y="735" width="50" height="50" />
+<bpmndi:BPMNLabel><dc:Bounds x="3435.0" y="789" width="90" height="27" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_work_di" bpmnElement="t_work"><dc:Bounds x="3595" y="653" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_tower_di" bpmnElement="t_tower"><dc:Bounds x="3595" y="777" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="g_join_di" bpmnElement="g_join"><dc:Bounds x="3835" y="735" width="50" height="50" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_sap_di" bpmnElement="t_sap"><dc:Bounds x="3975" y="715" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_tco_di" bpmnElement="t_tco"><dc:Bounds x="4165" y="715" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="t_run_di" bpmnElement="t_run"><dc:Bounds x="4355" y="715" width="150" height="90" />
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="end1_di" bpmnElement="end1"><dc:Bounds x="4602" y="742" width="36" height="36" />
+<bpmndi:BPMNLabel><dc:Bounds x="4575.0" y="782" width="90" height="27" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Group_uc3_di" bpmnElement="Group_uc3"><dc:Bounds x="163" y="76" width="2074" height="826" /><bpmndi:BPMNLabel><dc:Bounds x="173" y="80" width="2054" height="24" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Group_uc2_di" bpmnElement="Group_uc2"><dc:Bounds x="2253" y="76" width="554" height="826" /><bpmndi:BPMNLabel><dc:Bounds x="2263" y="80" width="534" height="24" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Group_uc1_di" bpmnElement="Group_uc1"><dc:Bounds x="2823" y="76" width="1314" height="826" /><bpmndi:BPMNLabel><dc:Bounds x="2833" y="80" width="1294" height="24" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+<bpmndi:BPMNShape id="Group_uc4_di" bpmnElement="Group_uc4"><dc:Bounds x="4153" y="76" width="554" height="826" /><bpmndi:BPMNLabel><dc:Bounds x="4163" y="80" width="534" height="24" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+<bpmndi:BPMNEdge id="flow_0_di" bpmnElement="flow_0">
+<di:waypoint x="268" y="240" />
+<di:waypoint x="365" y="240" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_1_di" bpmnElement="flow_1">
+<di:waypoint x="515" y="240" />
+<di:waypoint x="555" y="240" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_2_di" bpmnElement="flow_2">
+<di:waypoint x="705" y="240" />
+<di:waypoint x="721" y="240" />
+<di:waypoint x="721" y="500" />
+<di:waypoint x="745" y="500" />
+<bpmndi:BPMNLabel><dc:Bounds x="725" y="361" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_3_di" bpmnElement="flow_3">
+<di:waypoint x="895" y="500" />
+<di:waypoint x="935" y="500" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_4_di" bpmnElement="flow_4">
+<di:waypoint x="1085" y="500" />
+<di:waypoint x="1125" y="500" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_5_di" bpmnElement="flow_5">
+<di:waypoint x="1275" y="500" />
+<di:waypoint x="1365" y="500" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_6_di" bpmnElement="flow_6">
+<di:waypoint x="1390" y="525" />
+<di:waypoint x="1390" y="562" />
+<bpmndi:BPMNLabel><dc:Bounds x="1394" y="501" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_7_di" bpmnElement="flow_7">
+<di:waypoint x="1415" y="500" />
+<di:waypoint x="1505" y="500" />
+<bpmndi:BPMNLabel><dc:Bounds x="1419" y="476" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_8_di" bpmnElement="flow_8">
+<di:waypoint x="1655" y="500" />
+<di:waypoint x="1671" y="500" />
+<di:waypoint x="1671" y="240" />
+<di:waypoint x="1695" y="240" />
+<bpmndi:BPMNLabel><dc:Bounds x="1675" y="361" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_9_di" bpmnElement="flow_9">
+<di:waypoint x="1845" y="240" />
+<di:waypoint x="1861" y="240" />
+<di:waypoint x="1861" y="500" />
+<di:waypoint x="1885" y="500" />
+<bpmndi:BPMNLabel><dc:Bounds x="1865" y="361" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_10_di" bpmnElement="flow_10">
+<di:waypoint x="2035" y="500" />
+<di:waypoint x="2075" y="500" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_11_di" bpmnElement="flow_11">
+<di:waypoint x="2225" y="500" />
+<di:waypoint x="2241" y="500" />
+<di:waypoint x="2241" y="760" />
+<di:waypoint x="2265" y="760" />
+<bpmndi:BPMNLabel><dc:Bounds x="2245" y="621" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_12_di" bpmnElement="flow_12">
+<di:waypoint x="2415" y="760" />
+<di:waypoint x="2455" y="760" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_13_di" bpmnElement="flow_13">
+<di:waypoint x="2605" y="760" />
+<di:waypoint x="2621" y="760" />
+<di:waypoint x="2621" y="500" />
+<di:waypoint x="2645" y="500" />
+<bpmndi:BPMNLabel><dc:Bounds x="2625" y="621" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_14_di" bpmnElement="flow_14">
+<di:waypoint x="2795" y="500" />
+<di:waypoint x="2835" y="500" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_15_di" bpmnElement="flow_15">
+<di:waypoint x="2985" y="500" />
+<di:waypoint x="3025" y="500" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_16_di" bpmnElement="flow_16">
+<di:waypoint x="3175" y="500" />
+<di:waypoint x="3191" y="500" />
+<di:waypoint x="3191" y="760" />
+<di:waypoint x="3215" y="760" />
+<bpmndi:BPMNLabel><dc:Bounds x="3195" y="621" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_17_di" bpmnElement="flow_17">
+<di:waypoint x="3365" y="760" />
+<di:waypoint x="3455" y="760" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_18_di" bpmnElement="flow_18">
+<di:waypoint x="3505" y="760" />
+<di:waypoint x="3571" y="760" />
+<di:waypoint x="3571" y="698" />
+<di:waypoint x="3595" y="698" />
+<bpmndi:BPMNLabel><dc:Bounds x="3509" y="736" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_19_di" bpmnElement="flow_19">
+<di:waypoint x="3505" y="760" />
+<di:waypoint x="3571" y="760" />
+<di:waypoint x="3571" y="822" />
+<di:waypoint x="3595" y="822" />
+<bpmndi:BPMNLabel><dc:Bounds x="3509" y="736" width="36" height="18" /></bpmndi:BPMNLabel>
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_20_di" bpmnElement="flow_20">
+<di:waypoint x="3745" y="698" />
+<di:waypoint x="3811" y="698" />
+<di:waypoint x="3811" y="760" />
+<di:waypoint x="3835" y="760" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_21_di" bpmnElement="flow_21">
+<di:waypoint x="3745" y="822" />
+<di:waypoint x="3811" y="822" />
+<di:waypoint x="3811" y="760" />
+<di:waypoint x="3835" y="760" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_22_di" bpmnElement="flow_22">
+<di:waypoint x="3885" y="760" />
+<di:waypoint x="3975" y="760" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_23_di" bpmnElement="flow_23">
+<di:waypoint x="4125" y="760" />
+<di:waypoint x="4165" y="760" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_24_di" bpmnElement="flow_24">
+<di:waypoint x="4315" y="760" />
+<di:waypoint x="4355" y="760" />
+</bpmndi:BPMNEdge>
+<bpmndi:BPMNEdge id="flow_25_di" bpmnElement="flow_25">
+<di:waypoint x="4505" y="760" />
+<di:waypoint x="4602" y="760" />
+</bpmndi:BPMNEdge>
+</bpmndi:BPMNPlane>
+</bpmndi:BPMNDiagram>
+</bpmn:definitions>

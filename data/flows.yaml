@@ -1,0 +1,212 @@
+# Cross-tool E2E flow steps (BPMN-ready) — lanes/types/tasks from the reviewed E2E model.
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: start
+  type: Start event
+  lane: IT Planning (Finance)
+  task: Planning cycle begins
+  notes: ''
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '1'
+  type: Task
+  lane: IT Planning (Finance)
+  task: Create workforce plan & top-down target spend by department
+  notes: 'At whatever level you budget: department, cost center, ART, solution train'
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '2'
+  type: Send task (ADM)
+  lane: IT Planning (Finance)
+  task: Send portfolio spend targets to ATP (data highway)
+  notes: 'Lane crossing: ADM'
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '3'
+  type: Task
+  lane: Targetprocess / ATP
+  task: Create top-down budget / target artifacts
+  notes: ''
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '4'
+  type: User task
+  lane: Targetprocess / ATP
+  task: Create position request (role, location, hours, type)
+  notes: Department link ties request to finance budget line
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '5'
+  type: User task
+  lane: Targetprocess / ATP
+  task: Run multi-level approval workflow (HR > Dept > Final, escalations)
+  notes: ''
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '6'
+  type: XOR gateway
+  lane: Targetprocess / ATP
+  task: Approved?
+  notes: No > end event 'Request rejected'; Yes > continue
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '7'
+  type: Send task (ADM)
+  lane: Targetprocess / ATP
+  task: Send approved positions to IT Planning (daily / weekly sync)
+  notes: Only approved positions cross
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '8'
+  type: Task
+  lane: IT Planning (Finance)
+  task: Normalize & budget open + filled positions (auto-updated when filled)
+  notes: 'Round-trip: fill event in ATP auto-updates Planning record'
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '9'
+  type: User task
+  lane: Targetprocess / ATP
+  task: Allocate users / teams / ARTs / solution trains to work (bottom-up demand)
+  notes: ''
+- flow: UC3
+  name: Portfolio Target Spend (targets down)
+  step: '10'
+  type: Task
+  lane: Targetprocess / ATP
+  task: Compare demand rollup vs. target spend (capacity / FTE reports)
+  notes: 'Forward-looking: e.g. 3 months out demand exceeds FTE'
+- flow: UC2
+  name: Work Allocation Rates (rates back)
+  step: '11'
+  type: Service task
+  lane: Costing - Apptio One / TBM Studio
+  task: Maintain protected rates; compute blended team / ART-level rates
+  notes: Individual rates never leave Costing
+- flow: UC2
+  name: Work Allocation Rates (rates back)
+  step: '12'
+  type: Send task (ADM)
+  lane: Costing - Apptio One / TBM Studio
+  task: Send blended rates back to ATP (Costing is source of truth)
+  notes: 'Design decision: rate exposure level; true-up pattern'
+- flow: UC2
+  name: Work Allocation Rates (rates back)
+  step: '13'
+  type: Task
+  lane: Targetprocess / ATP
+  task: Cost work allocations with blended rates; feed budget cycle
+  notes: ''
+- flow: UC1
+  name: Labor Capitalization (actuals in)
+  step: '14'
+  type: Task
+  lane: Targetprocess / ATP
+  task: Maintain involvements %, job profiles, CapEx/OpEx & IT-tower mappings
+  notes: 'Three ingredients: job profiles, involvements, protected rates'
+- flow: UC1
+  name: Labor Capitalization (actuals in)
+  step: '15'
+  type: Send task (ADM)
+  lane: Targetprocess / ATP
+  task: Send workforce & completed work data to Costing (TBM Studio)
+  notes: ''
+- flow: UC1
+  name: Labor Capitalization (actuals in)
+  step: '16'
+  type: Service task
+  lane: Costing - Apptio One / TBM Studio
+  task: Calculate monthly team cost & blended CapEx % (protected rates)
+  notes: ''
+- flow: UC1
+  name: Labor Capitalization (actuals in)
+  step: '17'
+  type: XOR gateway
+  lane: Costing - Apptio One / TBM Studio
+  task: Team work visible?
+  notes: Yes > story-point allocation; No > fixed-capacity
+- flow: UC1
+  name: Labor Capitalization (actuals in)
+  step: 17a
+  type: Task
+  lane: Costing - Apptio One / TBM Studio
+  task: Allocate team costs to completed work (story points, weightage)
+  notes: Same allocation principles as TBM
+- flow: UC1
+  name: Labor Capitalization (actuals in)
+  step: 17b
+  type: Task
+  lane: Costing - Apptio One / TBM Studio
+  task: Allocate team costs to IT towers / apps (fixed capacity)
+  notes: Ops teams without visible backlog (e.g. ServiceNow)
+- flow: UC1
+  name: Labor Capitalization (actuals in)
+  step: '18'
+  type: Service task
+  lane: Costing - Apptio One / TBM Studio
+  task: Generate SAP-ready monthly actuals - CapEx / OpEx by user
+  notes: Deprecates time writing; join gateway before this step
+- flow: UC4
+  name: Cost Actuals to App TCO (TCO up)
+  step: '19'
+  type: Task
+  lane: Costing - Apptio One / TBM Studio
+  task: Roll cost actuals up to Application TCO
+  notes: ''
+- flow: UC4
+  name: Cost Actuals to App TCO (TCO up)
+  step: '20'
+  type: Task
+  lane: Costing - Apptio One / TBM Studio
+  task: Attribute labor cost to run vs. change in App TCO view
+  notes: Driven by real delivery data, not story-level Jira import
+- flow: UC4
+  name: Cost Actuals to App TCO (TCO up)
+  step: end
+  type: End event
+  lane: Costing - Apptio One / TBM Studio
+  task: Finance & App TCO reporting
+  notes: ''
+- flow: CLD
+  name: Cloud-to-TBM
+  step: c1
+  type: Task
+  lane: Cloudability
+  task: Allocate & ATUM-map cloud spend (towers, services)
+  notes: ''
+- flow: CLD
+  name: Cloud-to-TBM
+  step: c2
+  type: Send task
+  lane: Cloudability
+  task: Share cloud cost + capacity data to Costing
+  notes: Monthly
+- flow: CLD
+  name: Cloud-to-TBM
+  step: c3
+  type: Task
+  lane: Costing - Apptio One / TBM Studio
+  task: Include cloud in App TCO, BU consumption & Bill of IT
+  notes: ''
+- flow: INV
+  name: Investment Loop
+  step: i1
+  type: Send task
+  lane: Targetprocess / ATP
+  task: Send investments, planned labor allocations, actual effort, budget-change requests to Costing/Planning
+  notes: ''
+- flow: INV
+  name: Investment Loop
+  step: i2
+  type: Task
+  lane: Costing - Apptio One / TBM Studio
+  task: Reconcile investment spend; update approved budgets
+  notes: ''
+- flow: INV
+  name: Investment Loop
+  step: i3
+  type: Send task
+  lane: IT Planning (Finance)
+  task: Send approved investment budgets & budget changes to ATP
+  notes: 'Desjardins labels: Budgets, Labor Data, Objectives, Financial Guidance down; Progress, Actuals, Key Results
+    up'

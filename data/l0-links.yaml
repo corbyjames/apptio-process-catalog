@@ -1,0 +1,31 @@
+# Cross-area feeds drawn on the L0 landscape diagram.
+- frm: '05'
+  to: '02'
+  label: targets down (UC3)
+- frm: '04'
+  to: '05'
+  label: approved positions (UC3)
+- frm: '06'
+  to: '04'
+  label: blended rates back (UC2)
+- frm: '03'
+  to: '06'
+  label: work + workforce data (UC1)
+- frm: '06'
+  to: 08
+  label: App TCO & Bill of IT (UC4)
+- frm: '07'
+  to: '06'
+  label: cloud cost to TBM
+- frm: '02'
+  to: '05'
+  label: investment loop
+- frm: '01'
+  to: '02'
+  label: strategy & OKRs
+- frm: '02'
+  to: '03'
+  label: funded work
+- frm: '05'
+  to: '06'
+  label: budget & forecast

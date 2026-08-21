@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BPMN Viewer & Editor — Apptio Process Catalog</title>
+<script src="https://unpkg.com/bpmn-js@17/dist/bpmn-modeler.development.js"></script>
+<style>
+  body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column;height:100vh}
+  header{display:flex;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid #ddd;flex-wrap:wrap}
+  header b{font-size:15px}
+  select,button{font:13px system-ui;padding:6px 10px;border-radius:8px;border:1px solid #ccc;background:#fff;cursor:pointer}
+  #canvas{flex:1}
+  .hint{color:#666;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <b>BPMN Viewer / Editor</b>
+  <select id="sel"></select>
+  <button id="open">Open</button>
+  <input type="file" id="file" accept=".bpmn,.xml" style="display:none">
+  <button onclick="document.getElementById('file').click()">Open local file…</button>
+  <button id="save">Download edited .bpmn</button>
+  <button id="svg">Download SVG</button>
+  <span class="hint">Edit on canvas, download, then commit via PR — generated/ files are overwritten by CI, so save refined models into diagrams/bpmn/custom/.</span>
+</header>
+<div id="canvas"></div>
+<script>
+const modeler = new BpmnJS({ container: "#canvas" });
+let current = "diagram";
+async function openPath(p){
+  const r = await fetch(p); const xml = await r.text();
+  await modeler.importXML(xml); modeler.get("canvas").zoom("fit-viewport");
+  current = p.split("/").pop().replace(/\.bpmn$/,"");
+}
+fetch("bpmn-manifest.json").then(r=>r.json()).then(m=>{
+  const s = document.getElementById("sel");
+  m.forEach(e=>{ const o=document.createElement("option"); o.value=e.path; o.textContent=e.label; s.append(o); });
+  if(m.length) openPath(m[0].path);
+});
+document.getElementById("open").onclick = ()=> openPath(document.getElementById("sel").value);
+document.getElementById("file").onchange = async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  await modeler.importXML(await f.text()); modeler.get("canvas").zoom("fit-viewport");
+  current = f.name.replace(/\.bpmn$/,"");
+};
+function dl(name, mime, content){ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([content],{type:mime})); a.download=name; a.click(); }
+document.getElementById("save").onclick = async ()=>{ const {xml} = await modeler.saveXML({format:true}); dl(current+".bpmn","application/xml",xml); };
+document.getElementById("svg").onclick = async ()=>{ const {svg} = await modeler.saveSVG(); dl(current+".svg","image/svg+xml",svg); };
+</script>
+</body>
+</html>

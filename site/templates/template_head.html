@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBM Apptio Process Catalog — Dashboard &amp; Visualizer</title>
+<style>
+:root{
+  color-scheme: light;
+  --surface-1:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,.10);
+  --s-tp:#2a78d6; --s-cost:#eb6834; --s-plan:#1baf7a; --s-cld:#eda100; --s-x:#e87ba4;
+  --chip-agile:#2a78d6; --chip-hybrid:#4a3aa7; --chip-trad:#eb6834; --chip-any:#898781;
+  --accent:#2a78d6;
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface-1:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+  --s-tp:#3987e5; --s-cost:#d95926; --s-plan:#199e70; --s-cld:#c98500; --s-x:#d55181;
+  --chip-agile:#3987e5; --chip-hybrid:#9085e9; --chip-trad:#d95926; --chip-any:#898781;
+  --accent:#3987e5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --surface-1:#1a1a19; --page:#0d0d0d; --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
+    --s-tp:#3987e5; --s-cost:#d95926; --s-plan:#199e70; --s-cld:#c98500; --s-x:#d55181;
+    --chip-agile:#3987e5; --chip-hybrid:#9085e9; --chip-trad:#d95926; --chip-any:#898781;
+    --accent:#3987e5;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:18px 24px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:baseline}
+header h1{font-size:19px;margin:0;font-weight:700}
+header .sub{color:var(--ink-2);font-size:13px}
+header .spacer{flex:1}
+button.ghost{background:none;border:1px solid var(--ring);border-radius:8px;color:var(--ink-2);padding:5px 11px;cursor:pointer;font-size:13px}
+button.ghost:hover{background:var(--surface-1)}
+.tiles{display:flex;flex-wrap:wrap;gap:10px;padding:14px 24px 0}
+.tile{background:var(--surface-1);border:1px solid var(--ring);border-radius:10px;padding:10px 16px;min-width:108px}
+.tile .v{font-size:24px;font-weight:700}
+.tile .k{font-size:12px;color:var(--ink-2)}
+nav{display:flex;gap:4px;padding:16px 24px 0;border-bottom:1px solid var(--grid);flex-wrap:wrap}
+nav button{background:none;border:none;border-bottom:2.5px solid transparent;padding:8px 14px;font-size:14px;color:var(--ink-2);cursor:pointer}
+nav button.on{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+main{padding:18px 24px 40px;max-width:1420px}
+.hide{display:none !important}
+.grid-l0{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.fam{grid-column:1/-1;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 -4px}
+.card{background:var(--surface-1);border:1px solid var(--ring);border-left:4px solid var(--axis);border-radius:10px;padding:12px 14px;cursor:pointer}
+.card:hover{border-color:var(--accent)}
+.card h3{margin:0 0 4px;font-size:14.5px}
+.card p{margin:0 0 8px;color:var(--ink-2);font-size:12.8px}
+.card .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--muted)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:baseline}
+.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--ring);border-radius:999px;padding:1px 8px;font-size:11px;color:var(--ink-2);background:var(--surface-1)}
+.chip.deliv{font-weight:600}
+.chip.deliv::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--chip-any)}
+.chip.deliv.Agile::before{background:var(--chip-agile)}
+.chip.deliv.Hybrid::before{background:var(--chip-hybrid)}
+.chip.deliv.Traditional::before{background:var(--chip-trad)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.filters select,.filters input{background:var(--surface-1);color:var(--ink);border:1px solid var(--ring);border-radius:8px;padding:6px 9px;font-size:13px}
+.filters input{min-width:230px}
+.count{color:var(--muted);font-size:12.5px;margin-left:auto}
+.l0blk{margin-bottom:6px}
+.l0hd{font-size:15px;font-weight:700;margin:16px 0 2px;padding:6px 10px;border-left:4px solid var(--axis);background:var(--surface-1);border-radius:6px;cursor:pointer}
+.l1hd{font-size:13.5px;font-weight:600;color:var(--ink-2);margin:10px 0 4px 12px}
+.l2{background:var(--surface-1);border:1px solid var(--ring);border-radius:8px;margin:4px 0 4px 24px;padding:8px 12px;cursor:pointer}
+.l2:hover{border-color:var(--accent)}
+.l2 .row1{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.l2 .id{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.l2 .nm{font-weight:600;font-size:13.5px}
+.l2 .desc{color:var(--ink-2);font-size:12.8px;margin-top:3px}
+.detail{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;margin-top:9px;padding-top:9px;border-top:1px solid var(--grid);font-size:12.6px}
+.detail dt{color:var(--muted)}
+.detail dd{margin:0;color:var(--ink)}
+.flowchips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.flowchips button{border:1px solid var(--ring);background:var(--surface-1);border-radius:999px;padding:6px 14px;font-size:13px;color:var(--ink-2);cursor:pointer}
+.flowchips button.on{border-color:var(--accent);color:var(--ink);font-weight:600;box-shadow:inset 0 0 0 1px var(--accent)}
+.flowdesc{color:var(--ink-2);font-size:13px;margin:0 0 12px}
+.svgwrap{background:var(--surface-1);border:1px solid var(--ring);border-radius:10px;overflow-x:auto;padding:10px}
+.chartbox{background:var(--surface-1);border:1px solid var(--ring);border-radius:10px;padding:16px 18px;margin-bottom:16px;max-width:900px}
+.chartbox h3{margin:0 0 2px;font-size:14.5px}
+.chartbox .sub{color:var(--ink-2);font-size:12.5px;margin-bottom:12px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-bottom:8px}
+.tip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--ring);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:7px 10px;font-size:12.5px;z-index:50;max-width:320px}
+.tip b{display:block}
+table.tbl{border-collapse:collapse;font-size:12.5px;width:100%}
+table.tbl th,table.tbl td{border-bottom:1px solid var(--grid);padding:4px 10px 4px 0;text-align:left;font-variant-numeric:tabular-nums}
+table.tbl th{color:var(--muted);font-weight:600}
+.note{color:var(--ink-2);font-size:12.8px;max-width:900px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1>IBM Apptio Process Catalog</h1>
+  <span class="sub">Targetprocess · Costing · Planning · Cloudability — TBM / SPM / FinOps · L0–L2 · hybrid &amp; agile</span>
+  <span class="spacer"></span>
+  <button class="ghost" id="themeBtn">Light / dark</button>
+</header>
+<div class="tiles" id="tiles"></div>
+<nav id="nav">
+  <button data-v="map" class="on">L0 Map</button>
+  <button data-v="explorer">Catalog Explorer</button>
+  <button data-v="flows">E2E Flow Visualizer</button>
+  <button data-v="bpml">BPML Diagrams</button>
+  <button data-v="insights">Insights</button>
+</nav>
+<main>
+  <section id="v-map"><div class="grid-l0" id="l0grid"></div></section>
+  <section id="v-explorer" class="hide">
+    <div class="filters">
+      <select id="fL0"><option value="">All L0 areas</option></select>
+      <select id="fTool"><option value="">All tools</option></select>
+      <select id="fDeliv"><option value="">All delivery models</option>
+        <option>Agile</option><option>Hybrid</option><option>Traditional</option><option>Any</option></select>
+      <input id="fQ" type="search" placeholder="Search processes, config objects, personas…">
+      <button class="ghost" id="fClr">Clear</button>
+      <span class="count" id="fCount"></span>
+    </div>
+    <div id="tree"></div>
+  </section>
+  <section id="v-flows" class="hide">
+    <div class="flowchips" id="flowchips"></div>
+    <p class="flowdesc" id="flowdesc"></p>
+    <div class="svgwrap" id="flowsvg"></div>
+    <p class="note" style="margin-top:10px">Lanes are the BPMN lanes from the reviewed E2E model; diamonds are XOR gateways; dashed arrows are ADM (“data highway”) lane crossings. The story across UC3→UC2→UC1→UC4: <b>targets down, rates back, actuals in, TCO up.</b></p>
+  </section>
+  <section id="v-bpml" class="hide">
+    <div class="filters">
+      <select id="bpmlSel" style="min-width:340px"></select>
+      <button class="ghost" id="dlSvg">Download SVG</button>
+      <button class="ghost" id="dlBpmn">Download .bpmn</button>
+      <span class="count" id="bpmlHint"></span>
+    </div>
+    <p class="flowdesc" id="bpmlDesc"></p>
+    <div class="svgwrap" id="bpmlsvg"></div>
+    <p class="note" style="margin-top:10px">L0 = process landscape; L1 = collapsed sub-process chain (⊞) for one area — click a sub-process to open its L2 diagram; L2 = BPMN task sequence with persona lanes. The .bpmn export is BPMN 2.0 XML with diagram interchange — open it in bpmn.io, Camunda Modeler, or Visio.</p>
+  </section>
+  <section id="v-insights" class="hide" id="insights"></section>
+</main>
+<div class="tip hide" id="tip"></div>

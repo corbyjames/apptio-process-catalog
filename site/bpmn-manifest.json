@@ -1,0 +1,218 @@
+[
+ {
+  "path": "../diagrams/bpmn/custom/apptio-e2e-flow.bpmn",
+  "label": "custom / apptio-e2e-flow.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/01.1.bpmn",
+  "label": "generated / 01.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/01.2.bpmn",
+  "label": "generated / 01.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/02.1.bpmn",
+  "label": "generated / 02.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/02.2.bpmn",
+  "label": "generated / 02.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/02.3.bpmn",
+  "label": "generated / 02.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/02.4.bpmn",
+  "label": "generated / 02.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/02.5.bpmn",
+  "label": "generated / 02.5.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/03.1.bpmn",
+  "label": "generated / 03.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/03.2.bpmn",
+  "label": "generated / 03.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/03.3.bpmn",
+  "label": "generated / 03.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/03.4.bpmn",
+  "label": "generated / 03.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/04.1.bpmn",
+  "label": "generated / 04.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/04.2.bpmn",
+  "label": "generated / 04.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/04.3.bpmn",
+  "label": "generated / 04.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/04.4.bpmn",
+  "label": "generated / 04.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/04.5.bpmn",
+  "label": "generated / 04.5.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/05.1.bpmn",
+  "label": "generated / 05.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/05.2.bpmn",
+  "label": "generated / 05.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/05.3.bpmn",
+  "label": "generated / 05.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/05.4.bpmn",
+  "label": "generated / 05.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/05.5.bpmn",
+  "label": "generated / 05.5.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/05.6.bpmn",
+  "label": "generated / 05.6.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/05.7.bpmn",
+  "label": "generated / 05.7.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/06.1.bpmn",
+  "label": "generated / 06.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/06.2.bpmn",
+  "label": "generated / 06.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/06.3.bpmn",
+  "label": "generated / 06.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/06.4.bpmn",
+  "label": "generated / 06.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/06.5.bpmn",
+  "label": "generated / 06.5.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/06.6.bpmn",
+  "label": "generated / 06.6.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/06.7.bpmn",
+  "label": "generated / 06.7.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/07.1.bpmn",
+  "label": "generated / 07.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/07.2.bpmn",
+  "label": "generated / 07.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/07.3.bpmn",
+  "label": "generated / 07.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/07.4.bpmn",
+  "label": "generated / 07.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/07.5.bpmn",
+  "label": "generated / 07.5.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/07.6.bpmn",
+  "label": "generated / 07.6.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/07.7.bpmn",
+  "label": "generated / 07.7.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/08.1.bpmn",
+  "label": "generated / 08.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/08.2.bpmn",
+  "label": "generated / 08.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/08.3.bpmn",
+  "label": "generated / 08.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/08.4.bpmn",
+  "label": "generated / 08.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/09.1.bpmn",
+  "label": "generated / 09.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/09.2.bpmn",
+  "label": "generated / 09.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/09.3.bpmn",
+  "label": "generated / 09.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/09.4.bpmn",
+  "label": "generated / 09.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/09.5.bpmn",
+  "label": "generated / 09.5.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/09.6.bpmn",
+  "label": "generated / 09.6.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/10.1.bpmn",
+  "label": "generated / 10.1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/10.2.bpmn",
+  "label": "generated / 10.2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/10.3.bpmn",
+  "label": "generated / 10.3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/10.4.bpmn",
+  "label": "generated / 10.4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/10.5.bpmn",
+  "label": "generated / 10.5.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/10.6.bpmn",
+  "label": "generated / 10.6.bpmn"
+ }
+]

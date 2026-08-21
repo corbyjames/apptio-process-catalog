@@ -1,0 +1,53 @@
+name: Build catalog & deploy Pages
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r scripts/requirements.txt
+      - name: Regenerate derived artifacts from data/
+        run: python scripts/generate.py
+      - name: Commit regenerated files (main only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "catalog-bot"
+          git config user.email "actions@github.com"
+          git add docs diagrams/mermaid diagrams/bpmn/generated site dist
+          git diff --cached --quiet || git commit -m "chore: regenerate derived artifacts [skip ci]"
+          git push
+      - name: Check PRs are in sync with data/
+        if: github.event_name == 'pull_request'
+        run: |
+          git add -A
+          if ! git diff --cached --quiet -- docs diagrams/mermaid diagrams/bpmn/generated site dist; then
+            echo "::warning::Generated files differ from data/. They will be regenerated on merge to main."
+          fi
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

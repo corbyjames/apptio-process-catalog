@@ -1,0 +1,99 @@
+# Per-product configuration-object checklists (config backlog).
+- tool: Targetprocess
+  domain: Structure & access
+  objects: Portfolios (Projects); Teams & hierarchy; ART / Solution Train (Groups); team-project assignment; user
+    types; roles & per-process/per-state permissions; RBAC/entitlements
+  notes: 'Mirror operating model; Client Zero pattern: Team > ART > Solution Train with involvement %'
+- tool: Targetprocess
+  domain: Entities & workflows
+  objects: Process per portfolio; entity states & sub-states; terminology renames (Release > Planning Interval);
+    custom fields; calculated fields; Metrics engine rollups
+  notes: 'Entity hierarchy: Portfolio Epic > Epic > Feature > Story/Bug (+ Requests)'
+- tool: Targetprocess
+  domain: Workforce objects
+  objects: 'People (typed: internal/external/contingent, on/offshore, billable); Position Request + multi-level
+    approval workflow; Involvements %; Job Profiles (rate & CapEx/OpEx mapping); skills; locations; vacations'
+  notes: The three ingredients of the labor model live here
+- tool: Targetprocess
+  domain: Solutions Library
+  objects: SAFe 6.0; PI Planning; OKR; KPI; Demand & Capacity Mgmt (Work Allocation, Demand, Availability); Budgeting;
+    Scenario Planning; Time Tracking + Timesheet Approval; Vacation Tracking; WFM & Optimization; Service Desk;
+    Risk/Incident/Hybrid PM; DevOps
+  notes: Install then tailor; environment promotion Sandbox > Pre-Prod > Prod
+- tool: Targetprocess
+  domain: Views & automation
+  objects: Boards/lists/timelines; dashboards & information radiators; view sharing per role; automation rules (JS,
+    webhooks); validation rules
+  notes: Role-based views per SPM journey map
+- tool: Targetprocess
+  domain: Integrations
+  objects: Jira & Azure DevOps native bi-directional connectors; ServiceNow; email; SSO/SAML; REST API v1/v2; Workday
+    roster feed (+ team-mapping metadata); ADM feeds to Planning/Costing
+  notes: Sync cadences per source (daily/weekly/monthly/manual)
+- tool: Costing
+  domain: Project & model
+  objects: Costing Standard project; Foundation / Applications & Services / Business Units modules; Cost Source,
+    Labor, Fixed Asset Ledger, Other Cost Pools, IT Resource Towers objects
+  notes: 'TBM Studio: Data Studio / Model Studio / Report Studio'
+- tool: Costing
+  domain: Master & reference data
+  objects: Cost Source Master Data (+Profile, Validity); Labor, Vendors, Fixed Asset, Projects master data; Cost
+    Pool Reference List (ATUM); account mapping lookup tables; cost center hierarchy
+  notes: 'Key fields: Cost Pool/Sub-Pool, Is Depr, Fixed/Variable, Discretionary'
+- tool: Costing
+  domain: Allocations
+  objects: Allocation strategies (even, %, weighted, consumption); drivers (servers, headcount, tickets, transactions,
+    story points); labor allocation options (estimates, time, agile stories, hybrid); ATP CM Rate Transform; fixed-capacity
+    team rules; cross-charge & Build/Run cost types
+  notes: Mature allocations over time; absorption analysis for over/under allocation
+- tool: Costing
+  domain: Data pipeline
+  objects: Datalink app + on-prem Agent (Boomi); connectors (REST, SAP, ServiceNow, Salesforce...); ULS; schedules
+    & monitoring; Data Studio transforms & quality checks
+  notes: Implementation tiers automate 5-15 sources
+- tool: Costing
+  domain: Reporting
+  objects: IT Financial Reports; Applications Overview / App TCO; Business Units collection; Services & Workforce
+    NX reports; Benchmarking; Billing (Bill of IT); Apptio BI self-service + subscriptions
+  notes: CT Leadership Review pattern for exec reporting
+- tool: Planning
+  domain: Plan structure
+  objects: Plans & folders; plan states New/Open/Final; snapshots & version compare; multi-year; multi-currency;
+    working calendars; fiscal periods
+  notes: Budget of record + forecast versions strategy
+- tool: Planning
+  domain: Planning domains
+  objects: Worksheets/line items & cost categories; labor planning (positions, comp adjustments, headcount targets,
+    allocation rules); asset planning (depreciation methods, delegation); contract planning (amortization, renewals
+    & escalations, delegation); Integrated Investment Planning (investment tags, Build/Run, rate cards, cross-charge)
+  notes: GL-to-IT category mappings translate finance categories into IT terms
+- tool: Planning
+  domain: Governance & integration
+  objects: Approval workflows (submit/review/approve/return); cost object permissions; Restricted Access (sensitive
+    comp); Intelligent Forecasting; Costing & Cloudability integrations; IBM Planning Analytics bi-directional connector;
+    REST APIs (plans, variance, status, spend)
+  notes: null
+- tool: Cloudability
+  domain: Data & allocation
+  objects: Vendor Credentials (AWS/Azure/GCP/OCI); FOCUS Ingress + manifest; IBM FinOps Agent (containers); Business
+    Mappings & Business Metrics; Tags/Labels + Tag Explorer; Account Groups; Views; Cost Sharing & Telemetry rules;
+    ATUM dimensions
+  notes: FOCUS 1.0/1.1 supported; native connectors preferred for CSP data
+- tool: Cloudability
+  domain: Planning & optimization
+  objects: Budgets on Views; Intelligent Forecasting (driver dims); Workload Planning (Workloads, Resources, Recommendations,
+    Preferences); Rightsizing Preferences & ROI; Commitment Overview/Portfolio/Recommendations; Savings Automation
+    guardrails (per-account/region, active-management toggles, RateOptimizationFullAccess)
+  notes: null
+- tool: Cloudability
+  domain: Operate & govern
+  objects: Anomaly alert rules (scope, thresholds, recipients, email/PagerDuty, Jira/ServiceNow ticketing); Dashboards/Reports/Scorecards;
+    AI Services Dashboard; Cost Governance policies (tag enforcement, pre-deployment estimation - preview); user/role
+    admin
+  notes: Turbonomic action automation in Premium
+- tool: Cross-product
+  domain: ADM / data highway
+  objects: 'Feed catalog: targets down (Planning>ATP); positions up (ATP>Planning, daily/weekly); rates back (Costing>ATP);
+    workforce & work data in (ATP>Costing, monthly); cloud cost (Cloudability>Costing); investment loop (ATP<->Costing/Planning);
+    roster sources (daily/monthly/manual)'
+  notes: Monitor cadences & errors; this is the integration fabric of every E2E flow

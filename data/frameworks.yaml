@@ -1,0 +1,30 @@
+# TBM / FinOps / SPM / SAFe framing reference.
+TBM:
+  layers: Foundations (Roles, Data, Tools, Methods, Change) | TBM Model | TBM Taxonomy (Cost Pools > Resource/IT
+    Towers > Solutions > Consumers) | Outcomes | Value Drivers
+  disciplines: Cost Transparency; Delivering Value (Bill of IT, TCO); Planning & Governance; Benchmarking; Shaping
+    Demand; Run/Grow/Transform
+  maturity: 'TBM practice assessment: 6 dimensions (Engagement, Taxonomy, Data, Automation, Reporting & Metrics,
+    Value), scale 0-5 (NA, Initial, Developing, Defined, Managed, Optimized)'
+FinOps:
+  layers: 'Domains: Understand Usage & Cost; Quantify Business Value; Optimize Usage & Cost; Manage the FinOps Practice.
+    Phases: Inform > Optimize > Operate'
+  disciplines: 'Capabilities: Data Ingestion, Allocation, Reporting & Analytics, Anomaly Mgmt | Planning & Estimating,
+    Forecasting, Budgeting, KPIs & Benchmarking, Unit Economics | Architecting & Workload Placement, Usage Optimization,
+    Rate Optimization, Licensing & SaaS, Sustainability | Practice Operations, Governance Policy & Risk, Education,
+    Invoicing & Chargeback, Assessment, Tools & Services, Intersecting Disciplines'
+  maturity: 'Crawl / Walk / Run per capability; personas: Practitioner, Engineering, Finance, Leadership, Procurement,
+    Product + allied (ITAM, ITFM/TBM, ITSM, Security, Sustainability)'
+SPM:
+  layers: Market (SPM) > Products > Solution Areas (WFM, HPM, EAP, FPM, POM) > Domains (Strategic Planning, Portfolio
+    Mgmt, Resource Mgmt, Financial Mgmt) > Use Cases
+  disciplines: '6 business processes: Demand Intake/Funding Requests; OKR Prioritization; Demand & Capacity Mgmt;
+    Dependency Mgmt; Capitalization; Value Stream Mgmt. 16 capabilities across the 4 solution areas'
+  maturity: 'SPM maturity: 6 domains (Strategic Planning, Portfolio Mgmt, Financial Mgmt, Demand Intake, Value Realization,
+    Organization) x lenses (Knowledge, Process, Adoption, Metrics, Automation, Skills/Governance), scale 1-5 Foundational
+    > Structured > Managed > Optimized > Scaled'
+SAFe:
+  layers: 'Lean Portfolio Management: Strategy & Investment Funding; Agile Portfolio Operations; Lean Governance'
+  disciplines: Portfolio Kanban, WSJF, Lean Budgets & Guardrails, Participatory Budgeting, PI Planning, ARTs/Solution
+    Trains, OKRs, Value Stream Management, flow metrics
+  maturity: Measure & Grow assessments

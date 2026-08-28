@@ -24,6 +24,7 @@ def load(name):
 
 L0 = load("l0.yaml"); ROWS = load("catalog.yaml"); FLOWS = load("flows.yaml")
 FRAMEWORKS = load("frameworks.yaml"); CFG = load("tool-config.yaml"); LINKS = load("l0-links.yaml")
+CALENDAR = load("calendar.yaml")
 for r in ROWS: r["l0id"] = r["l1id"].split(".")[0]; r["l0"] = L0[r["l0id"]]["name"]
 FAM = lambda t: ("Targetprocess" if t=="Targetprocess" else "Costing" if t.startswith("Costing") else
                  "Planning" if t.startswith("Planning") else "Cloudability" if t.startswith("Cloudability") else "Cross-tool")
@@ -86,6 +87,17 @@ def gen_docs():
         if c["tool"]!=cur: cur=c["tool"]; out.append(f"\n## {c['tool']}\n")
         out.append(f"**{c['domain']}**: {c['objects']}" + (f" *({c['notes']})*" if c.get("notes") else "") + "\n")
     W("docs/tool-config-reference.md","\n".join(out))
+
+    out = ["# Annual Operating Calendar\n","Generated from `data/calendar.yaml` (months are fiscal months, FM1 = fiscal year start). The dashboard's Operating Calendar tab renders this with a fiscal-year selector.\n"]
+    for st in CALENDAR["streams"]:
+        out.append(f"\n## {st['name']}\n")
+        out.append("| Process | Cadence | Fiscal months | Catalog refs |\n|---|---|---|---|")
+        for en in st["entries"]:
+            months = ", ".join(f"FM{m}" for m in en["fm"]) if len(en["fm"])<12 else "All year"
+            out.append(f"| {en['name']} | {en['cadence']} | {months} | {', '.join(en.get('refs',[]))} |")
+        for en in st["entries"]:
+            out.append(f"\n**{en['name']}** — {en['desc']}")
+    W("docs/operating-calendar.md","\n".join(out))
 
 # ---------------- mermaid ----------------
 def mermaid_l0():
@@ -189,7 +201,7 @@ def gen_site():
     head = open(os.path.join(ROOT,"site/templates/template_head.html")).read()
     js = open(os.path.join(ROOT,"site/templates/template_js.html")).read()
     data = {"l0":[dict(id=k, name=v["name"], desc=v["desc"], primary=v["primary"], supporting=v.get("supporting",""), frameworks=v["frameworks"], lanes=v["lanes"]) for k,v in sorted(L0.items())],
-            "rows":ROWS, "flows":FLOWS, "frameworks":FRAMEWORKS}
+            "rows":ROWS, "flows":FLOWS, "frameworks":FRAMEWORKS, "calendar":CALENDAR}
     payload = json.dumps(data, ensure_ascii=False).replace("</","<\\/")
     W("site/index.html", head + js.replace("__DATA__", payload))
 
@@ -197,7 +209,7 @@ def gen_site():
 def gen_xlsx():
     sys.path.insert(0, os.path.join(ROOT,"scripts"))
     from xlsx_build import build
-    build(ROOT, L0, ROWS, FLOWS, FRAMEWORKS, CFG, l1s_of)
+    build(ROOT, L0, ROWS, FLOWS, FRAMEWORKS, CFG, l1s_of, CALENDAR)
 
 if __name__ == "__main__":
     gen_docs(); gen_mermaid(); gen_bpmn(); gen_site(); gen_xlsx()

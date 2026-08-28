@@ -1,0 +1,144 @@
+# Annual operating calendar — the rhythm of the catalog's processes across a fiscal year.
+# Months are FISCAL months (fm 1 = first month of the fiscal year); the dashboard's
+# FY-start selector maps them to calendar months. Edit freely; refs point at catalog L2 ids.
+streams:
+- id: strategy
+  name: Strategy & Annual Planning
+  family: Targetprocess
+  entries:
+  - name: Strategy refresh & OKR setting
+    cadence: Annual
+    fm: [12, 1]
+    desc: Refresh strategic themes and set enterprise/portfolio OKRs for the new fiscal year.
+    refs: ["01.1.1", "01.2.1"]
+  - name: "Annual budget: top-down targets"
+    cadence: Annual
+    fm: [9]
+    desc: Finance sets target spend and headcount envelopes and distributes them to budget owners (targets ride the data highway to the portfolio).
+    refs: ["05.1.2", "02.4.2"]
+  - name: "Annual budget: bottom-up entry"
+    cadence: Annual
+    fm: [10]
+    desc: Budget owners build OpEx/CapEx line items — labor, contracts, assets, investments.
+    refs: ["05.1.3", "05.4.1", "05.5.1", "05.6.1"]
+  - name: "Annual budget: review & iterate"
+    cadence: Annual
+    fm: [11]
+    desc: Submit/review/approve/return cycles reconcile top-down targets with bottom-up plans.
+    refs: ["05.1.4"]
+  - name: "Annual budget: finalize budget of record"
+    cadence: Annual
+    fm: [12]
+    desc: Lock the approved plan as budget of record with a snapshot for variance baselines.
+    refs: ["05.1.5"]
+  - name: Participatory budgeting / lean budget adjustment
+    cadence: Semi-annual
+    fm: [6, 12]
+    desc: Adjust value-stream budgets and guardrails at the mid-year and year-end boundaries.
+    refs: ["02.2.3", "02.4.1"]
+- id: quarterly
+  name: Quarterly Cadence
+  family: Planning
+  entries:
+  - name: Quarterly forecast & sign-off
+    cadence: Quarterly
+    fm: [1, 4, 7, 10]
+    desc: Roll the forecast with YTD actuals, driver and AI-assisted updates, scenario compare, sign-off.
+    refs: ["05.2.1", "05.2.2", "05.2.3", "05.2.4"]
+  - name: Portfolio review & scenario refresh
+    cadence: Quarterly
+    fm: [1, 4, 7, 10]
+    desc: Re-prioritize the portfolio against strategy and capacity; promote the chosen scenario.
+    refs: ["02.3.2", "02.2.2"]
+  - name: OKR scoring & refresh
+    cadence: Quarterly
+    fm: [3, 6, 9, 12]
+    desc: Score key results, run quarterly reviews, reset objectives.
+    refs: ["01.2.3"]
+  - name: PI planning events
+    cadence: Quarterly (8-12 wks)
+    fm: [3, 6, 9, 12]
+    desc: Readiness assessment and preparation, the big-room event, committed PI objectives.
+    refs: ["03.1.1", "03.1.2", "03.1.3"]
+- id: monthly
+  name: Monthly Cadence
+  family: Costing
+  entries:
+  - name: Month-end close & cost allocation
+    cadence: Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Load actuals, run allocations through pools/towers/apps/BUs, validate to GL, publish TBM reporting.
+    refs: ["06.1.1", "06.1.2", "06.1.3", "06.1.4"]
+  - name: Variance analysis & reforecast
+    cadence: Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Reconcile actuals to plan, flag material variances, capture commentary, reforecast.
+    refs: ["05.3.1", "05.3.2", "05.3.3"]
+  - name: Labor capitalization actuals to ERP
+    cadence: Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Compute team cost & blended CapEx %, allocate to work or towers, generate the SAP-ready CapEx/OpEx file.
+    refs: ["06.4.4", "06.4.5", "06.4.6"]
+  - name: Showback / Bill of IT publication
+    cadence: Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Allocate consumption to business units and publish Bill of IT statements.
+    refs: ["08.1.1", "08.1.2"]
+  - name: CIO monthly operations review
+    cadence: Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Financial attainment, vendor, app run-vs-grow, cloud consumption and workforce dashboards.
+    refs: ["08.4.1"]
+  - name: Cloud budget & forecast review
+    cadence: Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Budget burn, rolling cloud forecast, unit-economics trends.
+    refs: ["07.6.1", "07.6.2", "07.3.3"]
+- id: continuous
+  name: Continuous & Weekly
+  family: Cloudability
+  entries:
+  - name: Demand intake & triage
+    cadence: Weekly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Capture, qualify and route demand through the portfolio funnel.
+    refs: ["02.1.1", "02.1.2", "02.1.3"]
+  - name: Cloud anomaly response
+    cadence: Continuous
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Detect, triage and resolve unusual cloud spend; tune alert rules.
+    refs: ["07.4.1", "07.4.2"]
+  - name: Rightsizing & commitment cadence
+    cadence: Weekly/Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Action rightsizing recommendations; manage RI/SP coverage (or Savings Automation autopilot).
+    refs: ["07.5.1", "07.5.3", "07.5.4"]
+  - name: Position management & data-highway syncs
+    cadence: Daily/Weekly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Position approvals flow to Planning; rosters, rates and work data sync on their cadences.
+    refs: ["04.4.3", "10.5.1"]
+- id: periodic
+  name: Annual & Periodic
+  family: Cross-tool
+  entries:
+  - name: Benchmarking refresh
+    cadence: Annual
+    fm: [5]
+    desc: Refresh peer benchmarks, review variance drivers, set improvement targets.
+    refs: ["06.6.1", "06.6.2"]
+  - name: TBM / FinOps / SPM maturity assessment
+    cadence: Annual/Semi-annual
+    fm: [7]
+    desc: Score practice maturity against target state and reset the capability roadmap.
+    refs: ["10.6.4"]
+  - name: Contract renewal planning peak
+    cadence: Annual (align to renewals)
+    fm: [8, 9]
+    desc: Time vendor renewals and escalations into the forecast ahead of the budget cycle.
+    refs: ["05.5.2"]
+  - name: Asset & capital refresh planning
+    cadence: Annual
+    fm: [8]
+    desc: Plan asset purchases, refresh and depreciation ahead of the budget cycle.
+    refs: ["05.6.1", "05.6.2"]

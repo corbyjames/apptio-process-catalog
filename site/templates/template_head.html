@@ -89,6 +89,33 @@ main{padding:18px 24px 40px;max-width:1420px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-bottom:8px}
 .tip{position:fixed;pointer-events:none;background:var(--surface-1);border:1px solid var(--ring);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:7px 10px;font-size:12.5px;z-index:50;max-width:320px}
 .tip b{display:block}
+.walkpanel{background:var(--surface-1);border:1px solid var(--ring);border-radius:10px;padding:14px 18px;margin-top:12px;max-width:980px}
+.walkpanel h3{margin:0 0 4px;font-size:16px}
+.walkpanel .meta{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.walkpanel p{margin:6px 0;color:var(--ink-2);font-size:13.5px}
+.walksteps{display:none}
+body.present header,body.present .tiles,body.present nav,body.present .note{display:none}
+body.present main{padding-top:8px;max-width:none}
+body.present .walkpanel{font-size:15px}
+body.present .walkpanel h3{font-size:20px}
+.calstream{margin:14px 0 4px;font-weight:700;font-size:13.5px}
+.calrow{display:grid;grid-template-columns:230px repeat(12,1fr);gap:2px;align-items:center;margin:2px 0}
+.calrow.hdr{position:sticky;top:0;background:var(--page);z-index:2;padding:4px 0}
+.calrow .lbl{font-size:12.3px;color:var(--ink);padding-right:8px;line-height:1.25}
+.calrow .lbl .cad{color:var(--muted);font-size:10.5px;display:block}
+.calrow .mh{text-align:center;font-size:11.5px;color:var(--muted);font-weight:600}
+.calcell{height:20px;border-radius:4px;background:var(--surface-1);border:1px solid var(--grid)}
+.calcell.on{border:none;cursor:pointer}
+@media print{
+  .noprint,header,.tiles,nav,#tip{display:none !important}
+  body{background:#fff}
+  section.hide{display:none !important}
+  .svgwrap{border:none;overflow:visible}
+  .walksteps{display:block !important;margin-top:14px}
+  .walksteps table{border-collapse:collapse;font-size:10.5px;width:100%}
+  .walksteps th,.walksteps td{border-bottom:1px solid #ccc;padding:3px 8px 3px 0;text-align:left;vertical-align:top}
+  .walkpanel{display:none}
+}
 table.tbl{border-collapse:collapse;font-size:12.5px;width:100%}
 table.tbl th,table.tbl td{border-bottom:1px solid var(--grid);padding:4px 10px 4px 0;text-align:left;font-variant-numeric:tabular-nums}
 table.tbl th{color:var(--muted);font-weight:600}
@@ -109,6 +136,8 @@ a{color:var(--accent)}
   <button data-v="explorer">Catalog Explorer</button>
   <button data-v="flows">E2E Flow Visualizer</button>
   <button data-v="bpml">BPML Diagrams</button>
+  <button data-v="walk">Process Walkthrough</button>
+  <button data-v="cal">Operating Calendar</button>
   <button data-v="insights">Insights</button>
 </nav>
 <main>
@@ -141,6 +170,30 @@ a{color:var(--accent)}
     <p class="flowdesc" id="bpmlDesc"></p>
     <div class="svgwrap" id="bpmlsvg"></div>
     <p class="note" style="margin-top:10px">L0 = process landscape; L1 = collapsed sub-process chain (⊞) for one area — click a sub-process to open its L2 diagram; L2 = BPMN task sequence with persona lanes. The .bpmn export is BPMN 2.0 XML with diagram interchange — open it in bpmn.io, Camunda Modeler, or Visio.</p>
+  </section>
+  <section id="v-walk" class="hide">
+    <div class="filters noprint">
+      <select id="walkSel" style="min-width:320px"></select>
+      <button class="ghost" id="wPrev">◀ Prev</button>
+      <button class="ghost" id="wNext">Next ▶</button>
+      <button class="ghost" id="wAll">Show all</button>
+      <button class="ghost" id="wPresent">Present</button>
+      <button class="ghost" id="wPrint">Print one-pager</button>
+      <span class="count" id="wPos"></span>
+    </div>
+    <p class="flowdesc" id="walkDesc"></p>
+    <div class="svgwrap" id="walksvg"></div>
+    <div id="walkPanel" class="walkpanel"></div>
+    <div id="walkSteps" class="walksteps printonly"></div>
+  </section>
+  <section id="v-cal" class="hide">
+    <div class="filters noprint">
+      <label style="color:var(--ink-2);font-size:13px">Fiscal year starts:</label>
+      <select id="fyStart"></select>
+      <span class="count">Hover an entry for detail; bars show when each process runs. Data: <code>data/calendar.yaml</code></span>
+    </div>
+    <div id="calgrid"></div>
+    <p class="note" style="margin-top:12px">The rhythm grid shows the operating model at a glance: the annual budget cycle building through the last fiscal quarter, quarterly forecasting and PI cadences, the monthly close-to-Bill-of-IT engine, and the continuous FinOps/demand lanes underneath.</p>
   </section>
   <section id="v-insights" class="hide" id="insights"></section>
 </main>

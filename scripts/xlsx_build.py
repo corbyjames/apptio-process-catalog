@@ -5,7 +5,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
-def build(ROOT, L0, ALL, FLOWS_RAW, FRAMEWORKS, CFG_RAW, l1s_of):
+def build(ROOT, L0, ALL, FLOWS_RAW, FRAMEWORKS, CFG_RAW, l1s_of, CALENDAR=None):
     FLOWS = [(f["flow"], f["name"], f["step"], f["type"], f["lane"], f["task"], f.get("notes") or "") for f in FLOWS_RAW]
     CFG_T = [(c["tool"], c["domain"], c["objects"], c.get("notes") or "") for c in CFG_RAW]
     FONT = "Arial"
@@ -147,5 +147,16 @@ def build(ROOT, L0, ALL, FLOWS_RAW, FRAMEWORKS, CFG_RAW, l1s_of):
         for j,val in enumerate(row,1):
             c = ws.cell(i,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
 
+    if CALENDAR:
+        ws = wb.create_sheet("Operating Calendar")
+        cols = ["Stream","Process","Cadence"] + ["FM%d"%i for i in range(1,13)] + ["Description","Catalog refs"]
+        header(ws, cols, [22,34,15]+[5]*12+[60,22])
+        ri = 2
+        for st in CALENDAR["streams"]:
+            for en in st["entries"]:
+                vals = [st["name"], en["name"], en["cadence"]] + [("X" if m in en["fm"] else "") for m in range(1,13)] + [en["desc"], ", ".join(en.get("refs",[]))]
+                for j,val in enumerate(vals,1):
+                    c = ws.cell(ri,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
+                ri += 1
     wb.save(os.path.join(ROOT,"dist","Apptio_Process_Catalog_L0-L2.xlsx"))
 

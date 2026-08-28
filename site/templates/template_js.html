@@ -28,7 +28,7 @@ const l1sOf = id => { const seen=[],m={}; DATA.rows.filter(r=>r.l0id===id).forEa
 /* ---------- nav ---------- */
 document.querySelectorAll("#nav button").forEach(b => b.onclick = () => {
   document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("on",x===b));
-  ["map","explorer","flows","bpml","insights"].forEach(v => $("#v-"+v).classList.toggle("hide", v!==b.dataset.v));
+  ["map","explorer","flows","bpml","walk","cal","insights"].forEach(v => $("#v-"+v).classList.toggle("hide", v!==b.dataset.v));
 });
 const gotoExplorer = l0id => { $("#fL0").value = l0id; document.querySelector('#nav button[data-v="explorer"]').click(); renderTree(); };
 
@@ -538,8 +538,151 @@ function renderBpml(){
   }
 }
 
+/* ---------- Process Walkthrough (customer mode) ---------- */
+function walkSteps(sel){
+  if(sel==="E2E") return DATA.flows.filter(f=>["UC3","UC2","UC1","UC4"].includes(f.flow));
+  if(sel.startsWith("F:")) return DATA.flows.filter(f=>f.flow===sel.slice(2));
+  const l1=sel.slice(2);
+  return DATA.rows.filter(r=>r.l1id===l1).map(r=>({flow:l1, name:r.l1, step:r.l2id, type:"Task", lane:laneOf(r), task:r.l2id+" "+r.l2, notes:r.desc, r}));
+}
+let walkSel="E2E", walkIdx=-1;
+(function(){
+  const s=$("#walkSel");
+  s.append(new Option("★ Full E2E — Targets down · Rates back · Actuals in · TCO up","E2E"));
+  const og0=document.createElement("optgroup"); og0.label="Cross-tool flows";
+  const seen=[]; DATA.flows.forEach(f=>{ if(!seen.includes(f.flow)){ seen.push(f.flow); og0.append(new Option(f.flow+" — "+f.name,"F:"+f.flow)); }});
+  s.append(og0);
+  const og=document.createElement("optgroup"); og.label="Catalog processes (L1)";
+  const seen2={}; DATA.rows.forEach(r=>{ if(!seen2[r.l1id]){ seen2[r.l1id]=1; og.append(new Option(r.l1id+" "+r.l1,"L:"+r.l1id)); }});
+  s.append(og);
+  s.onchange=()=>{ walkSel=s.value; walkIdx=-1; renderWalk(); };
+  $("#wPrev").onclick=()=>{ walkIdx=Math.max(0,(walkIdx<0?0:walkIdx-1)); renderWalk(); };
+  $("#wNext").onclick=()=>{ const n=walkSteps(walkSel).length; walkIdx=Math.min(n-1,walkIdx+1); renderWalk(); };
+  $("#wAll").onclick=()=>{ walkIdx=-1; renderWalk(); };
+  $("#wPresent").onclick=()=>{ document.body.classList.toggle("present"); };
+  $("#wPrint").onclick=()=>{ document.querySelectorAll("main > section").forEach(x=>{ if(x.id!=="v-walk") x.classList.add("hide"); }); window.print(); };
+  document.addEventListener("keydown",e=>{
+    if($("#v-walk").classList.contains("hide")) return;
+    if(e.key==="ArrowRight") $("#wNext").click();
+    if(e.key==="ArrowLeft") $("#wPrev").click();
+    if(e.key==="Escape") document.body.classList.remove("present");
+  });
+})();
+function renderWalk(){
+  const steps=walkSteps(walkSel);
+  const lanes=[]; steps.forEach(s=>{ if(!lanes.includes(s.lane)) lanes.push(s.lane); });
+  const hasBranch=steps.some(s=>/[ab]$/.test(String(s.step)));
+  const laneH=hasBranch?168:120, headW=168, stepW=190, gap=26, padT=14;
+  const cols=[]; let ci=-1;
+  steps.forEach(s=>{ if(/b$/.test(String(s.step))) cols.push(ci); else {ci++; cols.push(ci);} });
+  const W=headW+(ci+1)*(stepW+gap)+30, H=lanes.length*laneH+padT*2;
+  const ink=cssv("--ink"), ink2=cssv("--ink-2"), grid=cssv("--grid"), axis=cssv("--axis"), surf=cssv("--surface-1"), acc=cssv("--accent");
+  let svg=`<svg width="${W}" height="${H}" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-size="11">`;
+  lanes.forEach((ln,i)=>{
+    const y=padT+i*laneH;
+    svg+=`<rect x="0" y="${y}" width="${W-10}" height="${laneH-8}" fill="${i%2?'transparent':grid}" opacity="${i%2?0:0.28}" rx="8"/>`;
+    svg+=`<line x1="${headW-10}" y1="${y}" x2="${headW-10}" y2="${y+laneH-8}" stroke="${axis}"/>`;
+    wrap(ln,16).slice(0,3).forEach((w,li)=> svg+=`<text x="12" y="${y+laneH/2-14+li*15}" fill="${ink}" font-weight="600">${esc(w)}</text>`);
+  });
+  const pos=steps.map((s,i)=>{
+    const li=lanes.indexOf(s.lane);
+    let by=padT+li*laneH+(laneH-8)/2-28;
+    if(/a$/.test(String(s.step))) by-=36; if(/b$/.test(String(s.step))) by+=36;
+    return {x:headW+cols[i]*(stepW+gap), y:by, w:stepW, h:56, s, i};
+  });
+  const isGate=s=>/gateway/i.test(s.type);
+  const dimOp = i => walkIdx<0 ? 1 : (i===walkIdx?1:0.28);
+  // connectors (linear + a/b branch handling as in flow view)
+  for(let i=0;i<steps.length-1;i++){
+    const s=steps[i], nxt=steps[i+1];
+    let pairs=[];
+    if(isGate(s)&&/a$/.test(String(nxt.step))){
+      const bI=steps.findIndex(x=>/b$/.test(String(x.step)));
+      const aftI=steps.findIndex((x,j)=>j>bI&&!/[ab]$/.test(String(x.step)));
+      pairs.push([i,i+1]); if(bI>0) pairs.push([i,bI]);
+      if(aftI>0){ pairs.push([i+1,aftI]); if(bI>0) pairs.push([bI,aftI]); }
+    } else if(/[ab]$/.test(String(s.step))) continue;
+    else if(!/[ab]$/.test(String(nxt.step))) pairs.push([i,i+1]);
+    pairs.forEach(([a,b])=>{
+      const A=pos[a],B=pos[b];
+      const x1=A.x+A.w,y1=A.y+A.h/2,x2=B.x,y2=B.y+B.h/2,midx=(x1+x2)/2;
+      const cross=A.s.lane!==B.s.lane;
+      const op=walkIdx<0?1:((a===walkIdx||b===walkIdx)?1:0.25);
+      svg+=`<g opacity="${op}"><path d="M${x1},${y1} L${midx},${y1} L${midx},${y2} L${x2-6},${y2}" fill="none" stroke="${cross?acc:ink2}" stroke-width="1.6" ${cross?'stroke-dasharray="5 4"':''}/><path d="M${x2-7},${y2-4} L${x2},${y2} L${x2-7},${y2+4} Z" fill="${cross?acc:ink2}"/></g>`;
+    });
+  }
+  pos.forEach(p=>{
+    const s=p.s, gate=isGate(s), evt=/event/i.test(s.type), cur=p.i===walkIdx;
+    const op=dimOp(p.i), stroke=cur?acc:axis, swd=cur?3:1.5;
+    if(gate){
+      const cx=p.x+p.w/2, cy=p.y+p.h/2;
+      svg+=`<g class="wstep" data-i="${p.i}" opacity="${op}" style="cursor:pointer"><path d="M${cx-30},${cy} L${cx},${cy-26} L${cx+30},${cy} L${cx},${cy+26} Z" fill="${surf}" stroke="${stroke}" stroke-width="${swd}"/><text x="${cx}" y="${cy+40}" text-anchor="middle" fill="${ink2}" font-size="10.5">${esc(s.task)}</text></g>`;
+    } else if(evt){
+      const cx=p.x+26, cy=p.y+p.h/2;
+      svg+=`<g class="wstep" data-i="${p.i}" opacity="${op}" style="cursor:pointer"><circle cx="${cx}" cy="${cy}" r="15" fill="${surf}" stroke="${/End/i.test(s.type)?ink:stroke}" stroke-width="${/End/i.test(s.type)?3:swd}"/><text x="${cx}" y="${cy+30}" text-anchor="middle" fill="${ink2}" font-size="10.5">${esc(s.task.slice(0,26))}</text></g>`;
+    } else {
+      svg+=`<g class="wstep" data-i="${p.i}" opacity="${op}" style="cursor:pointer"><rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="8" fill="${surf}" stroke="${stroke}" stroke-width="${swd}"/>`;
+      wrap(s.task,29).slice(0,3).forEach((ln,li)=> svg+=`<text x="${p.x+10}" y="${p.y+16+li*13}" fill="${ink}">${esc(ln)}</text>`);
+      svg+=`</g><text x="${p.x+2}" y="${p.y-4}" fill="${ink2}" font-size="10" opacity="${op}">${esc(String(s.step))}</text>`;
+    }
+  });
+  svg+="</svg>";
+  $("#walksvg").innerHTML=svg;
+  document.querySelectorAll(".wstep").forEach(g=>{ g.onclick=()=>{ walkIdx=+g.dataset.i; renderWalk(); }; });
+  if(walkIdx>=0){ const q=pos[walkIdx]; const wrapEl=$("#walksvg"); wrapEl.scrollLeft=Math.max(0,q.x-wrapEl.clientWidth/2+q.w/2); }
+  // narration panel
+  const total=steps.length;
+  const title = walkSel==="E2E" ? "Full E2E flow" : (steps[0].name||"");
+  $("#walkDesc").textContent = walkIdx<0 ? `${title} — ${total} steps across ${lanes.length} lanes. Click any step, or use Next / arrow keys to walk through it.` : "";
+  $("#wPos").textContent = walkIdx<0 ? `${total} steps` : `Step ${walkIdx+1} of ${total}`;
+  const pnl=$("#walkPanel");
+  if(walkIdx<0){ pnl.innerHTML=`<h3>${esc(title)}</h3><p>Use <b>Next ▶</b> (or →) to start the guided walkthrough. Each step highlights on the diagram while this panel explains what happens, who does it, and in which tool. <b>Present</b> hides the app chrome for customer sessions; <b>Print one-pager</b> produces a leave-behind.</p>`; }
+  else {
+    const s=steps[walkIdx], r=s.r;
+    pnl.innerHTML = `<h3>Step ${walkIdx+1}: ${esc(s.task)}</h3>
+      <div class="meta"><span class="chip">${esc(s.lane)}</span><span class="chip">${esc(s.type)}</span>${s.flow?`<span class="chip">${esc(s.flow)}</span>`:""}${r?`<span class="chip deliv ${r.delivery}">${r.delivery}</span>`:""}</div>
+      ${s.notes?`<p>${esc(s.notes)}</p>`:""}
+      ${r?`<p><b>Tool:</b> ${esc(r.tool)}${r.support?` (+ ${esc(r.support)})`:""} · <b>Cadence:</b> ${esc(r.cadence)}</p><p><b>Inputs:</b> ${esc(r.inputs)} → <b>Outputs:</b> ${esc(r.outputs)}</p><p><b>Configured with:</b> ${esc(r.config)}</p>`:""}`;
+  }
+  // print step list
+  $("#walkSteps").innerHTML = `<h3>${esc(title)} — step list</h3><table><tr><th>#</th><th>Step</th><th>Lane</th><th>Detail</th></tr>` +
+    steps.map((s,i)=>`<tr><td>${i+1}</td><td>${esc(s.task)}</td><td>${esc(s.lane)}</td><td>${esc(s.notes||(s.r? s.r.desc:"")||"")}</td></tr>`).join("") + "</table>";
+}
+
+/* ---------- Operating Calendar ---------- */
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+let fyStart=0; // 0 = January
+(function(){
+  const s=$("#fyStart");
+  MONTHS.forEach((m,i)=> s.append(new Option(m + (i===0?" (calendar year)":""), i)));
+  s.onchange=()=>{ fyStart=+s.value; renderCal(); };
+})();
+function renderCal(){
+  const g=$("#calgrid"); g.innerHTML="";
+  if(!DATA.calendar){ g.innerHTML="<p class='note'>No calendar data.</p>"; return; }
+  const hdr=el("div","calrow hdr","<div class='lbl'></div>"+Array.from({length:12},(_,i)=>`<div class='mh'>${MONTHS[(fyStart+i)%12]}<br><span style='font-weight:400'>FM${i+1}</span></div>`).join(""));
+  g.append(hdr);
+  DATA.calendar.streams.forEach(st=>{
+    const col=cssv(FAMCOLOR[st.family]||"--s-x");
+    g.append(el("div","calstream",`<span class="dot" style="background:${col}"></span> ${esc(st.name)}`));
+    st.entries.forEach(en=>{
+      const cells=Array.from({length:12},(_,i)=>{
+        const on=en.fm.includes(i+1);
+        return `<div class="calcell${on?" on":""}" ${on?`style="background:${col}" data-e="1"`:""}></div>`;
+      }).join("");
+      const row=el("div","calrow",`<div class="lbl">${esc(en.name)}<span class="cad">${esc(en.cadence)}</span></div>${cells}`);
+      row.querySelectorAll(".calcell.on").forEach(c=>{
+        c.addEventListener("mousemove",e=> showTip(e,`<b>${esc(en.name)} · ${esc(en.cadence)}</b>${esc(en.desc)}<br><span style="color:var(--muted)">Catalog: ${esc((en.refs||[]).join(", "))}</span>`));
+        c.addEventListener("mouseleave",hideTip);
+        c.addEventListener("click",()=>{ $("#fQ").value=(en.refs&&en.refs[0])||en.name; ["fL0","fTool","fDeliv"].forEach(id=>$("#"+id).value=""); document.querySelector('#nav button[data-v="explorer"]').click(); renderTree(); });
+      });
+      g.append(row);
+    });
+  });
+}
+
 /* ---------- render all ---------- */
-function renderAll(){ renderMap(); renderTree(); renderFlow(); renderBpml(); renderInsights(); }
+function renderAll(){ renderMap(); renderTree(); renderFlow(); renderBpml(); renderWalk(); renderCal(); renderInsights(); }
 applyTheme();
 </script>
 </body>

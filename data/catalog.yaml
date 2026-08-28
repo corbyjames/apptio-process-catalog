@@ -20,7 +20,10 @@
   l2: Cascade strategy to portfolios & value streams
   l1id: '01.1'
   l1: Strategic Planning & Alignment
-  desc: Link objectives to portfolios, value streams and ARTs so investment and work align top-down (line of sight).
+  desc: 'Link objectives to portfolios, value streams and ARTs so investment and work align top-down (line of sight).
+    Validate the full traceability chain (Strategic Objective > Portfolio Priority > Product/Value Stream > PI Objective
+    > Epic > Feature > Story > Delivery > Outcome) and flag breaks: objectives with no execution, work with no strategic
+    linkage, delivered work with no outcome.'
   delivery: Any
   tool: Targetprocess
   support: ''
@@ -30,7 +33,8 @@
   outputs: Objective-portfolio linkage, funded value streams
   config: Portfolio/ART (Group) structure, relations objectives->portfolio epics, OKR cascade (Ultimate>Strategic>Tactical)
   fw: 'SPM: Strategic Planning | SAFe: LPM'
-  src: TBMC25 Client Zero OKR cascade; EAP CFD 5-step strategic planning
+  src: TBMC25 Client Zero OKR cascade; EAP CFD 5-step strategic planning; PI Planning/EVD Agent requirements (IBM,
+    anonymized) §6.1
 - l2id: 01.1.3
   l2: Monitor strategy execution & re-plan dynamically
   l1id: '01.1'
@@ -61,9 +65,11 @@
   cadence: Quarterly/annual
   inputs: Strategic themes
   outputs: OKR tree with owners & periods
-  config: 'OKR solution: Objective & Key Result entities, period assignment, weighted scoring'
+  config: 'OKR solution: Objective & Key Result entities, period assignment, weighted scoring; objective-writing
+    standards (outcome- not task-phrased, measurable, sufficient supporting features)'
   fw: 'SPM: Strategic Planning | SAFe: OKRs'
-  src: IBM Docs/TP guide OKR solution; Client Zero cascade
+  src: IBM Docs/TP guide OKR solution; Client Zero cascade; PI Planning/EVD Agent requirements (IBM, anonymized)
+    §7.6
 - l2id: 01.2.2
   l2: Link work & investments to OKRs
   l1id: '01.2'
@@ -114,7 +120,8 @@
   l1id: '02.1'
   l1: Demand Intake & Qualification
   desc: Route, categorize (work item taxonomy, BAU vs change, CapEx/OpEx) and qualify requests against strategy
-    before they enter the portfolio funnel.
+    before they enter the portfolio funnel. Includes detecting materially similar or duplicate demand (overlapping
+    investments, teams pursuing similar outcomes) beyond title matching.
   delivery: Any
   tool: Targetprocess
   support: ''
@@ -123,9 +130,11 @@
   inputs: Demand records
   outputs: Qualified demand in funnel
   config: Request workflow states, triage boards, automation rules (routing/auto-reply/linked entities), work-intake
-    taxonomy (categories, CapEx/OpEx, non-labor categories)
+    taxonomy (categories, CapEx/OpEx, non-labor categories); duplicate/overlap detection across descriptions, outcomes,
+    journeys, capabilities
   fw: 'SPM: Demand Intake'
-  src: SPM journey map (work-intake model taxonomy); TP guide
+  src: SPM journey map (work-intake model taxonomy); TP guide; PI Planning/EVD Agent requirements (IBM, anonymized)
+    §6.2, §8.3
 - l2id: 02.1.3
   l2: Progress demand through Portfolio Kanban
   l1id: '02.1'
@@ -145,7 +154,8 @@
   l2: Build lean business case / epic hypothesis
   l1id: '02.2'
   l1: Prioritization & Investment Decision
-  desc: Estimate outcomes, effort and MVP for candidate investments; capture hypothesis and benefit model.
+  desc: Estimate outcomes, effort and MVP for candidate investments; capture hypothesis and benefit model. Decomposition
+    runs opportunities > portfolio epics > features > stories with sequenced delivery increments.
   delivery: Any
   tool: Targetprocess
   support: ''
@@ -156,7 +166,7 @@
   config: Budgeting solution templates (epic hypothesis, lean business case), rich-text/custom fields, Portfolio
     Epic Score report
   fw: 'SAFe: Epic/LPM | SPM: Demand Intake'
-  src: TP Budgeting solution; LFM demo (epic scoring)
+  src: TP Budgeting solution; LFM demo (epic scoring); PI Planning/EVD Agent requirements (IBM, anonymized) §6.3
 - l2id: 02.2.2
   l2: Prioritize by value (WSJF / scoring)
   l1id: '02.2'
@@ -211,7 +221,8 @@
   l1id: '02.3'
   l1: Portfolio Planning & Roadmapping
   desc: Evaluate alternative portfolio mixes (scope, timing, capacity, budget) and promote the chosen scenario to
-    the plan of record.
+    the plan of record. Scenario questions include capacity loss, feature slip, objective re-prioritization, approval
+    delays, platform constraints and the financial impact of moving scope.
   delivery: Any
   tool: Targetprocess
   support: Planning
@@ -222,12 +233,15 @@
   config: Scenario Planning solution (plan variants, promote scenario to baseline), demand vs capacity data, budget
     dashboards
   fw: 'SPM: Portfolio Mgmt | SAFe: Participatory Budgeting'
-  src: Customer PowerUp (scenario planning, baselines); TP solutions
+  src: Customer PowerUp (scenario planning, baselines); TP solutions; PI Planning/EVD Agent requirements (IBM, anonymized)
+    §8.4
 - l2id: 02.3.3
   l2: Manage cross-initiative dependencies & risks
   l1id: '02.3'
   l1: Portfolio Planning & Roadmapping
-  desc: Identify, visualize and resolve dependencies and portfolio-level risks across initiatives and trains.
+  desc: Identify, visualize and resolve dependencies and portfolio-level risks across initiatives and trains - including
+    cross-ART/cross-portfolio dependencies, shared-service contention, platform bottlenecks, missing predecessors,
+    insufficient lead time and aging dependencies.
   delivery: Any
   tool: Targetprocess
   support: ''
@@ -235,9 +249,10 @@
   cadence: Continuous
   inputs: Roadmaps, PI plans
   outputs: Dependency/risk register & resolutions
-  config: Dependency/Impediment entities, relations, ART Planning Board, Risk Management solution
+  config: Dependency/Impediment entities, relations, ART Planning Board, Risk Management solution; dependency graph
+    & prioritized heatmap, dependency ownership & aging tracking
   fw: 'SAFe: Program risks/ROAM | SPM: Portfolio Mgmt'
-  src: TP entities; PI Planning solution
+  src: TP entities; PI Planning solution; PI Planning/EVD Agent requirements (IBM, anonymized) §7.3, §11
 - l2id: 02.3.4
   l2: Maintain one governed hybrid portfolio view
   l1id: '02.3'
@@ -336,11 +351,12 @@
   fw: 'SPM: Value Realization | TBM: four value conversations'
   src: WFM closed loop (Analyze & Act); LFM demo
 - l2id: 03.1.1
-  l2: Assess & prepare PI readiness
+  l2: Assess & prepare quarterly planning readiness
   l1id: '03.1'
-  l1: PI Planning
-  desc: Run readiness checks (PI/ART entities, objectives, features, team objectives) and execute the 4-phase preparation
-    plan.
+  l1: Quarterly Planning (SAFe PI cadence)
+  desc: Run readiness checks (PI/ART entities, objectives, features, team objectives, estimates, owners, dependencies,
+    definition-of-ready) with a scored readiness verdict at team/ART/solution-train/portfolio level, resolution
+    recommendations for each gap, and the 4-phase preparation plan.
   delivery: Agile
   tool: Targetprocess
   support: ''
@@ -349,13 +365,16 @@
   inputs: Portfolio backlog, ART/team structure
   outputs: READY verdict, prepared backlog & objectives
   config: PI & ART entities with dates, ART/Program PI Objectives, Team PI Objectives, features assigned to PI release,
-    capacity fields (velocity = people x 8 rule; 80/20 allocation), PI Planning solution Pre-Plan views
+    capacity fields (velocity = people x 8 rule; 80/20 allocation), PI Planning solution Pre-Plan views; readiness
+    scoring & gap-resolution workflow (assign owner, add estimate, split feature, escalate decision), definition-of-ready
+    rules
   fw: 'SAFe: PI Planning'
-  src: PI Planning Demo Script (readiness + 20-day plan); PI Planning solution 1.0.0
+  src: PI Planning Demo Script (readiness + 20-day plan); PI Planning solution 1.0.0; PI Planning/EVD Agent requirements
+    (IBM, anonymized) §7.1-7.2
 - l2id: 03.1.2
-  l2: Run PI planning event
+  l2: Run quarterly planning event
   l1id: '03.1'
-  l1: PI Planning
+  l1: Quarterly Planning (SAFe PI cadence)
   desc: 'Facilitate big-room planning: teams plan features/stories into iterations, map dependencies, ROAM risks.'
   delivery: Agile
   tool: Targetprocess
@@ -371,7 +390,7 @@
 - l2id: 03.1.3
   l2: Commit & publish PI objectives
   l1id: '03.1'
-  l1: PI Planning
+  l1: Quarterly Planning (SAFe PI cadence)
   desc: Finalize team/ART PI objectives with business value, confidence vote, and publish the program board.
   delivery: Agile
   tool: Targetprocess
@@ -384,10 +403,13 @@
   fw: 'SAFe: PI Planning'
   src: PI Planning Demo Script
 - l2id: 03.1.4
-  l2: Track PI execution & system demo
+  l2: Baseline commitments & track PI execution
   l1id: '03.1'
-  l1: PI Planning
-  desc: Monitor feature progress, dependencies and risks through the PI; run system demos and inspect & adapt.
+  l1: Quarterly Planning (SAFe PI cadence)
+  desc: Baseline what was committed at PI planning (objectives, features, capacity and funding assumptions, accepted
+    risks, confidence results) as an auditable record, then continuously validate delivery against it - velocity,
+    slippage, blocked dependencies, carryover, flow metrics - distinguishing normal variation from likely missed
+    commitments; run system demos and RTE briefings.
   delivery: Agile
   tool: Targetprocess
   support: Jira/ADO
@@ -395,9 +417,48 @@
   cadence: Iteration cadence
   inputs: Committed plan, delivery data
   outputs: Progress/flow reporting, I&A actions
-  config: PI Dashboard, dependency & risk boards, progress rollup metrics, burndown/CFD reports
+  config: PI Dashboard, dependency & risk boards, progress rollup metrics, burndown/CFD reports; commitment baseline
+    snapshot, planned-vs-actual objective tracking, predictive ART health (flow time/efficiency/load, WIP, dependency
+    aging), RTE/STE daily briefing views
   fw: 'SAFe: PI execution'
-  src: TP reports; PI Planning solution Coordinate & Deliver views
+  src: TP reports; PI Planning solution Coordinate & Deliver views; PI Planning/EVD Agent requirements (IBM, anonymized)
+    §9.1-9.4
+- l2id: 03.1.5
+  l2: Manage PI risks (ROAM) & confidence vote
+  l1id: '03.1'
+  l1: Quarterly Planning (SAFe PI cadence)
+  desc: Capture and classify program risks (Resolved/Owned/Accepted/Mitigated) with owners and mitigation actions,
+    monitor aging and severity, and run the confidence vote - correlating votes with capacity, readiness and dependency
+    data, and recording remediation when confidence is low.
+  delivery: Agile
+  tool: Targetprocess
+  support: ''
+  personas: RTE, teams, Business Owners
+  cadence: Per PI + continuous
+  inputs: Identified risks, plan data
+  outputs: ROAMed risk register, confidence results & remediation actions
+  config: Risk entities with ROAM classification fields, risk boards, owners & due dates, confidence-vote capture,
+    risk aging/escalation automation rules
+  fw: 'SAFe: ROAM, confidence vote'
+  src: PI Planning/EVD Agent requirements (IBM, anonymized) §8.5-8.6
+- l2id: 03.1.6
+  l2: Run system demo & Inspect and Adapt
+  l1id: '03.1'
+  l1: Quarterly Planning (SAFe PI cadence)
+  desc: Prepare and run the system demo (demo candidates showing progress toward objectives, outcome summaries)
+    and the Inspect & Adapt event - aggregating missed objectives, carryover, dependency failures, estimation variance
+    and flow metrics into improvement themes with measurable actions.
+  delivery: Agile
+  tool: Targetprocess
+  support: Jira/ADO
+  personas: RTE, teams, stakeholders
+  cadence: Per PI
+  inputs: Completed features, PI metrics
+  outputs: Demo, I&A findings, improvement backlog
+  config: Demo readiness views, PI metrics dashboards (predictability, flow, carryover), retrospective/improvement
+    work items, pattern analysis (recurring dependency failures, chronic overcommitment)
+  fw: 'SAFe: System Demo, Inspect & Adapt'
+  src: PI Planning/EVD Agent requirements (IBM, anonymized) §10
 - l2id: 03.2.1
   l2: Plan & execute iterations
   l1id: '03.2'
@@ -1125,7 +1186,8 @@
   l1id: '05.7'
   l1: Project & Investment Financial Planning
   desc: Plan labor effort (hours/days/FTE) by role or named resource with rate cards; configure internal cross-charge
-    to avoid double counting.
+    to avoid double counting. Pre-PI financial validation checks planned work against approved funding, guardrails
+    and capitalization policy, flagging unfunded commitments and funding shortfalls.
   delivery: Any
   tool: Planning
   support: Targetprocess
@@ -1136,7 +1198,7 @@
   config: Labor resource planning (rates x effort), flexible rate cards, configurable cross-charge, demand vs capacity
     balancing
   fw: 'ITFM | SPM: WFM'
-  src: ApptioOne CFD IIP
+  src: ApptioOne CFD IIP; PI Planning/EVD Agent requirements (IBM, anonymized) §7.5
 - l2id: 05.7.3
   l2: Operate the investment loop with ATP
   l1id: '05.7'
@@ -2270,3 +2332,60 @@
     roadmap planning
   fw: All three frameworks
   src: TBM/FinOps/SPM assessment instruments (Metlife examples)
+- l2id: 10.7.1
+  l2: Deploy the planning copilot & delivery intelligence
+  l1id: '10.7'
+  l1: AI-Assisted Planning & Delivery Intelligence
+  desc: 'Stand up AI-assisted capabilities over the SPM stack: PI readiness scoring with resolution recommendations,
+    dependency discovery, capacity validation, objective drafting & quality analysis, live planning copilot with
+    real-time impact analysis, commitment tracking and predictive health briefings.'
+  delivery: Agile
+  tool: Targetprocess
+  support: Jira/ADO, Costing, watsonx
+  personas: RTE/STE, Portfolio Mgmt, Transformation office
+  cadence: Implementation + per PI
+  inputs: Planning & delivery data, historical performance
+  outputs: Readiness scores, dependency heatmaps, briefings, scenario analyses
+  config: 'MVP capability set: readiness assessment & scoring, resolution recommendations, dependency discovery/visualization,
+    capacity validation, objective drafting/quality, live copilot, real-time impact analysis, risk/ROAM facilitation,
+    commitment baseline & tracking, executive/RTE briefings; Targetprocess + Jira/ADO integration'
+  fw: SAFe augmentation | SPM
+  src: PI Planning/EVD Agent requirements (IBM, anonymized) §5, §18 (MVP)
+- l2id: 10.7.2
+  l2: Govern agent autonomy & trust
+  l1id: '10.7'
+  l1: AI-Assisted Planning & Delivery Intelligence
+  desc: 'Configure human-in-the-loop governance for AI planning capabilities: the agent analyzes, recommends and
+    drafts but never autonomously approves material planning, funding, scope or commitment changes; recommendations
+    must be explainable (what, why, data evaluated, confidence) and disclose missing or stale data.'
+  delivery: Any
+  tool: All four
+  support: ''
+  personas: Governance, Transformation office, Security
+  cadence: Implementation + reviews
+  inputs: Governance policies
+  outputs: Configured autonomy rules, audit trail
+  config: Configurable autonomy/approval rules, RBAC & data entitlements, separation of duties, action history &
+    recommendation traceability, data-source attribution, model/prompt governance, sensitive-data protection
+  fw: AI governance
+  src: PI Planning/EVD Agent requirements (IBM, anonymized) §3, §15
+- l2id: 10.7.3
+  l2: Ground agents in enterprise context & ecosystem
+  l1id: '10.7'
+  l1: AI-Assisted Planning & Delivery Intelligence
+  desc: 'Maintain the governed local knowledge the agents reason over (planning playbooks, definitions of ready/done,
+    objective templates, taxonomies, funding & capitalization policies) and the integration fabric: core systems,
+    source-of-truth and sync rules, and the broader multi-agent ecosystem (Portfolio, Product, Workforce, Financial
+    agents).'
+  delivery: Any
+  tool: All four
+  support: Jira/ADO, GitHub, HR, BI, Miro
+  personas: Platform admins, TBM Office, Architecture
+  cadence: Continuous
+  inputs: Enterprise context, integration inventory
+  outputs: Version-controlled agent knowledge & integrations
+  config: Version-controlled context store (journeys, architectures, policies, conventions), MCP-based extensibility
+    (approved tools, customer agents, role-based tool access, auditable actions), source-of-truth & two-way sync
+    governance, stale/conflicting-data disclosure
+  fw: 'AI architecture | TBM: Data'
+  src: PI Planning/EVD Agent requirements (IBM, anonymized) §13-14

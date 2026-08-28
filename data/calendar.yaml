@@ -55,7 +55,7 @@ streams:
     fm: [3, 6, 9, 12]
     desc: Score key results, run quarterly reviews, reset objectives.
     refs: ["01.2.3"]
-  - name: PI planning events
+  - name: Quarterly planning events (PI cadence)
     cadence: Quarterly (8-12 wks)
     fm: [3, 6, 9, 12]
     desc: Readiness assessment and preparation, the big-room event, committed PI objectives.

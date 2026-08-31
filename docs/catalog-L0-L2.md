@@ -20,11 +20,11 @@ BPMN: [`diagrams/bpmn/generated/01.1.bpmn`](../diagrams/bpmn/generated/01.1.bpmn
 - Config: Objective entity (OKR solution), Group/portfolio hierarchy, roadmap views
 - Framework: SPM: Strategic Planning | SAFe: Strategic Themes | Evidence: SPM CFD; WFM deck; IBM Docs OKR solution
 
-**01.1.2 Cascade strategy to portfolios & value streams** — Link objectives to portfolios, value streams and ARTs so investment and work align top-down (line of sight).
+**01.1.2 Cascade strategy to portfolios & value streams** — Link objectives to portfolios, value streams and ARTs so investment and work align top-down (line of sight). Validate the full traceability chain (Strategic Objective > Portfolio Priority > Product/Value Stream > PI Objective > Epic > Feature > Story > Delivery > Outcome) and flag breaks: objectives with no execution, work with no strategic linkage, delivered work with no outcome.
 - Delivery model: Any | Tool: Targetprocess | Personas: Portfolio Mgmt, Value Stream owners | Cadence: Annual + on change
 - Inputs: Strategic themes → Outputs: Objective-portfolio linkage, funded value streams
 - Config: Portfolio/ART (Group) structure, relations objectives->portfolio epics, OKR cascade (Ultimate>Strategic>Tactical)
-- Framework: SPM: Strategic Planning | SAFe: LPM | Evidence: TBMC25 Client Zero OKR cascade; EAP CFD 5-step strategic planning
+- Framework: SPM: Strategic Planning | SAFe: LPM | Evidence: TBMC25 Client Zero OKR cascade; EAP CFD 5-step strategic planning; PI Planning/EVD Agent requirements (IBM, anonymized) §6.1
 
 **01.1.3 Monitor strategy execution & re-plan dynamically** — Track progress of strategy in real time via dashboards and re-plan objectives and allocations as conditions change.
 - Delivery model: Any | Tool: Targetprocess (+ Costing) | Personas: C-Suite, Portfolio Mgmt | Cadence: Quarterly + continuous
@@ -40,8 +40,8 @@ BPMN: [`diagrams/bpmn/generated/01.2.bpmn`](../diagrams/bpmn/generated/01.2.bpmn
 **01.2.1 Set & cascade OKRs** — Define objectives and measurable key results at enterprise/portfolio/ART/team levels (3-level or SAFe model) per period.
 - Delivery model: Any | Tool: Targetprocess | Personas: All levels; facilitated by Strategy/PMO | Cadence: Quarterly/annual
 - Inputs: Strategic themes → Outputs: OKR tree with owners & periods
-- Config: OKR solution: Objective & Key Result entities, period assignment, weighted scoring
-- Framework: SPM: Strategic Planning | SAFe: OKRs | Evidence: IBM Docs/TP guide OKR solution; Client Zero cascade
+- Config: OKR solution: Objective & Key Result entities, period assignment, weighted scoring; objective-writing standards (outcome- not task-phrased, measurable, sufficient supporting features)
+- Framework: SPM: Strategic Planning | SAFe: OKRs | Evidence: IBM Docs/TP guide OKR solution; Client Zero cascade; PI Planning/EVD Agent requirements (IBM, anonymized) §7.6
 
 **01.2.2 Link work & investments to OKRs** — Relate portfolio epics, features and budgets to objectives so funding and delivery inherit strategic alignment.
 - Delivery model: Any | Tool: Targetprocess | Personas: Portfolio Mgmt, Product | Cadence: Continuous
@@ -73,11 +73,11 @@ BPMN: [`diagrams/bpmn/generated/02.1.bpmn`](../diagrams/bpmn/generated/02.1.bpmn
 - Config: Service Desk portal, Request entity + request types, email integration, voting; ServiceNow intake integration
 - Framework: SPM: Demand Intake | FinOps n/a | Evidence: TP guide Service Desk; WFM deck (ServiceNow ideation front-end)
 
-**02.1.2 Triage, categorize & qualify demand** — Route, categorize (work item taxonomy, BAU vs change, CapEx/OpEx) and qualify requests against strategy before they enter the portfolio funnel.
+**02.1.2 Triage, categorize & qualify demand** — Route, categorize (work item taxonomy, BAU vs change, CapEx/OpEx) and qualify requests against strategy before they enter the portfolio funnel. Includes detecting materially similar or duplicate demand (overlapping investments, teams pursuing similar outcomes) beyond title matching.
 - Delivery model: Any | Tool: Targetprocess | Personas: PMO, Portfolio Mgmt | Cadence: Weekly cadence
 - Inputs: Demand records → Outputs: Qualified demand in funnel
-- Config: Request workflow states, triage boards, automation rules (routing/auto-reply/linked entities), work-intake taxonomy (categories, CapEx/OpEx, non-labor categories)
-- Framework: SPM: Demand Intake | Evidence: SPM journey map (work-intake model taxonomy); TP guide
+- Config: Request workflow states, triage boards, automation rules (routing/auto-reply/linked entities), work-intake taxonomy (categories, CapEx/OpEx, non-labor categories); duplicate/overlap detection across descriptions, outcomes, journeys, capabilities
+- Framework: SPM: Demand Intake | Evidence: SPM journey map (work-intake model taxonomy); TP guide; PI Planning/EVD Agent requirements (IBM, anonymized) §6.2, §8.3
 
 **02.1.3 Progress demand through Portfolio Kanban** — Move epics Funnel-Reviewing-Analyzing-Backlog-Implementing-Done with WIP limits and visible decision states.
 - Delivery model: Agile | Tool: Targetprocess | Personas: Portfolio Mgmt, LPM function | Cadence: Continuous
@@ -90,11 +90,11 @@ BPMN: [`diagrams/bpmn/generated/02.1.bpmn`](../diagrams/bpmn/generated/02.1.bpmn
 
 BPMN: [`diagrams/bpmn/generated/02.2.bpmn`](../diagrams/bpmn/generated/02.2.bpmn)
 
-**02.2.1 Build lean business case / epic hypothesis** — Estimate outcomes, effort and MVP for candidate investments; capture hypothesis and benefit model.
+**02.2.1 Build lean business case / epic hypothesis** — Estimate outcomes, effort and MVP for candidate investments; capture hypothesis and benefit model. Decomposition runs opportunities > portfolio epics > features > stories with sequenced delivery increments.
 - Delivery model: Any | Tool: Targetprocess | Personas: Epic owners, Portfolio Mgmt, Finance | Cadence: Per candidate epic
 - Inputs: Qualified epics → Outputs: Lean business cases with estimates
 - Config: Budgeting solution templates (epic hypothesis, lean business case), rich-text/custom fields, Portfolio Epic Score report
-- Framework: SAFe: Epic/LPM | SPM: Demand Intake | Evidence: TP Budgeting solution; LFM demo (epic scoring)
+- Framework: SAFe: Epic/LPM | SPM: Demand Intake | Evidence: TP Budgeting solution; LFM demo (epic scoring); PI Planning/EVD Agent requirements (IBM, anonymized) §6.3
 
 **02.2.2 Prioritize by value (WSJF / scoring)** — Rank the portfolio backlog by WSJF or configurable value scoring against strategy. Hybrid alternative: manual or objective-scoring prioritization for non-agile work.
 - Delivery model: Agile | Tool: Targetprocess | Personas: Portfolio Mgmt, Business owners | Cadence: Per planning cadence
@@ -119,17 +119,17 @@ BPMN: [`diagrams/bpmn/generated/02.3.bpmn`](../diagrams/bpmn/generated/02.3.bpmn
 - Config: Timeline/Roadmap views on Portfolio Epics/Epics/Features vs Releases/PIs, multi-level roadmaps
 - Framework: SPM: Portfolio Mgmt | Evidence: TP view modes; Solution Overview deck
 
-**02.3.2 Model scenarios & trade-offs** — Evaluate alternative portfolio mixes (scope, timing, capacity, budget) and promote the chosen scenario to the plan of record.
+**02.3.2 Model scenarios & trade-offs** — Evaluate alternative portfolio mixes (scope, timing, capacity, budget) and promote the chosen scenario to the plan of record. Scenario questions include capacity loss, feature slip, objective re-prioritization, approval delays, platform constraints and the financial impact of moving scope.
 - Delivery model: Any | Tool: Targetprocess (+ Planning) | Personas: Portfolio Mgmt, Finance | Cadence: Planning cycles + ad hoc
 - Inputs: Backlog, capacity, targets → Outputs: Selected scenario/baseline
 - Config: Scenario Planning solution (plan variants, promote scenario to baseline), demand vs capacity data, budget dashboards
-- Framework: SPM: Portfolio Mgmt | SAFe: Participatory Budgeting | Evidence: Customer PowerUp (scenario planning, baselines); TP solutions
+- Framework: SPM: Portfolio Mgmt | SAFe: Participatory Budgeting | Evidence: Customer PowerUp (scenario planning, baselines); TP solutions; PI Planning/EVD Agent requirements (IBM, anonymized) §8.4
 
-**02.3.3 Manage cross-initiative dependencies & risks** — Identify, visualize and resolve dependencies and portfolio-level risks across initiatives and trains.
+**02.3.3 Manage cross-initiative dependencies & risks** — Identify, visualize and resolve dependencies and portfolio-level risks across initiatives and trains - including cross-ART/cross-portfolio dependencies, shared-service contention, platform bottlenecks, missing predecessors, insufficient lead time and aging dependencies.
 - Delivery model: Any | Tool: Targetprocess | Personas: Portfolio Mgmt, RTEs | Cadence: Continuous
 - Inputs: Roadmaps, PI plans → Outputs: Dependency/risk register & resolutions
-- Config: Dependency/Impediment entities, relations, ART Planning Board, Risk Management solution
-- Framework: SAFe: Program risks/ROAM | SPM: Portfolio Mgmt | Evidence: TP entities; PI Planning solution
+- Config: Dependency/Impediment entities, relations, ART Planning Board, Risk Management solution; dependency graph & prioritized heatmap, dependency ownership & aging tracking
+- Framework: SAFe: Program risks/ROAM | SPM: Portfolio Mgmt | Evidence: TP entities; PI Planning solution; PI Planning/EVD Agent requirements (IBM, anonymized) §7.3, §11
 
 **02.3.4 Maintain one governed hybrid portfolio view** — View and manage all work across hybrid programs - agile (epics/features from teams' tools) and waterfall projects - in a single governed environment with common categorization (BAU vs Change, CapEx/OpEx).
 - Delivery model: Hybrid | Tool: Targetprocess (+ Jira/ADO) | Personas: Portfolio Mgmt, PMO | Cadence: Continuous
@@ -185,17 +185,17 @@ BPMN: [`diagrams/bpmn/generated/02.5.bpmn`](../diagrams/bpmn/generated/02.5.bpmn
 Diagrams: [Mermaid](../diagrams/mermaid/area-03.md)
 
 
-### 03.1 PI Planning
+### 03.1 Quarterly Planning (SAFe PI cadence)
 
 BPMN: [`diagrams/bpmn/generated/03.1.bpmn`](../diagrams/bpmn/generated/03.1.bpmn)
 
-**03.1.1 Assess & prepare PI readiness** — Run readiness checks (PI/ART entities, objectives, features, team objectives) and execute the 4-phase preparation plan.
+**03.1.1 Assess & prepare quarterly planning readiness** — Run readiness checks (PI/ART entities, objectives, features, team objectives, estimates, owners, dependencies, definition-of-ready) with a scored readiness verdict at team/ART/solution-train/portfolio level, resolution recommendations for each gap, and the 4-phase preparation plan.
 - Delivery model: Agile | Tool: Targetprocess | Personas: RTE/PI Coordinator, Product Owners, System Architect, Scrum Masters | Cadence: Per PI (8-12 wks)
 - Inputs: Portfolio backlog, ART/team structure → Outputs: READY verdict, prepared backlog & objectives
-- Config: PI & ART entities with dates, ART/Program PI Objectives, Team PI Objectives, features assigned to PI release, capacity fields (velocity = people x 8 rule; 80/20 allocation), PI Planning solution Pre-Plan views
-- Framework: SAFe: PI Planning | Evidence: PI Planning Demo Script (readiness + 20-day plan); PI Planning solution 1.0.0
+- Config: PI & ART entities with dates, ART/Program PI Objectives, Team PI Objectives, features assigned to PI release, capacity fields (velocity = people x 8 rule; 80/20 allocation), PI Planning solution Pre-Plan views; readiness scoring & gap-resolution workflow (assign owner, add estimate, split feature, escalate decision), definition-of-ready rules
+- Framework: SAFe: PI Planning | Evidence: PI Planning Demo Script (readiness + 20-day plan); PI Planning solution 1.0.0; PI Planning/EVD Agent requirements (IBM, anonymized) §7.1-7.2
 
-**03.1.2 Run PI planning event** — Facilitate big-room planning: teams plan features/stories into iterations, map dependencies, ROAM risks.
+**03.1.2 Run quarterly planning event** — Facilitate big-room planning: teams plan features/stories into iterations, map dependencies, ROAM risks.
 - Delivery model: Agile | Tool: Targetprocess | Personas: ART (all roles), Business Owners | Cadence: Per PI
 - Inputs: Prepared backlog, capacity → Outputs: Draft team plans, dependency board
 - Config: PI Planning Board, ART Planning Board (dependencies), Team Iteration assignment, WSJF-ordered features, risk entities
@@ -207,11 +207,23 @@ BPMN: [`diagrams/bpmn/generated/03.1.bpmn`](../diagrams/bpmn/generated/03.1.bpmn
 - Config: Team PI Objectives (Committed/Stretch, confidence %, BV points), PI Dashboard, Program Board
 - Framework: SAFe: PI Planning | Evidence: PI Planning Demo Script
 
-**03.1.4 Track PI execution & system demo** — Monitor feature progress, dependencies and risks through the PI; run system demos and inspect & adapt.
+**03.1.4 Baseline commitments & track PI execution** — Baseline what was committed at PI planning (objectives, features, capacity and funding assumptions, accepted risks, confidence results) as an auditable record, then continuously validate delivery against it - velocity, slippage, blocked dependencies, carryover, flow metrics - distinguishing normal variation from likely missed commitments; run system demos and RTE briefings.
 - Delivery model: Agile | Tool: Targetprocess (+ Jira/ADO) | Personas: RTE, teams, stakeholders | Cadence: Iteration cadence
 - Inputs: Committed plan, delivery data → Outputs: Progress/flow reporting, I&A actions
-- Config: PI Dashboard, dependency & risk boards, progress rollup metrics, burndown/CFD reports
-- Framework: SAFe: PI execution | Evidence: TP reports; PI Planning solution Coordinate & Deliver views
+- Config: PI Dashboard, dependency & risk boards, progress rollup metrics, burndown/CFD reports; commitment baseline snapshot, planned-vs-actual objective tracking, predictive ART health (flow time/efficiency/load, WIP, dependency aging), RTE/STE daily briefing views
+- Framework: SAFe: PI execution | Evidence: TP reports; PI Planning solution Coordinate & Deliver views; PI Planning/EVD Agent requirements (IBM, anonymized) §9.1-9.4
+
+**03.1.5 Manage PI risks (ROAM) & confidence vote** — Capture and classify program risks (Resolved/Owned/Accepted/Mitigated) with owners and mitigation actions, monitor aging and severity, and run the confidence vote - correlating votes with capacity, readiness and dependency data, and recording remediation when confidence is low.
+- Delivery model: Agile | Tool: Targetprocess | Personas: RTE, teams, Business Owners | Cadence: Per PI + continuous
+- Inputs: Identified risks, plan data → Outputs: ROAMed risk register, confidence results & remediation actions
+- Config: Risk entities with ROAM classification fields, risk boards, owners & due dates, confidence-vote capture, risk aging/escalation automation rules
+- Framework: SAFe: ROAM, confidence vote | Evidence: PI Planning/EVD Agent requirements (IBM, anonymized) §8.5-8.6
+
+**03.1.6 Run system demo & Inspect and Adapt** — Prepare and run the system demo (demo candidates showing progress toward objectives, outcome summaries) and the Inspect & Adapt event - aggregating missed objectives, carryover, dependency failures, estimation variance and flow metrics into improvement themes with measurable actions.
+- Delivery model: Agile | Tool: Targetprocess (+ Jira/ADO) | Personas: RTE, teams, stakeholders | Cadence: Per PI
+- Inputs: Completed features, PI metrics → Outputs: Demo, I&A findings, improvement backlog
+- Config: Demo readiness views, PI metrics dashboards (predictability, flow, carryover), retrospective/improvement work items, pattern analysis (recurring dependency failures, chronic overcommitment)
+- Framework: SAFe: System Demo, Inspect & Adapt | Evidence: PI Planning/EVD Agent requirements (IBM, anonymized) §10
 
 
 ### 03.2 Team Delivery
@@ -578,11 +590,11 @@ BPMN: [`diagrams/bpmn/generated/05.7.bpmn`](../diagrams/bpmn/generated/05.7.bpmn
 - Config: Integrated Investment Planning: investment tags on budget lines, Project Cost Type (build/run), Project Total & Charges KPIs, project permissions
 - Framework: TBM: run/grow/transform | SPM: Financial Mgmt | Evidence: ApptioOne CFD IIP
 
-**05.7.2 Plan investment labor & cross-charge** — Plan labor effort (hours/days/FTE) by role or named resource with rate cards; configure internal cross-charge to avoid double counting.
+**05.7.2 Plan investment labor & cross-charge** — Plan labor effort (hours/days/FTE) by role or named resource with rate cards; configure internal cross-charge to avoid double counting. Pre-PI financial validation checks planned work against approved funding, guardrails and capitalization policy, flagging unfunded commitments and funding shortfalls.
 - Delivery model: Any | Tool: Planning (+ Targetprocess) | Personas: PMO, Resource Mgmt, IT Finance | Cadence: Per plan cycle
 - Inputs: Labor demand from portfolio → Outputs: Investment labor plan
 - Config: Labor resource planning (rates x effort), flexible rate cards, configurable cross-charge, demand vs capacity balancing
-- Framework: ITFM | SPM: WFM | Evidence: ApptioOne CFD IIP
+- Framework: ITFM | SPM: WFM | Evidence: ApptioOne CFD IIP; PI Planning/EVD Agent requirements (IBM, anonymized) §7.5
 
 **05.7.3 Operate the investment loop with ATP** — Exchange approved budgets and budget-change requests with Targetprocess; receive planned allocations and actual effort back.
 - Delivery model: Any | Tool: Planning (+ Targetprocess, Costing) | Personas: IT Finance, Portfolio Mgmt | Cadence: Continuous
@@ -1194,3 +1206,26 @@ BPMN: [`diagrams/bpmn/generated/10.6.bpmn`](../diagrams/bpmn/generated/10.6.bpmn
 - Inputs: Assessment instruments → Outputs: Scores, gaps, roadmap
 - Config: TBM 6-dimension assessment (0-5), FinOps 4-domain Crawl/Walk/Run, SPM 6-domain x lens assessment (1-5), roadmap planning
 - Framework: All three frameworks | Evidence: TBM/FinOps/SPM assessment instruments (Metlife examples)
+
+
+### 10.7 AI-Assisted Planning & Delivery Intelligence
+
+BPMN: [`diagrams/bpmn/generated/10.7.bpmn`](../diagrams/bpmn/generated/10.7.bpmn)
+
+**10.7.1 Deploy the planning copilot & delivery intelligence** — Stand up AI-assisted capabilities over the SPM stack: PI readiness scoring with resolution recommendations, dependency discovery, capacity validation, objective drafting & quality analysis, live planning copilot with real-time impact analysis, commitment tracking and predictive health briefings.
+- Delivery model: Agile | Tool: Targetprocess (+ Jira/ADO, Costing, watsonx) | Personas: RTE/STE, Portfolio Mgmt, Transformation office | Cadence: Implementation + per PI
+- Inputs: Planning & delivery data, historical performance → Outputs: Readiness scores, dependency heatmaps, briefings, scenario analyses
+- Config: MVP capability set: readiness assessment & scoring, resolution recommendations, dependency discovery/visualization, capacity validation, objective drafting/quality, live copilot, real-time impact analysis, risk/ROAM facilitation, commitment baseline & tracking, executive/RTE briefings; Targetprocess + Jira/ADO integration
+- Framework: SAFe augmentation | SPM | Evidence: PI Planning/EVD Agent requirements (IBM, anonymized) §5, §18 (MVP)
+
+**10.7.2 Govern agent autonomy & trust** — Configure human-in-the-loop governance for AI planning capabilities: the agent analyzes, recommends and drafts but never autonomously approves material planning, funding, scope or commitment changes; recommendations must be explainable (what, why, data evaluated, confidence) and disclose missing or stale data.
+- Delivery model: Any | Tool: All four | Personas: Governance, Transformation office, Security | Cadence: Implementation + reviews
+- Inputs: Governance policies → Outputs: Configured autonomy rules, audit trail
+- Config: Configurable autonomy/approval rules, RBAC & data entitlements, separation of duties, action history & recommendation traceability, data-source attribution, model/prompt governance, sensitive-data protection
+- Framework: AI governance | Evidence: PI Planning/EVD Agent requirements (IBM, anonymized) §3, §15
+
+**10.7.3 Ground agents in enterprise context & ecosystem** — Maintain the governed local knowledge the agents reason over (planning playbooks, definitions of ready/done, objective templates, taxonomies, funding & capitalization policies) and the integration fabric: core systems, source-of-truth and sync rules, and the broader multi-agent ecosystem (Portfolio, Product, Workforce, Financial agents).
+- Delivery model: Any | Tool: All four (+ Jira/ADO, GitHub, HR, BI, Miro) | Personas: Platform admins, TBM Office, Architecture | Cadence: Continuous
+- Inputs: Enterprise context, integration inventory → Outputs: Version-controlled agent knowledge & integrations
+- Config: Version-controlled context store (journeys, architectures, policies, conventions), MCP-based extensibility (approved tools, customer agents, role-based tool access, auditable actions), source-of-truth & two-way sync governance, stale/conflicting-data disclosure
+- Framework: AI architecture | TBM: Data | Evidence: PI Planning/EVD Agent requirements (IBM, anonymized) §13-14

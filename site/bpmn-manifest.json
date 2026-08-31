@@ -214,5 +214,9 @@
  {
   "path": "../diagrams/bpmn/generated/10.6.bpmn",
   "label": "generated / 10.6.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/10.7.bpmn",
+  "label": "generated / 10.7.bpmn"
  }
 ]

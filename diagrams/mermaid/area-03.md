@@ -7,7 +7,7 @@ Generated — edit `data/catalog.yaml`.
 ```mermaid
 flowchart LR
   S((start))
-  N03_1[["03.1 PI Planning"]]
+  N03_1[["03.1 Quarterly Planning (SAFe PI cadence)"]]
   S --> N03_1
   N03_2[["03.2 Team Delivery"]]
   N03_1 --> N03_2
@@ -18,20 +18,24 @@ flowchart LR
   N03_4 --> E(((end)))
 ```
 
-## 03.1 PI Planning (L2)
+## 03.1 Quarterly Planning (SAFe PI cadence) (L2)
 
 ```mermaid
 flowchart LR
   S((start))
-  N03_1_1["03.1.1 Assess & prepare PI readiness<br/><i>RTE/PI Coordinator · Agile</i>"]
+  N03_1_1["03.1.1 Assess & prepare quarterly planning readiness<br/><i>RTE/PI Coordinator · Agile</i>"]
   S --> N03_1_1
-  N03_1_2["03.1.2 Run PI planning event<br/><i>ART (all roles) · Agile</i>"]
+  N03_1_2["03.1.2 Run quarterly planning event<br/><i>ART (all roles) · Agile</i>"]
   N03_1_1 --> N03_1_2
   N03_1_3["03.1.3 Commit & publish PI objectives<br/><i>ART · Agile</i>"]
   N03_1_2 --> N03_1_3
-  N03_1_4["03.1.4 Track PI execution & system demo<br/><i>RTE · Agile</i>"]
+  N03_1_4["03.1.4 Baseline commitments & track PI execution<br/><i>RTE · Agile</i>"]
   N03_1_3 --> N03_1_4
-  N03_1_4 --> E(((end)))
+  N03_1_5["03.1.5 Manage PI risks (ROAM) & confidence vote<br/><i>RTE · Agile</i>"]
+  N03_1_4 --> N03_1_5
+  N03_1_6["03.1.6 Run system demo & Inspect and Adapt<br/><i>RTE · Agile</i>"]
+  N03_1_5 --> N03_1_6
+  N03_1_6 --> E(((end)))
 ```
 
 ## 03.2 Team Delivery (L2)

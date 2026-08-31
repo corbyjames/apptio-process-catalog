@@ -19,7 +19,9 @@ flowchart LR
   N10_4 --> N10_5
   N10_6[["10.6 Practice Operations & Maturity"]]
   N10_5 --> N10_6
-  N10_6 --> E(((end)))
+  N10_7[["10.7 AI-Assisted Planning & Delivery Intelligence"]]
+  N10_6 --> N10_7
+  N10_7 --> E(((end)))
 ```
 
 ## 10.1 Targetprocess Configuration (L2)
@@ -100,4 +102,18 @@ flowchart LR
   N10_6_4["10.6.4 Assess maturity & set roadmap<br/><i>TBM Office · Any</i>"]
   N10_6_3 --> N10_6_4
   N10_6_4 --> E(((end)))
+```
+
+## 10.7 AI-Assisted Planning & Delivery Intelligence (L2)
+
+```mermaid
+flowchart LR
+  S((start))
+  N10_7_1["10.7.1 Deploy the planning copilot & delivery intelligence<br/><i>RTE/STE · Agile</i>"]
+  S --> N10_7_1
+  N10_7_2["10.7.2 Govern agent autonomy & trust<br/><i>Governance · Any</i>"]
+  N10_7_1 --> N10_7_2
+  N10_7_3["10.7.3 Ground agents in enterprise context & ecosystem<br/><i>Platform admins · Any</i>"]
+  N10_7_2 --> N10_7_3
+  N10_7_3 --> E(((end)))
 ```

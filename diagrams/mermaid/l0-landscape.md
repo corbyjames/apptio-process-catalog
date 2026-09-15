@@ -1,6 +1,6 @@
 # L0 Process Landscape
 
-Generated — edit `data/l0.yaml` / `data/l0-links.yaml`.
+Generated — edit `data/catalog.json` / `data/l0-links.yaml`.
 
 ```mermaid
 flowchart LR
@@ -18,8 +18,7 @@ flowchart LR
   subgraph FINOPS["Cloudability — FinOps"]
     A07["07 Cloud Financial Management (FinOps)"]
   end
-  subgraph ENABLE["Integration & Enablement"]
-    A09["09 Cross-Tool End-to-End Flows"]
+  subgraph ENABLE["Platform, data & practices"]
     A10["10 Platform Configuration, Data & Administration"]
   end
   A05 -- "targets down (UC3)" --> A02

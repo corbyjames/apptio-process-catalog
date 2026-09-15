@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_05_5" targetNamespace="http://apptio-process-catalog">
-<bpmn:collaboration id="Collab_1"><bpmn:participant id="Participant_1" name="05.5 Vendor &amp; Contract Planning" processRef="Process_05_5"/></bpmn:collaboration>
-<bpmn:process id="Process_05_5" name="Vendor &amp; Contract Planning" isExecutable="false"><bpmn:laneSet id="LaneSet_1"><bpmn:lane id="Lane_1" name="IT Finance"><bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef><bpmn:flowNodeRef>Task_05_5_1</bpmn:flowNodeRef><bpmn:flowNodeRef>Task_05_5_3</bpmn:flowNodeRef><bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef></bpmn:lane><bpmn:lane id="Lane_2" name="Vendor Mgmt"><bpmn:flowNodeRef>Task_05_5_2</bpmn:flowNodeRef></bpmn:lane></bpmn:laneSet><bpmn:startEvent id="StartEvent_1" name="Start"><bpmn:outgoing>Flow_0</bpmn:outgoing></bpmn:startEvent><bpmn:task id="Task_05_5_1" name="05.5.1 Maintain contract line items"><bpmn:incoming>Flow_0</bpmn:incoming><bpmn:outgoing>Flow_1</bpmn:outgoing></bpmn:task><bpmn:task id="Task_05_5_2" name="05.5.2 Plan renewals &amp; escalations"><bpmn:incoming>Flow_1</bpmn:incoming><bpmn:outgoing>Flow_2</bpmn:outgoing></bpmn:task><bpmn:task id="Task_05_5_3" name="05.5.3 Delegate contract costs"><bpmn:incoming>Flow_2</bpmn:incoming><bpmn:outgoing>Flow_3</bpmn:outgoing></bpmn:task><bpmn:endEvent id="EndEvent_1" name="End"><bpmn:incoming>Flow_3</bpmn:incoming></bpmn:endEvent><bpmn:sequenceFlow id="Flow_0" sourceRef="StartEvent_1" targetRef="Task_05_5_1"/><bpmn:sequenceFlow id="Flow_1" sourceRef="Task_05_5_1" targetRef="Task_05_5_2"/><bpmn:sequenceFlow id="Flow_2" sourceRef="Task_05_5_2" targetRef="Task_05_5_3"/><bpmn:sequenceFlow id="Flow_3" sourceRef="Task_05_5_3" targetRef="EndEvent_1"/></bpmn:process>
-<bpmndi:BPMNDiagram id="Diagram_1"><bpmndi:BPMNPlane id="Plane_1" bpmnElement="Collab_1"><bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true"><dc:Bounds x="0" y="0" width="970" height="248"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Lane_1_di" bpmnElement="Lane_1" isHorizontal="true"><dc:Bounds x="30" y="14" width="940" height="110"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Lane_2_di" bpmnElement="Lane_2" isHorizontal="true"><dc:Bounds x="30" y="124" width="940" height="110"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1"><dc:Bounds x="155" y="52.0" width="26" height="26"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Task_05_5_1_di" bpmnElement="Task_05_5_1"><dc:Bounds x="194" y="36.0" width="190" height="58"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Task_05_5_2_di" bpmnElement="Task_05_5_2"><dc:Bounds x="424" y="146.0" width="190" height="58"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="Task_05_5_3_di" bpmnElement="Task_05_5_3"><dc:Bounds x="654" y="36.0" width="190" height="58"/></bpmndi:BPMNShape><bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1"><dc:Bounds x="861" y="52.0" width="26" height="26"/></bpmndi:BPMNShape><bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="181" y="65.0"/><di:waypoint x="187.5" y="65.0"/><di:waypoint x="187.5" y="65.0"/><di:waypoint x="194" y="65.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="384" y="65.0"/><di:waypoint x="404.0" y="65.0"/><di:waypoint x="404.0" y="175.0"/><di:waypoint x="424" y="175.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="614" y="175.0"/><di:waypoint x="634.0" y="175.0"/><di:waypoint x="634.0" y="65.0"/><di:waypoint x="654" y="65.0"/></bpmndi:BPMNEdge><bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="844" y="65.0"/><di:waypoint x="852.5" y="65.0"/><di:waypoint x="852.5" y="65.0"/><di:waypoint x="861" y="65.0"/></bpmndi:BPMNEdge></bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G05_5" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_G05_5">
+    <bpmn:participant id="Participant_G05_5" name="05.5 Plan vendors &amp; contracts — Plan vendors &amp; contracts" processRef="Process_G05_5" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_G05_5" name="Plan vendors &amp; contracts" isExecutable="false">
+    <bpmn:documentation>Process group 05.5 in L0-05 IT Financial Planning &amp; Budgeting: 3 L2 processes laid out in the order of the catalog, in the BPMN lane of the persona that performs each one.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_G05_5">
+      <bpmn:lane id="Lane_G05_5_0" name="IT Finance">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_5_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_5_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_G05_5_1" name="Budget Owners">
+        <bpmn:flowNodeRef>n_05_5_2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="n_05_5_1" name="Maintain contract line items">
+      <bpmn:documentation>Catalog: 05.5.1. Outcome: contract plan lines</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="n_05_5_2" name="Plan renewals &amp; escalations">
+      <bpmn:documentation>Catalog: 05.5.2. Outcome: renewal-aware forecast</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="n_05_5_3" name="Delegate contract costs">
+      <bpmn:documentation>Catalog: 05.5.3. Outcome: delegated cost ownership</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_05_5_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_05_5_1" targetRef="n_05_5_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_05_5_2" targetRef="n_05_5_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_05_5_3" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_G05_5">
+    <bpmndi:BPMNPlane id="BPMNPlane_G05_5" bpmnElement="Collaboration_G05_5">
+      <bpmndi:BPMNShape id="Participant_G05_5_di" bpmnElement="Participant_G05_5" isHorizontal="true"><dc:Bounds x="0" y="0" width="1218" height="244" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G05_5_0_di" bpmnElement="Lane_G05_5_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G05_5_1_di" bpmnElement="Lane_G05_5_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_5_1_di" bpmnElement="n_05_5_1"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_5_2_di" bpmnElement="n_05_5_2"><dc:Bounds x="594" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_5_3_di" bpmnElement="n_05_5_3"><dc:Bounds x="802" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1073" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="571" y="61" /><di:waypoint x="571" y="183" /><di:waypoint x="594" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="183" /><di:waypoint x="779" y="183" /><di:waypoint x="779" y="61" /><di:waypoint x="802" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="61" /><di:waypoint x="1073" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
 </bpmn:definitions>

@@ -4,6 +4,70 @@
   "label": "custom / apptio-e2e-flow.bpmn"
  },
  {
+  "path": "../diagrams/bpmn/generated/flow-CLD.bpmn",
+  "label": "generated / flow-CLD.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/flow-INV.bpmn",
+  "label": "generated / flow-INV.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/flow-UC1.bpmn",
+  "label": "generated / flow-UC1.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/flow-UC2.bpmn",
+  "label": "generated / flow-UC2.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/flow-UC3.bpmn",
+  "label": "generated / flow-UC3.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/flow-UC4.bpmn",
+  "label": "generated / flow-UC4.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/flow-ZBB.bpmn",
+  "label": "generated / flow-ZBB.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-01.bpmn",
+  "label": "generated / L0-01.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-02.bpmn",
+  "label": "generated / L0-02.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-03.bpmn",
+  "label": "generated / L0-03.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-04.bpmn",
+  "label": "generated / L0-04.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-05.bpmn",
+  "label": "generated / L0-05.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-06.bpmn",
+  "label": "generated / L0-06.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-07.bpmn",
+  "label": "generated / L0-07.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-08.bpmn",
+  "label": "generated / L0-08.bpmn"
+ },
+ {
+  "path": "../diagrams/bpmn/generated/L0-10.bpmn",
+  "label": "generated / L0-10.bpmn"
+ },
+ {
   "path": "../diagrams/bpmn/generated/01.1.bpmn",
   "label": "generated / 01.1.bpmn"
  },
@@ -96,6 +160,10 @@
   "label": "generated / 05.7.bpmn"
  },
  {
+  "path": "../diagrams/bpmn/generated/05.8.bpmn",
+  "label": "generated / 05.8.bpmn"
+ },
+ {
   "path": "../diagrams/bpmn/generated/06.1.bpmn",
   "label": "generated / 06.1.bpmn"
  },
@@ -118,10 +186,6 @@
  {
   "path": "../diagrams/bpmn/generated/06.6.bpmn",
   "label": "generated / 06.6.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/06.7.bpmn",
-  "label": "generated / 06.7.bpmn"
  },
  {
   "path": "../diagrams/bpmn/generated/07.1.bpmn",
@@ -148,48 +212,12 @@
   "label": "generated / 07.6.bpmn"
  },
  {
-  "path": "../diagrams/bpmn/generated/07.7.bpmn",
-  "label": "generated / 07.7.bpmn"
- },
- {
   "path": "../diagrams/bpmn/generated/08.1.bpmn",
   "label": "generated / 08.1.bpmn"
  },
  {
   "path": "../diagrams/bpmn/generated/08.2.bpmn",
   "label": "generated / 08.2.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/08.3.bpmn",
-  "label": "generated / 08.3.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/08.4.bpmn",
-  "label": "generated / 08.4.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/09.1.bpmn",
-  "label": "generated / 09.1.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/09.2.bpmn",
-  "label": "generated / 09.2.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/09.3.bpmn",
-  "label": "generated / 09.3.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/09.4.bpmn",
-  "label": "generated / 09.4.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/09.5.bpmn",
-  "label": "generated / 09.5.bpmn"
- },
- {
-  "path": "../diagrams/bpmn/generated/09.6.bpmn",
-  "label": "generated / 09.6.bpmn"
  },
  {
   "path": "../diagrams/bpmn/generated/10.1.bpmn",

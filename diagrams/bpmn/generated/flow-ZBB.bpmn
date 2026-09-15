@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_ZBB" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_ZBB">
+    <bpmn:participant id="Participant_ZBB" name="ZBB re-base — Zero-based re-base to investment uplift" processRef="Process_ZBB" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_ZBB" name="Zero-based re-base to investment uplift" isExecutable="false">
+    <bpmn:documentation>The zero-based cycle as a cross-tool flow: Costing supplies the fact base for in-scope decision units; Planning hosts package build, ranking, cut-line and approval; freed run spend rides the existing UC3 target feed to Targetprocess as an uplift; monthly actuals return via UC4 to police package commitments. Reuses UC3 and UC4 - no new integration.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_ZBB">
+      <bpmn:lane id="Lane_ZBB_0" name="IT Planning (Finance)">
+        <bpmn:flowNodeRef>n_z0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_z1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_z5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_z6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_z7</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_z8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ZBB_1" name="Costing / TBM Studio">
+        <bpmn:flowNodeRef>n_z2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_z3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_z10</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ZBB_2" name="Budget owners (in Planning)">
+        <bpmn:flowNodeRef>n_z4</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ZBB_3" name="Targetprocess / ATP">
+        <bpmn:flowNodeRef>n_z9</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_z0" name="ZBB cycle opens for this year&#x27;s rotation slice">
+      <bpmn:documentation>Catalog: 05.8.1. Rotational: each decision unit every 2-3 years</bpmn:documentation>
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+      <bpmn:timerEventDefinition />
+    </bpmn:startEvent>
+    <bpmn:userTask id="n_z1" name="Select decision units; name cost-category owners x budget owners; define zero base">
+      <bpmn:documentation>Catalog: 05.8.1. </bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="n_z2" name="Build activity &amp; cost-driver fact base per decision unit">
+      <bpmn:documentation>Catalog: 05.8.2, 07.5.1. Same allocated model as UC4; Cloudability rightsizing sets the cloud zero base</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="n_z3" name="Publish fact base &amp; zero-base floors to Planning (actuals import)">
+      <bpmn:documentation>Catalog: 05.3.1. Reuses Costing to Planning actuals integration</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="n_z4" name="Build decision packages at Minimum / Current / Enhanced tiers">
+      <bpmn:documentation>Catalog: 05.8.3. Labor positions come from Targetprocess via UC3 steps 7-8</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_z5" name="Rank packages; compare cumulative cost to target; draw cut-line; pressure-test">
+      <bpmn:documentation>Catalog: 05.8.4. One Planning version per cut-line scenario</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="n_z6" name="Cut-line within target?">
+      <bpmn:documentation>Catalog: 05.8.4. No: return packages for rework (loop to z4); Yes: continue</bpmn:documentation>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="n_z7" name="Approve; merge ZBB units into master plan; snapshot as budget of record &amp; savings baseline">
+      <bpmn:documentation>Catalog: 05.8.5, 05.1.4, 05.1.5. </bpmn:documentation>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="n_z8" name="Send revised targets incl. freed-spend uplift to Targetprocess">
+      <bpmn:documentation>Catalog: 05.8.5. = UC3 step 2, re-run with the post-ZBB target</bpmn:documentation>
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="n_z9" name="Apply uplift to value-stream / portfolio envelopes; fund change">
+      <bpmn:documentation>Catalog: 02.4.2, 02.2.3. </bpmn:documentation>
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="n_z10" name="Actuals vs package commitments; savings realization; block leakage">
+      <bpmn:documentation>Catalog: 05.8.6, 06.2.2, 05.3.2, 08.2.3. </bpmn:documentation>
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="n_end" name="Cycle retrospective; next rotation slice selected">
+      <bpmn:documentation>Catalog: 05.8.6. </bpmn:documentation>
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_z0" targetRef="n_z1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_z1" targetRef="n_z2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_z2" targetRef="n_z3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_z3" targetRef="n_z4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_z4" targetRef="n_z5" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_z5" targetRef="n_z6" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_z6" targetRef="n_z4" name="No" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="n_z6" targetRef="n_z7" name="Yes" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="n_z7" targetRef="n_z8" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="n_z8" targetRef="n_z9" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="n_z9" targetRef="n_z10" />
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="n_z10" targetRef="n_end" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_ZBB">
+    <bpmndi:BPMNPlane id="BPMNPlane_ZBB" bpmnElement="Collaboration_ZBB">
+      <bpmndi:BPMNShape id="Participant_ZBB_di" bpmnElement="Participant_ZBB" isHorizontal="true"><dc:Bounds x="0" y="0" width="2674" height="488" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_ZBB_0_di" bpmnElement="Lane_ZBB_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="2644" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_ZBB_1_di" bpmnElement="Lane_ZBB_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="2644" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_ZBB_2_di" bpmnElement="Lane_ZBB_2" isHorizontal="true"><dc:Bounds x="30" y="244" width="2644" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_ZBB_3_di" bpmnElement="Lane_ZBB_3" isHorizontal="true"><dc:Bounds x="30" y="366" width="2644" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z0_di" bpmnElement="n_z0"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z1_di" bpmnElement="n_z1"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z2_di" bpmnElement="n_z2"><dc:Bounds x="594" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z3_di" bpmnElement="n_z3"><dc:Bounds x="802" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z4_di" bpmnElement="n_z4"><dc:Bounds x="1010" y="268" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z5_di" bpmnElement="n_z5"><dc:Bounds x="1218" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z6_di" bpmnElement="n_z6"><dc:Bounds x="1483" y="37" width="48" height="48" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z7_di" bpmnElement="n_z7"><dc:Bounds x="1634" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z8_di" bpmnElement="n_z8"><dc:Bounds x="1842" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z9_di" bpmnElement="n_z9"><dc:Bounds x="2050" y="390" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_z10_di" bpmnElement="n_z10"><dc:Bounds x="2258" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_di" bpmnElement="n_end"><dc:Bounds x="2529" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="571" y="61" /><di:waypoint x="571" y="183" /><di:waypoint x="594" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="183" /><di:waypoint x="802" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="183" /><di:waypoint x="987" y="183" /><di:waypoint x="987" y="305" /><di:waypoint x="1010" y="305" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="305" /><di:waypoint x="1195" y="305" /><di:waypoint x="1195" y="61" /><di:waypoint x="1218" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="61" /><di:waypoint x="1483" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1507" y="85" /><di:waypoint x="1507" y="360" /><di:waypoint x="1091" y="360" /><di:waypoint x="1091" y="342" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="1531" y="61" /><di:waypoint x="1634" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8"><di:waypoint x="1796" y="61" /><di:waypoint x="1842" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9"><di:waypoint x="2004" y="61" /><di:waypoint x="2027" y="61" /><di:waypoint x="2027" y="427" /><di:waypoint x="2050" y="427" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10"><di:waypoint x="2212" y="427" /><di:waypoint x="2235" y="427" /><di:waypoint x="2235" y="183" /><di:waypoint x="2258" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11"><di:waypoint x="2420" y="183" /><di:waypoint x="2474" y="183" /><di:waypoint x="2474" y="61" /><di:waypoint x="2529" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

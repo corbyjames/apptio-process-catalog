@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_UC1" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_UC1">
+    <bpmn:participant id="Participant_UC1" name="Actuals in — Labor capitalization" processRef="Process_UC1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_UC1" name="Labor capitalization" isExecutable="false">
+    <bpmn:documentation>Targetprocess sends involvements, job profiles, mappings and completed work to Costing; TBM Studio computes monthly team cost and blended CapEx %, allocates to work (story points) or towers (fixed capacity), and generates the SAP-ready CapEx/OpEx actuals file that deprecates time writing.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_UC1">
+      <bpmn:lane id="Lane_UC1_0" name="Targetprocess / ATP">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_14</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_15</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_UC1_1" name="Costing / TBM Studio">
+        <bpmn:flowNodeRef>n_16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_17a</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_17b</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_18</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_UC1_2" name="ERP (SAP)">
+
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="n_14" name="Maintain involvements %, job profiles, CapEx/OpEx &amp; IT-tower mappings">
+      <bpmn:documentation>Catalog: 04.1.2, 04.1.3. Three ingredients: job profiles, involvements, protected rates</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="n_15" name="Send workforce &amp; completed work data to Costing (TBM Studio)">
+      <bpmn:documentation>Catalog: 04.5.3, 06.4.3. </bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:serviceTask id="n_16" name="Calculate monthly team cost &amp; blended CapEx % (protected rates)">
+      <bpmn:documentation>Catalog: 06.4.4. </bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="n_17" name="Team work visible?">
+      <bpmn:documentation>Catalog: 06.4.5. Yes: story-point allocation; No: fixed-capacity</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="n_17a" name="Allocate team costs to completed work (story points, weightage)">
+      <bpmn:documentation>Catalog: 06.4.5. Same allocation principles as TBM</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="n_17b" name="Allocate team costs to IT towers / apps (fixed capacity)">
+      <bpmn:documentation>Catalog: 06.4.5. Ops teams without visible backlog (e.g. ServiceNow)</bpmn:documentation>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:serviceTask id="n_18" name="Generate SAP-ready monthly actuals - CapEx / OpEx by user">
+      <bpmn:documentation>Catalog: 06.4.6. Deprecates time writing; join gateway before this step</bpmn:documentation>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_14" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_14" targetRef="n_15" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_15" targetRef="n_16" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_16" targetRef="n_17" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_17" targetRef="n_17a" name="Yes" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_17" targetRef="n_17b" name="No" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_17a" targetRef="n_18" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="n_17b" targetRef="n_18" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="n_18" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_UC1">
+    <bpmndi:BPMNPlane id="BPMNPlane_UC1" bpmnElement="Collaboration_UC1">
+      <bpmndi:BPMNShape id="Participant_UC1_di" bpmnElement="Participant_UC1" isHorizontal="true"><dc:Bounds x="0" y="0" width="1842" height="462" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_UC1_0_di" bpmnElement="Lane_UC1_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_UC1_1_di" bpmnElement="Lane_UC1_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1812" height="218" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_UC1_2_di" bpmnElement="Lane_UC1_2" isHorizontal="true"><dc:Bounds x="30" y="340" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_14_di" bpmnElement="n_14"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_15_di" bpmnElement="n_15"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_16_di" bpmnElement="n_16"><dc:Bounds x="802" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_17_di" bpmnElement="n_17"><dc:Bounds x="1067" y="159" width="48" height="48" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_17a_di" bpmnElement="n_17a"><dc:Bounds x="1218" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_17b_di" bpmnElement="n_17b"><dc:Bounds x="1218" y="242" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_18_di" bpmnElement="n_18"><dc:Bounds x="1426" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1697" y="165" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="779" y="61" /><di:waypoint x="779" y="183" /><di:waypoint x="802" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="183" /><di:waypoint x="1067" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1115" y="183" /><di:waypoint x="1218" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1115" y="183" /><di:waypoint x="1166" y="183" /><di:waypoint x="1166" y="279" /><di:waypoint x="1218" y="279" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1380" y="183" /><di:waypoint x="1426" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="1380" y="279" /><di:waypoint x="1403" y="279" /><di:waypoint x="1403" y="183" /><di:waypoint x="1426" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8"><di:waypoint x="1588" y="183" /><di:waypoint x="1697" y="183" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

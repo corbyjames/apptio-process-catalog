@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_UC4" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_UC4">
+    <bpmn:participant id="Participant_UC4" name="TCO up — Cost actuals to application TCO" processRef="Process_UC4" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_UC4" name="Cost actuals to application TCO" isExecutable="false">
+    <bpmn:documentation>All cost actuals roll up to Application TCO; because labor arrives attached to work, run vs change attribution is driven by real delivery data rather than a story-level Jira import.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_UC4">
+      <bpmn:lane id="Lane_UC4_0" name="Costing / TBM Studio">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_19</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="n_19" name="Roll cost actuals up to Application TCO">
+      <bpmn:documentation>Catalog: 06.3.2, 06.3.3. </bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="n_20" name="Attribute labor cost to run vs. change in App TCO view">
+      <bpmn:documentation>Catalog: 06.3.3, 06.2.3. Driven by real delivery data, not story-level Jira import</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="n_end" name="Finance &amp; App TCO reporting">
+      <bpmn:documentation>Catalog: 06.1.4, 08.1.1. </bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_19" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_19" targetRef="n_20" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_20" targetRef="n_end" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_UC4">
+    <bpmndi:BPMNPlane id="BPMNPlane_UC4" bpmnElement="Collaboration_UC4">
+      <bpmndi:BPMNShape id="Participant_UC4_di" bpmnElement="Participant_UC4" isHorizontal="true"><dc:Bounds x="0" y="0" width="1010" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_UC4_0_di" bpmnElement="Lane_UC4_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="980" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_19_di" bpmnElement="n_19"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_20_di" bpmnElement="n_20"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_di" bpmnElement="n_end"><dc:Bounds x="865" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="865" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

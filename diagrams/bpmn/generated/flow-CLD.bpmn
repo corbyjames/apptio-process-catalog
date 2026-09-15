@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_CLD" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_CLD">
+    <bpmn:participant id="Participant_CLD" name="Cloud to TBM — Cloud cost into the TBM model" processRef="Process_CLD" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_CLD" name="Cloud cost into the TBM model" isExecutable="false">
+    <bpmn:documentation>Cloud cost and capacity data flows from Cloudability into the Costing model, ATUM-aligned, so Application TCO and business-unit consumption include cloud.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_CLD">
+      <bpmn:lane id="Lane_CLD_0" name="Cloudability">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_c1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_c2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_CLD_1" name="Costing / TBM Studio">
+        <bpmn:flowNodeRef>n_c3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="n_c1" name="Allocate &amp; ATUM-map cloud spend (towers, services)">
+      <bpmn:documentation>Catalog: 07.2.3, 07.2.4. </bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="n_c2" name="Share cloud cost + capacity data to Costing">
+      <bpmn:documentation>Catalog: 07.2.4. Monthly</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="n_c3" name="Include cloud in App TCO, BU consumption &amp; Bill of IT">
+      <bpmn:documentation>Catalog: 06.3.3, 08.1.1, 08.1.2. </bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_c1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_c1" targetRef="n_c2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_c2" targetRef="n_c3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_c3" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_CLD">
+    <bpmndi:BPMNPlane id="BPMNPlane_CLD" bpmnElement="Collaboration_CLD">
+      <bpmndi:BPMNShape id="Participant_CLD_di" bpmnElement="Participant_CLD" isHorizontal="true"><dc:Bounds x="0" y="0" width="1218" height="244" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_CLD_0_di" bpmnElement="Lane_CLD_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_CLD_1_di" bpmnElement="Lane_CLD_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_c1_di" bpmnElement="n_c1"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_c2_di" bpmnElement="n_c2"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_c3_di" bpmnElement="n_c3"><dc:Bounds x="802" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1073" y="165" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="779" y="61" /><di:waypoint x="779" y="183" /><di:waypoint x="802" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="183" /><di:waypoint x="1073" y="183" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

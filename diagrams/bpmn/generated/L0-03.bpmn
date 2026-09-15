@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A03" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A03">
+    <bpmn:participant id="Participant_A03" name="L0-03 Agile Program &amp; Delivery Management — Agile Program &amp; Delivery Management" processRef="Process_A03" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A03" name="Agile Program &amp; Delivery Management" isExecutable="false">
+    <bpmn:documentation>Plan and execute work on a PI and iteration cadence across ARTs, solution trains and teams, including hybrid/waterfall delivery, release management and value stream flow.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A03">
+      <bpmn:lane id="Lane_A03_0" name="RTE/Program">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_03_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_03_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_03_4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_A03_1" name="Agile Teams">
+        <bpmn:flowNodeRef>n_03_2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_03_1" name="Plan quarterly (SAFe PI cadence)" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 03.1.1. 6 processes: 03.1.1, 03.1.2, 03.1.3, 03.1.4, 03.1.5, 03.1.6</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_03_2" name="Deliver at team level" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 03.2.1. 4 processes: 03.2.1, 03.2.2, 03.2.3, 03.2.4</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_03_3" name="Manage releases &amp; hybrid projects" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 03.3.1. 3 processes: 03.3.1, 03.3.2, 03.3.3</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_03_4" name="Manage value streams" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 03.4.1. 2 processes: 03.4.1, 03.4.2</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_03_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_03_1" targetRef="n_03_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_03_2" targetRef="n_03_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_03_3" targetRef="n_03_4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_03_4" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A03">
+    <bpmndi:BPMNPlane id="BPMNPlane_A03" bpmnElement="Collaboration_A03">
+      <bpmndi:BPMNShape id="Participant_A03_di" bpmnElement="Participant_A03" isHorizontal="true"><dc:Bounds x="0" y="0" width="1426" height="244" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A03_0_di" bpmnElement="Lane_A03_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1396" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A03_1_di" bpmnElement="Lane_A03_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1396" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_03_1_di" bpmnElement="n_03_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_03_2_di" bpmnElement="n_03_2" isExpanded="false"><dc:Bounds x="594" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_03_3_di" bpmnElement="n_03_3" isExpanded="false"><dc:Bounds x="802" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_03_4_di" bpmnElement="n_03_4" isExpanded="false"><dc:Bounds x="1010" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1281" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="571" y="61" /><di:waypoint x="571" y="183" /><di:waypoint x="594" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="183" /><di:waypoint x="779" y="183" /><di:waypoint x="779" y="61" /><di:waypoint x="802" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="61" /><di:waypoint x="1010" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="61" /><di:waypoint x="1281" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

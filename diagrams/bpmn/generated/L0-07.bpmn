@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A07" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A07">
+    <bpmn:participant id="Participant_A07" name="L0-07 Cloud Financial Management (FinOps) — Cloud Financial Management (FinOps)" processRef="Process_A07" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A07" name="Cloud Financial Management (FinOps)" isExecutable="false">
+    <bpmn:documentation>Operate the FinOps lifecycle - ingest and allocate multi-cloud and container spend, report it, respond to anomalies, optimize usage and rates, and plan cloud budgets and migrations.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A07">
+      <bpmn:lane id="Lane_A07_0" name="FinOps Practitioner">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_07_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_07_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_07_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_07_4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_07_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_07_6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_07_1" name="Establish the cloud cost data foundation" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 07.1.1. 4 processes: 07.1.1, 07.1.2, 07.1.3, 07.1.4</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_07_2" name="Allocate cloud cost &amp; govern tagging" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 07.2.1. 4 processes: 07.2.1, 07.2.2, 07.2.3, 07.2.4</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_07_3" name="Report cloud cost, unit economics &amp; sustainability" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 07.3.1. 4 processes: 07.3.1, 07.3.2, 07.3.3, 07.3.4</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_07_4" name="Manage anomalies" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 07.4.1. 2 processes: 07.4.1, 07.4.2</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_07_5" name="Optimize usage &amp; rates" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 07.5.1. 4 processes: 07.5.1, 07.5.2, 07.5.3, 07.5.4</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_07_6" name="Plan &amp; forecast cloud spend" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 07.6.1. 3 processes: 07.6.1, 07.6.2, 07.6.3</bpmn:documentation>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_07_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_07_1" targetRef="n_07_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_07_2" targetRef="n_07_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_07_3" targetRef="n_07_4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_07_4" targetRef="n_07_5" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_07_5" targetRef="n_07_6" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_07_6" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A07">
+    <bpmndi:BPMNPlane id="BPMNPlane_A07" bpmnElement="Collaboration_A07">
+      <bpmndi:BPMNShape id="Participant_A07_di" bpmnElement="Participant_A07" isHorizontal="true"><dc:Bounds x="0" y="0" width="1842" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A07_0_di" bpmnElement="Lane_A07_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_07_1_di" bpmnElement="n_07_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_07_2_di" bpmnElement="n_07_2" isExpanded="false"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_07_3_di" bpmnElement="n_07_3" isExpanded="false"><dc:Bounds x="802" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_07_4_di" bpmnElement="n_07_4" isExpanded="false"><dc:Bounds x="1010" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_07_5_di" bpmnElement="n_07_5" isExpanded="false"><dc:Bounds x="1218" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_07_6_di" bpmnElement="n_07_6" isExpanded="false"><dc:Bounds x="1426" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1697" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="802" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="61" /><di:waypoint x="1010" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="61" /><di:waypoint x="1218" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="61" /><di:waypoint x="1426" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1588" y="61" /><di:waypoint x="1697" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

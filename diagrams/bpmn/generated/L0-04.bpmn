@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A04" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A04">
+    <bpmn:participant id="Participant_A04" name="L0-04 Workforce &amp; Resource Management — Workforce &amp; Resource Management" processRef="Process_A04" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A04" name="Workforce &amp; Resource Management" isExecutable="false">
+    <bpmn:documentation>Maintain the workforce baseline (people, teams, involvements, job profiles), plan capacity against demand, allocate resources to work, govern position requests, and track time.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A04">
+      <bpmn:lane id="Lane_A04_0" name="Resource Management">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_04_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_04_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_04_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_04_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_A04_1" name="Portfolio Management">
+        <bpmn:flowNodeRef>n_04_4</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_04_1" name="Maintain the workforce baseline" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 04.1.1. 3 processes: 04.1.1, 04.1.2, 04.1.3</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_04_2" name="Plan capacity" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 04.2.1. 3 processes: 04.2.1, 04.2.2, 04.2.3</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_04_3" name="Allocate resources &amp; track utilization" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 04.3.1. 4 processes: 04.3.1, 04.3.2, 04.3.3, 04.3.4</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_04_4" name="Manage positions" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 04.4.1. 3 processes: 04.4.1, 04.4.2, 04.4.3</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_04_5" name="Track &amp; approve time" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 04.5.1. 3 processes: 04.5.1, 04.5.2, 04.5.3</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_04_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_04_1" targetRef="n_04_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_04_2" targetRef="n_04_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_04_3" targetRef="n_04_4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_04_4" targetRef="n_04_5" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_04_5" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A04">
+    <bpmndi:BPMNPlane id="BPMNPlane_A04" bpmnElement="Collaboration_A04">
+      <bpmndi:BPMNShape id="Participant_A04_di" bpmnElement="Participant_A04" isHorizontal="true"><dc:Bounds x="0" y="0" width="1634" height="244" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A04_0_di" bpmnElement="Lane_A04_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1604" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A04_1_di" bpmnElement="Lane_A04_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1604" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_04_1_di" bpmnElement="n_04_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_04_2_di" bpmnElement="n_04_2" isExpanded="false"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_04_3_di" bpmnElement="n_04_3" isExpanded="false"><dc:Bounds x="802" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_04_4_di" bpmnElement="n_04_4" isExpanded="false"><dc:Bounds x="1010" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_04_5_di" bpmnElement="n_04_5" isExpanded="false"><dc:Bounds x="1218" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1489" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="802" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="61" /><di:waypoint x="987" y="61" /><di:waypoint x="987" y="183" /><di:waypoint x="1010" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="183" /><di:waypoint x="1195" y="183" /><di:waypoint x="1195" y="61" /><di:waypoint x="1218" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="61" /><di:waypoint x="1489" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

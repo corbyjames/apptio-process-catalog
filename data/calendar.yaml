@@ -88,7 +88,7 @@ streams:
     cadence: Monthly
     fm: [1,2,3,4,5,6,7,8,9,10,11,12]
     desc: Financial attainment, vendor, app run-vs-grow, cloud consumption and workforce dashboards.
-    refs: ["08.4.1"]
+    refs: ["08.2.3"]
   - name: Cloud budget & forecast review
     cadence: Monthly
     fm: [1,2,3,4,5,6,7,8,9,10,11,12]

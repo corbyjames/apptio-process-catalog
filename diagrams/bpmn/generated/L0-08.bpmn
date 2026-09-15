@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A08" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A08">
+    <bpmn:participant id="Participant_A08" name="L0-08 Consumption, Chargeback &amp; Value Management — Consumption, Chargeback &amp; Value Management" processRef="Process_A08" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A08" name="Consumption, Chargeback &amp; Value Management" isExecutable="false">
+    <bpmn:documentation>Turn transparency into accountability: showback and Bill of IT to business units, price services, shape demand, benchmark against peers, and run the executive value operating rhythm.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A08">
+      <bpmn:lane id="Lane_A08_0" name="TBM Office">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_08_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_08_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_08_1" name="Show back &amp; bill for IT" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 08.1.1. 3 processes: 08.1.1, 08.1.2, 08.1.3</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_08_2" name="Engage the business &amp; steer value" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 08.2.1. 3 processes: 08.2.1, 08.2.2, 08.2.3</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_08_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_08_1" targetRef="n_08_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_08_2" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A08">
+    <bpmndi:BPMNPlane id="BPMNPlane_A08" bpmnElement="Collaboration_A08">
+      <bpmndi:BPMNShape id="Participant_A08_di" bpmnElement="Participant_A08" isHorizontal="true"><dc:Bounds x="0" y="0" width="1010" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A08_0_di" bpmnElement="Lane_A08_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="980" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_08_1_di" bpmnElement="n_08_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_08_2_di" bpmnElement="n_08_2" isExpanded="false"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="865" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="865" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,6 +1,6 @@
-# Annual Operating Calendar
+# Annual operating calendar
 
-Generated from `data/calendar.yaml` (months are fiscal months, FM1 = fiscal year start). The dashboard's Operating Calendar tab renders this with a fiscal-year selector.
+Generated from `data/calendar.yaml` (fiscal months, FM1 = fiscal year start).
 
 
 ## Strategy & Annual Planning
@@ -51,7 +51,7 @@ Generated from `data/calendar.yaml` (months are fiscal months, FM1 = fiscal year
 | Variance analysis & reforecast | Monthly | All year | 05.3.1, 05.3.2, 05.3.3 |
 | Labor capitalization actuals to ERP | Monthly | All year | 06.4.4, 06.4.5, 06.4.6 |
 | Showback / Bill of IT publication | Monthly | All year | 08.1.1, 08.1.2 |
-| CIO monthly operations review | Monthly | All year | 08.4.1 |
+| CIO monthly operations review | Monthly | All year | 08.2.3 |
 | Cloud budget & forecast review | Monthly | All year | 07.6.1, 07.6.2, 07.3.3 |
 
 **Month-end close & cost allocation** — Load actuals, run allocations through pools/towers/apps/BUs, validate to GL, publish TBM reporting.

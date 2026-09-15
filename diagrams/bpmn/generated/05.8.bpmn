@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G05_8" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_G05_8">
+    <bpmn:participant id="Participant_G05_8" name="05.8 Build &amp; review a zero-based budget — Build &amp; review a zero-based budget" processRef="Process_G05_8" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_G05_8" name="Build &amp; review a zero-based budget" isExecutable="false">
+    <bpmn:documentation>Process group 05.8 in L0-05 IT Financial Planning &amp; Budgeting: 6 L2 processes laid out in the order of the catalog, in the BPMN lane of the persona that performs each one.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_G05_8">
+      <bpmn:lane id="Lane_G05_8_0" name="IT Finance">
+        <bpmn:flowNodeRef>n_05_8_2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_G05_8_1" name="Budget Owners">
+        <bpmn:flowNodeRef>n_05_8_3</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_G05_8_2" name="FP&amp;A">
+        <bpmn:flowNodeRef>n_05_8_6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_G05_8_3" name="CIO">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_8_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_8_4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_8_5</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="n_05_8_1" name="Scope the ZBB cycle &amp; select decision units">
+      <bpmn:documentation>Catalog: 05.8.1. Outcome: zBB scope list, decision-unit register, owner matrix (cost category x budget owner), cycle calendar</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_05_8_2" name="Build the cost-driver fact base &amp; activity inventory">
+      <bpmn:documentation>Catalog: 05.8.2. Outcome: activity inventory with unit costs and drivers per decision unit; redundancy list; &#x27;zero-base&#x27; floor per unit</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_05_8_3" name="Build decision packages at tiered service levels">
+      <bpmn:documentation>Catalog: 05.8.3. Outcome: decision packages (3 tiers) per decision unit with costs, drivers, KPIs and justification</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_05_8_4" name="Rank packages &amp; set the funding cut-line">
+      <bpmn:documentation>Catalog: 05.8.4. Outcome: ranked package list, cut-line scenario, freed-spend figure, unfunded-package register</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="n_05_8_5" name="Approve zero-based budget &amp; release freed spend to the investment envelope">
+      <bpmn:documentation>Catalog: 05.8.5. Outcome: approved zero-based budget merged into budget of record; revised portfolio targets to ATP; savings baseline</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="n_05_8_6" name="Monitor package commitments &amp; sustain the zero-based mindset">
+      <bpmn:documentation>Catalog: 05.8.6. Outcome: savings-realization tracker, leakage exceptions, incentives/scorecard inputs, next-cycle rotation candidates</bpmn:documentation>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_05_8_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_05_8_1" targetRef="n_05_8_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_05_8_2" targetRef="n_05_8_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_05_8_3" targetRef="n_05_8_4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_05_8_4" targetRef="n_05_8_5" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_05_8_5" targetRef="n_05_8_6" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_05_8_6" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_G05_8">
+    <bpmndi:BPMNPlane id="BPMNPlane_G05_8" bpmnElement="Collaboration_G05_8">
+      <bpmndi:BPMNShape id="Participant_G05_8_di" bpmnElement="Participant_G05_8" isHorizontal="true"><dc:Bounds x="0" y="0" width="1842" height="488" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G05_8_0_di" bpmnElement="Lane_G05_8_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G05_8_1_di" bpmnElement="Lane_G05_8_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G05_8_2_di" bpmnElement="Lane_G05_8_2" isHorizontal="true"><dc:Bounds x="30" y="244" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G05_8_3_di" bpmnElement="Lane_G05_8_3" isHorizontal="true"><dc:Bounds x="30" y="366" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="409" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_8_1_di" bpmnElement="n_05_8_1"><dc:Bounds x="386" y="390" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_8_2_di" bpmnElement="n_05_8_2"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_8_3_di" bpmnElement="n_05_8_3"><dc:Bounds x="802" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_8_4_di" bpmnElement="n_05_8_4"><dc:Bounds x="1010" y="390" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_8_5_di" bpmnElement="n_05_8_5"><dc:Bounds x="1218" y="390" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_8_6_di" bpmnElement="n_05_8_6"><dc:Bounds x="1426" y="268" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1697" y="287" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="427" /><di:waypoint x="386" y="427" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="427" /><di:waypoint x="571" y="427" /><di:waypoint x="571" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="779" y="61" /><di:waypoint x="779" y="183" /><di:waypoint x="802" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="183" /><di:waypoint x="987" y="183" /><di:waypoint x="987" y="427" /><di:waypoint x="1010" y="427" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="427" /><di:waypoint x="1218" y="427" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="427" /><di:waypoint x="1403" y="427" /><di:waypoint x="1403" y="305" /><di:waypoint x="1426" y="305" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1588" y="305" /><di:waypoint x="1697" y="305" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

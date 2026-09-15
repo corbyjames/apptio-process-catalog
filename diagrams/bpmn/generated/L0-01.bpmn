@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A01" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A01">
+    <bpmn:participant id="Participant_A01" name="L0-01 Strategy &amp; Goal Management — Strategy &amp; Goal Management" processRef="Process_A01" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A01" name="Strategy &amp; Goal Management" isExecutable="false">
+    <bpmn:documentation>Define enterprise strategy and cascade it as measurable objectives so every portfolio, program and team has line of sight from work to strategic intent.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A01">
+      <bpmn:lane id="Lane_A01_0" name="C-Suite/Strategy">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_01_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_01_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_01_1" name="Set strategic direction &amp; alignment" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 01.1.1. 3 processes: 01.1.1, 01.1.2, 01.1.3</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_01_2" name="Manage OKRs" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 01.2.1. 3 processes: 01.2.1, 01.2.2, 01.2.3</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_01_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_01_1" targetRef="n_01_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_01_2" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A01">
+    <bpmndi:BPMNPlane id="BPMNPlane_A01" bpmnElement="Collaboration_A01">
+      <bpmndi:BPMNShape id="Participant_A01_di" bpmnElement="Participant_A01" isHorizontal="true"><dc:Bounds x="0" y="0" width="1010" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A01_0_di" bpmnElement="Lane_A01_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="980" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_01_1_di" bpmnElement="n_01_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_01_2_di" bpmnElement="n_01_2" isExpanded="false"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="865" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="865" y="61" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

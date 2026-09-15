@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_UC2" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_UC2">
+    <bpmn:participant id="Participant_UC2" name="Rates back — Work allocation rates" processRef="Process_UC2" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_UC2" name="Work allocation rates" isExecutable="false">
+    <bpmn:documentation>Costing maintains protected individual rates, computes blended team/ART rates and publishes them to Targetprocess so work allocations can be costed without exposing compensation.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_UC2">
+      <bpmn:lane id="Lane_UC2_0" name="Costing / TBM Studio">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_12</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_UC2_1" name="Targetprocess / ATP">
+        <bpmn:flowNodeRef>n_13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="n_11" name="Maintain protected rates; compute blended team / ART-level rates">
+      <bpmn:documentation>Catalog: 06.4.1. Individual rates never leave Costing</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="n_12" name="Send blended rates back to Targetprocess (Costing is source of truth)">
+      <bpmn:documentation>Catalog: 06.4.2. Design decision: rate exposure level; true-up pattern</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="n_13" name="Cost work allocations with blended rates; feed budget cycle">
+      <bpmn:documentation>Catalog: 04.3.1, 02.4.3. </bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_11" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_11" targetRef="n_12" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_12" targetRef="n_13" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_13" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_UC2">
+    <bpmndi:BPMNPlane id="BPMNPlane_UC2" bpmnElement="Collaboration_UC2">
+      <bpmndi:BPMNShape id="Participant_UC2_di" bpmnElement="Participant_UC2" isHorizontal="true"><dc:Bounds x="0" y="0" width="1218" height="244" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_UC2_0_di" bpmnElement="Lane_UC2_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_UC2_1_di" bpmnElement="Lane_UC2_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_11_di" bpmnElement="n_11"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_12_di" bpmnElement="n_12"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_13_di" bpmnElement="n_13"><dc:Bounds x="802" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1073" y="165" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="779" y="61" /><di:waypoint x="779" y="183" /><di:waypoint x="802" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="183" /><di:waypoint x="1073" y="183" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

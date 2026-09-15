@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A05" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A05">
+    <bpmn:participant id="Participant_A05" name="L0-05 IT Financial Planning &amp; Budgeting — IT Financial Planning &amp; Budgeting" processRef="Process_A05" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A05" name="IT Financial Planning &amp; Budgeting" isExecutable="false">
+    <bpmn:documentation>Build the annual IT budget and rolling forecasts on the TBM taxonomy - labor, contracts, assets and investments - manage variance, and publish targets that drive portfolio behavior. The budget can be built incrementally/driver-based (05.1) or zero-based for selected decision units (05.8); both converge on the same review, approval, budget-of-record and target-publication steps.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A05">
+      <bpmn:lane id="Lane_A05_0" name="IT Finance">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_05_6</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_A05_1" name="Budget Owners">
+        <bpmn:flowNodeRef>n_05_7</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_A05_2" name="CIO">
+        <bpmn:flowNodeRef>n_05_8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_05_1" name="Build the annual IT budget" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.1.1. 5 processes: 05.1.1, 05.1.2, 05.1.3, 05.1.4, 05.1.5</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_05_2" name="Forecast on a rolling cadence" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.2.1. 4 processes: 05.2.1, 05.2.2, 05.2.3, 05.2.4</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_05_3" name="Analyze variance &amp; reforecast" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.3.1. 3 processes: 05.3.1, 05.3.2, 05.3.3</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_05_4" name="Plan workforce &amp; labor cost" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.4.1. 3 processes: 05.4.1, 05.4.2, 05.4.3</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_05_5" name="Plan vendors &amp; contracts" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.5.1. 3 processes: 05.5.1, 05.5.2, 05.5.3</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_05_6" name="Plan capital &amp; assets" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.6.1. 2 processes: 05.6.1, 05.6.2</bpmn:documentation>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_05_7" name="Plan project &amp; investment finances" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.7.1. 3 processes: 05.7.1, 05.7.2, 05.7.3</bpmn:documentation>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_05_8" name="Build &amp; review a zero-based budget" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 05.8.1. 6 processes: 05.8.1, 05.8.2, 05.8.3, 05.8.4, 05.8.5, 05.8.6</bpmn:documentation>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_05_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_05_1" targetRef="n_05_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_05_2" targetRef="n_05_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_05_3" targetRef="n_05_4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_05_4" targetRef="n_05_5" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_05_5" targetRef="n_05_6" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_05_6" targetRef="n_05_7" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="n_05_7" targetRef="n_05_8" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="n_05_8" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A05">
+    <bpmndi:BPMNPlane id="BPMNPlane_A05" bpmnElement="Collaboration_A05">
+      <bpmndi:BPMNShape id="Participant_A05_di" bpmnElement="Participant_A05" isHorizontal="true"><dc:Bounds x="0" y="0" width="2258" height="366" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A05_0_di" bpmnElement="Lane_A05_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="2228" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A05_1_di" bpmnElement="Lane_A05_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="2228" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A05_2_di" bpmnElement="Lane_A05_2" isHorizontal="true"><dc:Bounds x="30" y="244" width="2228" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_1_di" bpmnElement="n_05_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_2_di" bpmnElement="n_05_2" isExpanded="false"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_3_di" bpmnElement="n_05_3" isExpanded="false"><dc:Bounds x="802" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_4_di" bpmnElement="n_05_4" isExpanded="false"><dc:Bounds x="1010" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_5_di" bpmnElement="n_05_5" isExpanded="false"><dc:Bounds x="1218" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_6_di" bpmnElement="n_05_6" isExpanded="false"><dc:Bounds x="1426" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_7_di" bpmnElement="n_05_7" isExpanded="false"><dc:Bounds x="1634" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_05_8_di" bpmnElement="n_05_8" isExpanded="false"><dc:Bounds x="1842" y="268" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="2113" y="287" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="802" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="61" /><di:waypoint x="1010" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="61" /><di:waypoint x="1218" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="61" /><di:waypoint x="1426" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1588" y="61" /><di:waypoint x="1611" y="61" /><di:waypoint x="1611" y="183" /><di:waypoint x="1634" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="1796" y="183" /><di:waypoint x="1819" y="183" /><di:waypoint x="1819" y="305" /><di:waypoint x="1842" y="305" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8"><di:waypoint x="2004" y="305" /><di:waypoint x="2113" y="305" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

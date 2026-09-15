@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Catalog of the business processes supported by IBM Apptio Targetprocess, Costing, Planning and Cloudability, framed by TBM, SPM and FinOps, with BPMN 2.0 diagrams for every area, group and cross-tool flow.">
+<title>Apptio Process Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F3F4F1; --surface:#FFFFFF; --surface2:#EBEDE8; --ink:#1E2422; --ink2:#4B5450; --ink3:#78827D;
+  --rule:#C9CDC4; --rule2:#DFE2DC; --accent:#1F5F4A; --accent-ink:#FFFFFF; --accent-soft:#E2EEE8;
+  --tp:#3A6EA5; --co:#8C5A2B; --pl:#5B6E1F; --cl:#2A8C8C; --all:#5E5A72;
+  --s-draft:#78827D; --s-review:#B7791F; --s-changes:#B4462E; --s-confirmed:#2F7A4B;
+  --s-draft-bg:#EEF0EC; --s-review-bg:#FAF0DC; --s-changes-bg:#F9E4DE; --s-confirmed-bg:#DFF0E4;
+  --focus:#1F5F4A; --shadow:0 1px 2px rgba(30,36,34,.08);
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#181B1A; --surface:#202423; --surface2:#2A2F2D; --ink:#E8EAE6; --ink2:#B9BFBA; --ink3:#8B938E;
+    --rule:#3A403D; --rule2:#2F3533; --accent:#7CC7A8; --accent-ink:#0F1F19; --accent-soft:#213A31;
+    --tp:#7FAADB; --co:#C99A6C; --pl:#A5B85C; --cl:#5FBFBF; --all:#A9A4C2;
+    --s-draft:#9AA39E; --s-review:#E0A94A; --s-changes:#E07A5F; --s-confirmed:#6FC48E;
+    --s-draft-bg:#2A2F2D; --s-review-bg:#3A2F17; --s-changes-bg:#3D2420; --s-confirmed-bg:#1E3527;
+    --focus:#7CC7A8; --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#181B1A; --surface:#202423; --surface2:#2A2F2D; --ink:#E8EAE6; --ink2:#B9BFBA; --ink3:#8B938E;
+  --rule:#3A403D; --rule2:#2F3533; --accent:#7CC7A8; --accent-ink:#0F1F19; --accent-soft:#213A31;
+  --tp:#7FAADB; --co:#C99A6C; --pl:#A5B85C; --cl:#5FBFBF; --all:#A9A4C2;
+  --s-draft:#9AA39E; --s-review:#E0A94A; --s-changes:#E07A5F; --s-confirmed:#6FC48E;
+  --s-draft-bg:#2A2F2D; --s-review-bg:#3A2F17; --s-changes-bg:#3D2420; --s-confirmed-bg:#1E3527;
+  --focus:#7CC7A8; --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;text-wrap:balance;line-height:1.2}
+h1{font:600 30px/1.15 var(--serif)}
+h2{font:600 21px/1.2 var(--serif)}
+h3{font:600 16px/1.3 var(--sans)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--accent-ink);padding:8px 12px;z-index:100}
+.skip:focus{left:8px;top:8px}
+.eyebrow{font:500 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+
+/* ---- top bar ---- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;gap:12px;padding:8px 20px;flex-wrap:wrap}
+.bar .crumbs{display:flex;align-items:center;gap:6px;flex:1 1 260px;min-width:0;font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .crumbs a{color:var(--ink2)}
+.bar .crumbs .sep{color:var(--ink3)}
+.bar .crumbs .here{color:var(--ink);font-weight:500}
+.bar .crumbs .id{font-family:var(--mono);color:var(--ink3);font-size:12px}
+.search{position:relative;flex:0 1 300px;min-width:180px}
+.search input{width:100%;padding:6px 10px 6px 30px;border:1px solid var(--rule);border-radius:6px;background:var(--ground);min-height:32px}
+.search svg{position:absolute;left:9px;top:9px;width:14px;height:14px;fill:none;stroke:var(--ink3);stroke-width:2}
+.search .results{position:absolute;top:36px;left:0;right:0;background:var(--surface);border:1px solid var(--rule);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.14);max-height:60vh;overflow:auto;z-index:30}
+.search .results a{display:block;padding:8px 10px;border-bottom:1px solid var(--rule2);color:var(--ink);font-size:13px}
+.search .results a:hover,.search .results a.active{background:var(--accent-soft);text-decoration:none}
+.search .results .k{font-family:var(--mono);font-size:11px;color:var(--ink3);margin-right:6px}
+.lens{display:inline-flex;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.lens button{background:var(--surface);border:0;padding:5px 11px;min-height:32px;cursor:pointer;color:var(--ink2);font-size:13px}
+.lens button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.progress{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2);white-space:nowrap}
+.progress .track{width:110px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;display:flex}
+.progress .track i{display:block;height:100%}
+.who{font-size:12px;color:var(--ink2);background:none;border:1px solid var(--rule);border-radius:6px;padding:5px 9px;min-height:32px;cursor:pointer}
+.who b{color:var(--ink);font-weight:500}
+
+/* ---- page frame ---- */
+.page{max-width:1240px;margin:0 auto;padding:24px 20px 80px}
+.page.wide{max-width:1400px}
+.pagehead{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:24px}
+.pagehead p.lede{max-width:68ch;color:var(--ink2);margin:8px 0 0}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink2);margin-top:10px}
+.meta .id{font-family:var(--mono);color:var(--ink3)}
+.notice{background:var(--surface2);border-left:3px solid var(--accent);padding:10px 14px;font-size:13px;color:var(--ink2);border-radius:0 6px 6px 0;margin:0 0 20px}
+
+/* ---- chips & status ---- */
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;line-height:1;padding:4px 8px;border-radius:4px;border:1px solid var(--rule);background:var(--surface);color:var(--ink2);white-space:nowrap}
+.chip.prod::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--pc)}
+.chip.prod[data-p="Targetprocess"]{--pc:var(--tp)} .chip.prod[data-p="Costing"]{--pc:var(--co)} .chip.prod[data-p="Planning"]{--pc:var(--pl)} .chip.prod[data-p="Cloudability"]{--pc:var(--cl)} .chip.prod[data-p="All four"]{--pc:var(--all)}
+.chip.flow{font-family:var(--mono);font-size:11px;background:var(--surface2);border-color:transparent}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.status[data-s="draft"]{color:var(--s-draft);background:var(--s-draft-bg)}
+.status[data-s="review"]{color:var(--s-review);background:var(--s-review-bg)}
+.status[data-s="changes"]{color:var(--s-changes);background:var(--s-changes-bg)}
+.status[data-s="confirmed"]{color:var(--s-confirmed);background:var(--s-confirmed-bg)}
+select.status-sel{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:4px 8px;min-height:28px;font-size:12px}
+
+/* ---- hub / landscape ---- */
+.landscape{display:grid;gap:14px;margin:8px 0 28px}
+.band{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:14px 16px 16px;box-shadow:var(--shadow)}
+.band .bhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.band .bhead h2{font:600 14px/1.2 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.band .bhead span{font-size:12px;color:var(--ink3)}
+.tiles{display:grid;gap:10px}
+.band.steer .tiles,.band.enable .tiles{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.band.core .tiles{grid-template-columns:repeat(6,minmax(0,1fr))}
+.tile{position:relative;display:flex;flex-direction:column;gap:8px;padding:12px 12px 12px 16px;border:1px solid var(--rule2);border-radius:6px;background:var(--ground);color:var(--ink);min-height:118px}
+.tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;border-radius:6px 0 0 6px;background:var(--pc)}
+.tile[data-p="Targetprocess"]{--pc:var(--tp)} .tile[data-p="Costing"]{--pc:var(--co)} .tile[data-p="Planning"]{--pc:var(--pl)} .tile[data-p="Cloudability"]{--pc:var(--cl)} .tile[data-p="All four"]{--pc:var(--all)}
+.tile:hover{text-decoration:none;border-color:var(--accent)}
+.tile .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.tile .t{font:600 14px/1.25 var(--sans);text-wrap:balance}
+.tile .sub{font-size:12px;color:var(--ink3);margin-top:auto}
+.tile .bar2{display:flex;height:4px;border-radius:2px;overflow:hidden;background:var(--surface2)}
+.tile .bar2 i{display:block;height:100%}
+.tile.small{min-height:auto;padding:10px 12px 10px 16px}
+.core-row{display:flex;align-items:center;gap:6px}
+.core-row .arrow{color:var(--ink3);font-size:18px;flex:0 0 auto}
+.flows-band{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.flowcard{display:flex;gap:12px;padding:12px;border:1px solid var(--rule2);border-radius:6px;background:var(--ground);color:var(--ink);align-items:flex-start}
+.flowcard:hover{text-decoration:none;border-color:var(--accent)}
+.flowcard .fid{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:500;min-width:36px;padding-top:1px}
+.flowcard > span:last-child{display:flex;flex-direction:column;min-width:0}
+.flowcard .ft{font-weight:600;font-size:14px}
+.flowcard .fs{font-size:12px;color:var(--ink3);margin-top:2px;display:block}
+.flowcard .fp{display:flex;gap:4px;margin-top:6px}
+.flowcard .fp i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.hubgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:start}
+.panel{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:16px 18px;box-shadow:var(--shadow)}
+.panel h2{font:600 15px/1.3 var(--sans);margin-bottom:10px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px}
+.kv dt{color:var(--ink3)} .kv dd{margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;color:var(--ink2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+.statlist{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(110px,auto);gap:10px;flex:0 0 auto}
+@media (max-width:700px){.statlist{grid-auto-flow:row;grid-template-columns:repeat(2,1fr);width:100%}}
+.stat{padding:10px 12px;border:1px solid var(--rule2);border-radius:6px;background:var(--ground)}
+.stat b{display:block;font:500 22px/1.1 var(--mono);font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--ink3)}
+
+/* ---- L0 page ---- */
+.l0{display:grid;grid-template-columns:240px minmax(0,1fr);gap:32px;align-items:start}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px);max-height:calc(100vh - 90px);overflow:auto;font-size:13px;padding-right:6px}
+.rail .rh{font-size:12px;color:var(--ink3);margin:0 0 8px;letter-spacing:.06em;text-transform:uppercase}
+.rail ul{list-style:none;margin:0;padding:0}
+.rail li a{display:block;padding:4px 8px;border-left:2px solid transparent;color:var(--ink2);border-radius:0 4px 4px 0}
+.rail li a.g{font-weight:600;color:var(--ink);margin-top:6px}
+.rail li a.p{padding-left:16px;font-size:12.5px}
+.rail li a .id{font-family:var(--mono);color:var(--ink3);font-size:11px;margin-right:4px}
+.rail li a:hover{background:var(--surface2);text-decoration:none}
+.rail li a.on{border-left-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.group{margin:0 0 36px;scroll-margin-top:80px}
+.ghead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:0 0 10px;border-bottom:2px solid var(--ink);margin-bottom:14px}
+.ghead h2{display:flex;gap:10px;align-items:baseline}
+.ghead h2 .id{font:500 14px var(--mono);color:var(--ink3)}
+.ghead .gmeta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--ink2)}
+.verdict{display:inline-flex;gap:6px;align-items:center}
+.verdict select{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:3px 6px;font-size:12px;min-height:28px}
+.verdict input{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:3px 8px;font-size:12px;min-height:28px;width:150px}
+.record{border:1px solid var(--rule);border-radius:8px;background:var(--surface);margin:0 0 14px;scroll-margin-top:80px;box-shadow:var(--shadow)}
+.record.target{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.rhead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:flex-start;padding:14px 18px 10px}
+.rhead .ttl{flex:1 1 320px;min-width:0}
+.rhead h3{font:600 17px/1.3 var(--sans);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.rhead h3 .id{font:500 13px var(--mono);color:var(--ink3)}
+.rhead h3 a.perma{font:400 12px var(--mono);color:var(--ink3);opacity:0;transition:opacity .15s}
+.rhead:hover h3 a.perma,.rhead h3 a.perma:focus{opacity:1}
+.rhead .eid{font:400 11px var(--mono);color:var(--ink3);margin-top:2px}
+.rhead .ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.outcome{margin:0 18px 10px;padding:10px 12px;background:var(--accent-soft);border-radius:6px;font-size:14px}
+.outcome b{font-weight:600;color:var(--accent)}
+.sl{margin:0;padding:0 18px 14px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:0;font-size:14px}
+.sl > div{display:contents}
+.sl dt{padding:7px 12px 7px 0;color:var(--ink3);font-size:12.5px;border-top:1px solid var(--rule2)}
+.sl dd{margin:0;padding:7px 0;border-top:1px solid var(--rule2)}
+.sl dd .np{color:var(--ink3);font-style:italic}
+.sl dd .chips{display:flex;flex-wrap:wrap;gap:5px}
+.sl dd .raw{display:block;font-size:12px;color:var(--ink3);margin-top:3px}
+.sl .io{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:start}
+.sl .io .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);display:block}
+.sl .io .arr{color:var(--ink3);padding-top:14px}
+.sl dd.evidence{font-size:13px;color:var(--ink2)}
+.record .foot{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;padding:8px 18px 12px;border-top:1px solid var(--rule2);font-size:12px;color:var(--ink3)}
+.record .foot .comp{display:inline-flex;align-items:center;gap:6px}
+.record .foot .comp i{display:inline-block;width:70px;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.record .foot .comp i b{display:block;height:100%;background:var(--accent)}
+.comments{padding:0 18px 14px}
+.comments summary{cursor:pointer;font-size:13px;color:var(--ink2);padding:6px 0;list-style:none;display:flex;gap:8px;align-items:center}
+.comments summary::-webkit-details-marker{display:none}
+.comments summary::before{content:"▸";font-size:11px;color:var(--ink3)}
+.comments[open] summary::before{content:"▾"}
+.comments .list{display:grid;gap:8px;margin:6px 0 10px}
+.comment{padding:8px 10px;border:1px solid var(--rule2);border-radius:6px;background:var(--ground);font-size:13px}
+.comment .ch{display:flex;gap:10px;font-size:11.5px;color:var(--ink3);margin-bottom:3px;flex-wrap:wrap}
+.comment .ch b{color:var(--ink2);font-weight:500}
+.comment .ch .at{font-family:var(--mono);background:var(--surface2);padding:0 5px;border-radius:3px}
+.cform{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start}
+.cform select,.cform textarea,.cform button{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:6px 8px;font-size:13px;min-height:32px}
+.cform textarea{resize:vertical;min-height:32px}
+.cform button{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);cursor:pointer}
+.prevnext{display:flex;justify-content:space-between;gap:12px;margin-top:32px;padding-top:16px;border-top:1px solid var(--rule);font-size:14px;flex-wrap:wrap}
+.prevnext a{display:inline-flex;flex-direction:column;gap:2px}
+.prevnext a span{font-size:11px;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase}
+.expand{font-size:13px;background:none;border:1px solid var(--rule);border-radius:6px;padding:5px 10px;cursor:pointer;min-height:32px}
+
+/* ---- register ---- */
+.facets{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.facets select{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:5px 8px;font-size:13px;min-height:32px;max-width:220px}
+.facets .applied{display:flex;flex-wrap:wrap;gap:6px}
+.facets .applied button{border:1px solid var(--rule);background:var(--accent-soft);border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer;min-height:26px}
+.facets .clear{background:none;border:0;color:var(--accent);cursor:pointer;font-size:13px;padding:4px}
+.facets .density{margin-left:auto}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table.reg{border-collapse:collapse;width:100%;font-size:13px;min-width:980px}
+table.reg th{position:sticky;top:0;background:var(--surface2);text-align:left;font-weight:500;font-size:12px;padding:9px 10px;border-bottom:1px solid var(--rule);color:var(--ink2);white-space:nowrap;cursor:pointer;user-select:none;z-index:1}
+table.reg th .dir{font-size:10px;color:var(--ink3);margin-left:4px}
+table.reg td{padding:9px 10px;border-bottom:1px solid var(--rule2);vertical-align:top}
+table.reg.compact td{padding:5px 10px}
+table.reg td.id{font-family:var(--mono);font-size:12px;white-space:nowrap}
+table.reg td.exp{width:28px;padding-right:0}
+table.reg td.exp button{background:none;border:0;cursor:pointer;color:var(--ink3);font-size:13px;padding:0 4px;min-width:24px;min-height:24px}
+table.reg tr.detail td{background:var(--ground);padding:0}
+table.reg tr.detail .record{margin:10px;border-color:var(--rule2)}
+table.reg td .chips{display:flex;flex-wrap:wrap;gap:4px}
+table.reg td input[type=checkbox]{width:16px;height:16px}
+.batch{display:flex;gap:8px;align-items:center;font-size:13px;margin:10px 0}
+.batch select,.batch button{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:5px 8px;font-size:13px;min-height:32px}
+.batch button{cursor:pointer}
+.count{font-size:13px;color:var(--ink3);margin:0 0 8px}
+
+/* ---- flow page ---- */
+.flowhead{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.lanes{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 20px}
+.lanes span{font-size:12px;padding:4px 10px;border-radius:4px;border:1px solid var(--rule);background:var(--surface)}
+table.steps{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+table.steps th{text-align:left;font-weight:500;font-size:12px;padding:9px 12px;background:var(--surface2);border-bottom:1px solid var(--rule);color:var(--ink2)}
+table.steps td{padding:10px 12px;border-bottom:1px solid var(--rule2);vertical-align:top}
+table.steps td.n{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--ink3)}
+table.steps td.lane{white-space:nowrap}
+table.steps td.lane i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px;vertical-align:0}
+table.steps td .type{font-size:11.5px;color:var(--ink3);display:block;margin-top:2px}
+table.steps td .note{font-size:12.5px;color:var(--ink2);margin-top:3px}
+table.steps td.gw{background:var(--s-review-bg)}
+table.steps td .l2s{display:flex;flex-wrap:wrap;gap:4px}
+table.steps td .l2s a{font-family:var(--mono);font-size:12px;padding:2px 6px;border:1px solid var(--rule);border-radius:4px;background:var(--ground)}
+.updown{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:20px}
+
+/* ---- BPMN diagram ---- */
+.bpmn{margin:0 0 22px;padding:0}
+.bpmn-scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+.bpmn svg{display:block;max-width:none;height:auto;color:var(--ink)}
+.bpmn svg a{color:inherit}
+.bpmn svg a:hover .bn rect,.bpmn svg a:focus .bn rect{stroke:var(--accent);stroke-width:2.5}
+.bpmn svg a:focus{outline:none}
+.bpmn figcaption{font-size:12.5px;color:var(--ink2);margin:8px 2px 0;max-width:90ch}
+.bpmn-x{margin:0 0 22px}
+.bpmn-x summary{cursor:pointer;font-size:13px;color:var(--ink2)}
+.bpmn-x .xbar{display:flex;gap:8px;align-items:center;margin:8px 0}
+.bpmn-x button{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:5px 10px;font-size:13px;min-height:32px;cursor:pointer}
+.bpmn-x textarea{width:100%;min-height:220px;font:12px/1.4 var(--mono);border:1px solid var(--rule);border-radius:6px;background:var(--ground);color:var(--ink);padding:8px;resize:vertical}
+@media print{.bpmn-x{display:none!important} .bpmn-scroll{overflow:visible;border:0;box-shadow:none} .bpmn svg{max-width:100%;width:100%!important}}
+
+/* ---- glossary / changelog ---- */
+.gloss{columns:2;column-gap:32px;font-size:14px}
+.gloss dt{font-weight:600;font-family:var(--mono);font-size:13px;break-after:avoid}
+.gloss dd{margin:2px 0 12px;color:var(--ink2);break-inside:avoid}
+.release{margin:0 0 24px;padding:0 0 16px;border-bottom:1px solid var(--rule)}
+.release h2{display:flex;gap:12px;align-items:baseline}
+.release h2 .d{font:400 13px var(--mono);color:var(--ink3)}
+.release ul{margin:8px 0 0;padding-left:20px}
+.release li{margin:4px 0}
+
+/* ---- responsive ---- */
+@media (max-width:1000px){
+  .band.core .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .hubgrid{grid-template-columns:1fr}
+  .l0{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:6px}
+  .rail ul{display:flex;flex-wrap:wrap;gap:2px}
+  .rail li a.p{display:none}
+}
+@media (max-width:600px){
+  .band.core .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sl{grid-template-columns:1fr}
+  .sl dt{border-top:1px solid var(--rule2);padding-bottom:0}
+  .sl dd{border-top:0;padding-top:2px}
+  .sl .io{grid-template-columns:1fr}
+  .sl .io .arr{display:none}
+  .gloss{columns:1}
+  .cform{grid-template-columns:1fr}
+  .progress .track{width:70px}
+}
+
+/* ---- print ---- */
+@media print{
+  .bar,.rail,.prevnext,.comments,.expand,.facets,.batch,.ctl,.who,.notice{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .page{max-width:none;padding:0}
+  .l0{grid-template-columns:1fr}
+  .group{break-before:page}
+  .group:first-of-type{break-before:auto}
+  .record{break-inside:avoid;box-shadow:none;border-color:#999}
+  a[href^="#/"]::after{content:""}
+  .rhead h3 a.perma{opacity:1}
+}
+</style>
+<style>
+/* ---- additions for the repository build ---- */
+.gdiag{margin:0 0 16px}
+.gdiag summary{cursor:pointer;font-size:13px;color:var(--ink2);padding:6px 0;list-style:none;display:flex;gap:8px;align-items:center}
+.gdiag summary::-webkit-details-marker{display:none}
+.gdiag summary::before{content:"▸";font-size:11px;color:var(--ink3)}
+.gdiag[open] summary::before{content:"▾"}
+.gdiag .bpmn{margin-top:8px}
+.dl{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;margin:6px 0 0}
+.dl a{font-family:var(--mono);font-size:12px;padding:2px 8px;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+.diagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.diagrid .card{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:12px 14px;box-shadow:var(--shadow)}
+.diagrid .card h3{font:600 14px/1.3 var(--sans);margin-bottom:4px}
+.diagrid .card .sub{font-size:12px;color:var(--ink3)}
+.topnav{display:flex;gap:12px;font-size:13px;flex-wrap:wrap}
+.topnav a{color:var(--ink2)}
+@media print{.gdiag{display:block} .gdiag summary{display:none} .topnav{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar" role="banner">
+  <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+  <div class="search" role="search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <input id="q" type="search" placeholder="Search processes, IDs, config…" aria-label="Search catalog" autocomplete="off">
+    <div class="results" id="qres" hidden></div>
+  </div>
+  <div class="lens" role="group" aria-label="Lens">
+    <button id="lens-business" aria-pressed="true">Business</button>
+    <button id="lens-sme" aria-pressed="false">SME</button>
+  </div>
+  <div class="progress" id="progress" title="Review progress across all L2 records"></div>
+  <button class="who" id="who" title="Set the name attached to your statuses, verdicts and comments">Reviewing as <b>—</b></button>
+</header>
+<main id="main" class="page"></main>
+
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function(){
+'use strict';
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const L0S = DATA.l0s, FLOWS = DATA.flows;
+const L0 = Object.fromEntries(L0S.map(l=>[l.id,l]));
+const L1 = {}, L2 = {}, L2BYEID = {};
+L0S.forEach(l0=>l0.l1s.forEach(l1=>{L1[l1.id]=l1; l1.l0=l0.id; l1.l2s.forEach(l2=>{L2[l2.id]=l2; L2BYEID[l2.eid]=l2; l2.l1=l1.id; l2.l0=l0.id;});}));
+const ALL_L2 = Object.values(L2);
+const FLOW = Object.fromEntries(FLOWS.map(f=>[f.id,f]));
+const STATUS = {draft:'Draft',review:'In review',changes:'Changes requested',confirmed:'Confirmed'};
+const VERDICT = {'':'No verdict yet',confirmed:'Confirmed',updated:'Updated',flagged:'Flagged'};
+const PCOLOR = {Targetprocess:'var(--tp)',Costing:'var(--co)',Planning:'var(--pl)',Cloudability:'var(--cl)','All four':'var(--all)'};
+const BUSINESS_FIELDS = ['inputs','description','outcome','who','where','cadence'];
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = (s,el=document)=>el.querySelector(s);
+const ls = {get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+// ---------- review state (shared via db when available, local otherwise) ----------
+const review = {statuses:{}, verdicts:{}, owners:{}, comments:{}};   // by element id
+let db = null, dbReady = false, shared = false;
+let lens = ls.get('lens','business');
+let reviewer = ls.get('reviewer','');
+const localReview = ls.get('review',{statuses:{},verdicts:{},owners:{},comments:{}});
+Object.assign(review, localReview);
+
+function reviewDocName(eid){ return eid; }
+async function saveReview(eid, patch){
+  const cur = Object.assign({}, review.statuses[eid]?{status:review.statuses[eid]}:{}, review.verdicts[eid]||{}, review.owners[eid]?{owner:review.owners[eid]}:{});
+  const body = Object.assign(cur, patch, {by:reviewer||'anonymous', at:new Date().toISOString()});
+  applyReviewDoc(eid, body);
+  if(db){ try{ await db.doc('review/'+eid).set(body);}catch(e){ console.warn('db write failed',e); } }
+  else { ls.set('review', review); }
+  renderProgress(); refreshInline(eid);
+}
+function applyReviewDoc(eid, d){
+  if(!d) return;
+  if(d.status) review.statuses[eid]=d.status;
+  if('verdict' in d) review.verdicts[eid]={verdict:d.verdict||'',note:d.note||'',by:d.by,at:d.at};
+  if('owner' in d) review.owners[eid]=d.owner||'';
+}
+async function addComment(eid, attr, text){
+  const c = {by:reviewer||'anonymous', at:new Date().toISOString(), attr:attr||'', text};
+  const list = (review.comments[eid]||[]).concat([c]);
+  review.comments[eid]=list;
+  if(db){ try{ await db.doc('comments/'+eid).set({items:list}); }catch(e){ console.warn(e);} }
+  else ls.set('review', review);
+  refreshInline(eid);
+}
+function refreshInline(eid){
+  document.querySelectorAll('[data-eid="'+eid+'"]').forEach(el=>{
+    const l2 = L2BYEID[eid];
+    if(l2){ const holder=el; const fresh=document.createElement('div'); fresh.innerHTML=recordHTML(l2); holder.replaceWith(fresh.firstElementChild); }
+    else if(el.classList.contains('ghead')){ const l1=Object.values(L1).find(g=>g.eid===eid); if(l1){const f=document.createElement('div'); f.innerHTML=gheadHTML(l1); el.replaceWith(f.firstElementChild);} }
+  });
+  document.querySelectorAll('.tile').forEach(t=>{ const l0=L0[t.dataset.l0]; if(l0) t.querySelector('.bar2').innerHTML=barHTML(l0); });
+}
+function statusOf(l2){ return review.statuses[l2.eid]||'draft'; }
+function counts(l2s){ const c={draft:0,review:0,changes:0,confirmed:0}; l2s.forEach(x=>c[statusOf(x)]++); return c; }
+function barHTML(l0){
+  const l2s = l0.l1s.flatMap(g=>g.l2s), c=counts(l2s), n=l2s.length;
+  return ['confirmed','changes','review','draft'].map(k=>`<i style="width:${(c[k]/n*100).toFixed(1)}%;background:var(--s-${k})" title="${STATUS[k]}: ${c[k]}"></i>`).join('');
+}
+function renderProgress(){
+  const c=counts(ALL_L2), n=ALL_L2.length;
+  $('#progress').innerHTML = `<span>${c.confirmed}/${n} confirmed</span><span class="track">${['confirmed','changes','review','draft'].map(k=>`<i style="width:${(c[k]/n*100).toFixed(1)}%;background:var(--s-${k})"></i>`).join('')}</span>${shared?'<span title="Statuses, verdicts and comments are shared with everyone who opens this page">shared</span>':'<span title="Not connected to shared review state — saved in this browser only">local</span>'}`;
+}
+
+// ---------- db wiring ----------
+async function initDb(){
+  try{
+    if(!window.claude || !window.claude.use) return;
+    db = await window.claude.use('db');
+    if(!db) return;
+    shared = true;
+    db.collection('review').onSnapshot(snap=>{
+      snap.docs.forEach(d=>applyReviewDoc(d.id, d.data()));
+      dbReady = true; renderProgress(); softRender();
+    }, e=>{ console.warn('review subscription ended', e); });
+    db.collection('comments').onSnapshot(snap=>{
+      snap.docs.forEach(d=>{ review.comments[d.id]=(d.data()||{}).items||[]; });
+      softRender();
+    }, e=>{ console.warn('comments subscription ended', e); });
+    renderProgress();
+  }catch(e){ console.warn('db unavailable', e); }
+}
+
+let pendingRender=false;
+function softRender(){
+  const ae=document.activeElement;
+  if(ae && /textarea|input/i.test(ae.tagName) && ae.closest('#main')){ pendingRender=true; ae.addEventListener('blur',()=>{ if(pendingRender){pendingRender=false; softRender();} },{once:true}); return; }
+  const y=window.scrollY; suppressScroll=true; render(); suppressScroll=false; window.scrollTo({top:y});
+}
+
+// ---------- helpers ----------
+function prodChips(l2){ return l2.products.map(p=>`<span class="chip prod" data-p="${p}">${p}</span>`).join('') || `<span class="chip prod" data-p="${esc(l2.primary_product)}">${esc(l2.primary_product)}</span>`; }
+function flowChips(l2){ return l2.flows.map(f=>`<a class="chip flow" href="#/flow/${f}" title="${esc(FLOW[f].title)}">${f} · ${esc(FLOW[f].name)}</a>`).join(''); }
+function np(v){ return v? esc(v) : '<span class="np">Not provided</span>'; }
+function link(id){ const l2=L2[id]; return l2?`<a href="#/l0/${l2.l0}/${id}" title="${esc(l2.name)}">${id}</a>`:esc(id); }
+function crossref(text){ return esc(text).replace(/\b(\d\d\.\d\.\d)\b/g,(m)=>L2[m]?`<a href="#/l0/${L2[m].l0}/${m}">${m}</a>`:m); }
+
+// ---------- record ----------
+function recordHTML(l2, opts={}){
+  const st = statusOf(l2), sme = lens==='sme';
+  const v = review.verdicts[l2.eid];
+  const comments = review.comments[l2.eid]||[];
+  const rows = [];
+  rows.push(`<div><dt>Inputs → outputs</dt><dd><div class="io"><div><span class="lbl">Inputs</span>${np(l2.inputs)}</div><span class="arr">→</span><div><span class="lbl">Outputs</span>${np(l2.outputs)}</div></div></dd></div>`);
+  rows.push(`<div><dt>What happens</dt><dd>${crossref(l2.description)}</dd></div>`);
+  rows.push(`<div><dt>Who</dt><dd><div class="chips">${l2.persona_list.map(p=>`<span class="chip">${esc(p)}</span>`).join('')}</div>${sme?`<span class="raw">Source text: ${esc(l2.personas)}</span>`:''}</dd></div>`);
+  rows.push(`<div><dt>Where</dt><dd><div class="chips">${prodChips(l2)}</div>${sme?`<span class="raw">${esc(l2.tool)}</span>`:''}</dd></div>`);
+  if(sme) rows.push(`<div><dt>Configuration objects</dt><dd>${np(l2.config)}</dd></div>`);
+  rows.push(`<div><dt>When</dt><dd><span class="chip">${esc(l2.cadence_bucket)}</span> <span style="color:var(--ink2);font-size:13px;margin-left:6px">${esc(l2.cadence)}</span></dd></div>`);
+  if(l2.flows.length) rows.push(`<div><dt>Part of flows</dt><dd><div class="chips">${flowChips(l2)}</div></dd></div>`);
+  if(sme){
+    rows.push(`<div><dt>Frameworks</dt><dd><div class="chips">${l2.frameworks.map(f=>`<span class="chip">${esc(f)}</span>`).join('')}</div></dd></div>`);
+    rows.push(`<div><dt>Delivery model</dt><dd>${esc(l2.delivery_model)}${l2.budgeting_method?` · <span style="color:var(--ink2)">Budgeting method: ${esc(l2.budgeting_method)}</span>`:''}</dd></div>`);
+    rows.push(`<div><dt>Evidence</dt><dd class="evidence">${np(l2.evidence)}</dd></div>`);
+  }
+  const verdictRow = v && v.verdict ? `<span>Group verdict: <b>${esc(VERDICT[v.verdict])}</b></span>`:'';
+  return `<article class="record${opts.target?' target':''}" id="rec-${l2.id}" data-eid="${l2.eid}" aria-labelledby="h-${l2.id}">
+    <div class="rhead">
+      <div class="ttl">
+        <h3 id="h-${l2.id}"><span class="id">${l2.id}</span><span>${esc(l2.name)}</span><a class="perma" href="#/l0/${l2.l0}/${l2.id}" aria-label="Permalink to ${l2.id}">#</a></h3>
+        <div class="eid">${l2.eid}${l2.legacy_id?` · was ${esc(l2.legacy_id)}`:''}${sme?` · ${esc(L1[l2.l1].name)}`:''}</div>
+      </div>
+      <div class="ctl">
+        <span class="status" data-s="${st}">${STATUS[st]}</span>
+        <select class="status-sel" data-set-status="${l2.eid}" aria-label="Set review status for ${l2.id}">
+          ${Object.entries(STATUS).map(([k,n])=>`<option value="${k}"${k===st?' selected':''}>${n}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <p class="outcome"><b>What you get:</b> ${esc(l2.outcome||'Not provided')}</p>
+    <dl class="sl">${rows.join('')}</dl>
+    <details class="comments"${comments.length?' open':''}>
+      <summary>${comments.length? comments.length+' comment'+(comments.length>1?'s':'') : 'Add a comment'} <span style="font-family:var(--mono);font-size:11px;color:var(--ink3)">anchored to ${l2.eid}</span></summary>
+      <div class="list">${comments.map(c=>`<div class="comment"><div class="ch"><b>${esc(c.by)}</b><span>${esc((c.at||'').slice(0,10))}</span>${c.attr?`<span class="at">${esc(c.attr)}</span>`:''}</div>${esc(c.text)}</div>`).join('')}</div>
+      <form class="cform" data-comment="${l2.eid}">
+        <select name="attr" aria-label="Attribute this comment is about"><option value="">Whole record</option>${['description','inputs','outputs','who','where','config','cadence','frameworks','evidence','outcome'].map(a=>`<option>${a}</option>`).join('')}</select>
+        <textarea name="text" rows="1" placeholder="Comment as ${esc(reviewer||'anonymous')}…" required aria-label="Comment text"></textarea>
+        <button type="submit">Post</button>
+      </form>
+    </details>
+    <div class="foot">
+      <span class="comp">Completeness <i><b style="width:${(l2.completeness/l2.completeness_of*100).toFixed(0)}%"></b></i> ${l2.completeness}/${l2.completeness_of}</span>
+      ${verdictRow}
+      <span>${review.statuses[l2.eid]?'':'No review recorded yet'}</span>
+    </div>
+  </article>`;
+}
+
+function gheadHTML(l1){
+  const v = review.verdicts[l1.eid]||{verdict:'',note:''};
+  const owner = review.owners[l1.eid]||'';
+  const c = counts(l1.l2s);
+  return `<div class="ghead" data-eid="${l1.eid}">
+    <h2 id="g-${l1.id}"><span class="id">${l1.id}</span>${esc(l1.name)}</h2>
+    <div class="gmeta">
+      <span>${l1.l2s.length} processes · ${c.confirmed} confirmed</span>
+      <label class="verdict">Owner <input type="text" value="${esc(owner)}" placeholder="SME owner" data-owner="${l1.eid}" aria-label="SME owner for ${l1.id}"></label>
+      <label class="verdict">Verdict <select data-verdict="${l1.eid}" aria-label="Verdict for ${l1.id}">${Object.entries(VERDICT).map(([k,n])=>`<option value="${k}"${k===v.verdict?' selected':''}>${n}</option>`).join('')}</select></label>
+      ${v.verdict?`<span style="color:var(--ink3)">by ${esc(v.by||'?')} ${esc((v.at||'').slice(0,10))}</span>`:''}
+    </div>
+  </div>`;
+}
+
+// ---------- pages ----------
+function hubHTML(){
+  const bands = {steer:[], core:[], enable:[]};
+  L0S.forEach(l=>bands[l.band].push(l));
+  const tile = (l0, cls='') => { const l2s=l0.l1s.flatMap(g=>g.l2s), c=counts(l2s); return `<a class="tile ${cls}" data-p="${l0.product}" data-l0="${l0.id}" href="#/l0/${l0.id}"><span class="n">L0-${l0.id}</span><span class="t">${esc(l0.name)}</span><span class="sub">${l0.l1s.length} groups · ${l2s.length} processes · ${c.confirmed} confirmed</span><span class="bar2">${barHTML(l0)}</span></a>`; };
+  const coreOrder = ['02','05','03','06','07','08'];
+  const total = ALL_L2.length, c = counts(ALL_L2);
+  const sourcesTop = `<div class="notice">Reading order, not execution order: <b>Steer</b> sets direction, the <b>Plan-to-Value</b> chain runs left to right, <b>Enable</b> underpins everything, and the seven <b>flows</b> cut across the chain. Every process keeps a permanent ID (P-0001…) so comments survive re-parenting.</div>`;
+  return `<div class="pagehead"><div><p class="eyebrow">IBM Apptio · Targetprocess · Costing · Planning · Cloudability</p><h1>Apptio Process Catalog</h1><p class="lede">Business processes supported by the four Apptio products, framed by TBM, SPM and FinOps. Nine process areas, ${Object.keys(L1).length} groups, ${total} processes and seven cross-tool flows, each drawn as a BPMN 2.0 swimlane diagram, presented through a Business or SME lens for review.</p></div>
+  <div class="statlist"><div class="stat"><b>${total}</b><span>L2 processes</span></div><div class="stat"><b>${c.confirmed}</b><span>confirmed</span></div><div class="stat"><b>${c.changes}</b><span>changes requested</span></div><div class="stat"><b>${FLOWS.length}</b><span>E2E flows</span></div></div></div>
+  ${sourcesTop}
+  <div class="landscape">
+    <section class="band steer"><div class="bhead"><h2>Steer</h2><span>Direction, objectives and the executive rhythm</span></div><div class="tiles">${bands.steer.map(l=>tile(l)).join('')}<a class="tile" data-p="Costing" href="#/l0/08/08.2.3"><span class="n">08.2.3</span><span class="t">Run the CIO monthly operations review</span><span class="sub">Executive value operating rhythm · in L0-08</span></a><a class="tile" data-p="All four" href="#/l0/10/10.6.1"><span class="n">10.6</span><span class="t">Run the practices &amp; grow maturity</span><span class="sub">TBM office · FinOps practice · SPM governance · in L0-10</span></a></div></section>
+    <section class="band core"><div class="bhead"><h2>Plan-to-Value</h2><span>Shape &amp; fund demand → plan &amp; budget → deliver → account for cost ‖ manage cloud cost → charge back &amp; prove value</span></div><div class="tiles">${coreOrder.map(id=>tile(L0[id])).join('')}</div></section>
+    <section class="band enable"><div class="bhead"><h2>Enable</h2><span>People, platforms and data that every other area depends on</span></div><div class="tiles">${bands.enable.map(l=>tile(l)).join('')}</div></section>
+    <section class="band"><div class="bhead"><h2>Flows across the chain</h2><span>"Targets down. Rates back. Actuals in. TCO up." — plus cloud-to-TBM, the investment loop and the ZBB re-base</span></div><div class="flows-band">${FLOWS.map(f=>`<a class="flowcard" href="#/flow/${f.id}"><span class="fid">${f.id}</span><span><span class="ft">${esc(f.name)}</span><span class="fs">${esc(f.title)} · ${f.steps.length} steps</span><span class="fp">${f.products.map(p=>`<i style="background:${PCOLOR[p]}" title="${p}"></i>`).join('')}</span></span></a>`).join('')}</div></section>
+  </div>
+  <div class="hubgrid">
+    <section class="panel"><h2>Other ways in</h2><dl class="kv">
+      <dt><a href="#/register">Register</a></dt><dd>One sortable, filterable table of all ${total} processes — slice by product, persona, cadence, flow, framework or review status; confirm or flag in batches.</dd>
+      <dt><a href="#/diagrams">Diagrams</a></dt><dd>Every BPMN 2.0 swimlane diagram — ${L0S.length} areas, ${Object.keys(L1).length} groups and ${FLOWS.length} flows — with .bpmn and .svg downloads and a <a href="viewer.html">bpmn-js editor</a>.</dd>
+      <dt><a href="#/glossary">Glossary</a></dt><dd>Every acronym in the catalog, in plain language.</dd>
+      <dt><a href="#/changelog">Changelog</a></dt><dd>What changed since v0.2 and why — keyed to element IDs.</dd>
+      <dt><a href="#/print">Print view</a></dt><dd>All nine areas expanded, one page per group, for offline review.</dd>
+    </dl></section>
+    <section class="panel"><h2>Legend</h2><div class="legend" style="margin-bottom:10px">${Object.entries(PCOLOR).map(([p,c])=>`<span><i style="background:${c}"></i>${p}</span>`).join('')}</div><div class="legend">${Object.entries(STATUS).map(([k,n])=>`<span class="status" data-s="${k}">${n}</span>`).join('')}</div><p style="font-size:12.5px;color:var(--ink2);margin:12px 0 0">Tile stripe = primary product. Thin bar = review status of the area's processes. Business lens hides configuration objects, framework detail, evidence and delivery model; SME lens shows everything.</p></section>
+  </div>`;
+}
+
+function l0HTML(l0, targetId){
+  const rail = `<nav class="rail" aria-label="On this page"><p class="rh">L0-${l0.id}</p><ul>${l0.l1s.map(g=>`<li><a class="g" href="#/l0/${l0.id}/${g.id}" data-spy="g-${g.id}"><span class="id">${g.id}</span>${esc(g.name)}</a></li>${g.l2s.map(p=>`<li><a class="p" href="#/l0/${l0.id}/${p.id}" data-spy="rec-${p.id}"><span class="id">${p.id}</span>${esc(p.name)}</a></li>`).join('')}`).join('')}</ul></nav>`;
+  const l2s = l0.l1s.flatMap(g=>g.l2s), c = counts(l2s);
+  const idx = L0S.indexOf(l0), prev = L0S[idx-1], next = L0S[idx+1];
+  const main = `<div class="pagehead"><div><p class="eyebrow">Process area L0-${l0.id} · primary product ${esc(l0.primary)}</p><h1>${esc(l0.name)}</h1><p class="lede">${crossref(l0.description)}</p>
+    <div class="meta"><span>${l0.l1s.length} groups</span><span>${l2s.length} processes</span><span>${c.confirmed} confirmed · ${c.changes} changes requested</span><span>Lanes: ${l0.lanes.map(esc).join(' · ')}</span></div></div></div>
+    ${l0.bpmn?`<section aria-label="Area diagram">${diagramBlock(l0.bpmn,{bare:true})}</section>`:''}
+    ${l0.l1s.map(g=>`<section class="group" id="g-${g.id}-sec" aria-labelledby="g-${g.id}">${gheadHTML(g)}${g.bpmn?diagramBlock(g.bpmn,{open:!ls.get('diagClosed',false)}):''}${g.merged_from.length?`<p class="notice">Merged in v0.4: ${g.merged_from.map(m=>esc(m.id+' '+m.name)).join(', ')}.</p>`:''}${g.l2s.map(p=>recordHTML(p,{target:p.id===targetId})).join('')}</section>`).join('')}
+    <div class="prevnext">${prev?`<a href="#/l0/${prev.id}"><span>Previous area</span>← L0-${prev.id} ${esc(prev.name)}</a>`:'<span></span>'}${next?`<a href="#/l0/${next.id}" style="text-align:right"><span>Next area</span>L0-${next.id} ${esc(next.name)} →</a>`:'<span></span>'}</div>`;
+  return `<div class="l0">${rail}<div>${main}</div></div>`;
+}
+
+const facetState = {product:'',persona:'',cadence:'',flow:'',framework:'',status:'',l0:'',method:'',q:''};
+let sortKey='id', sortDir=1, compact=false; const expanded=new Set(), selected=new Set();
+function registerHTML(){
+  const opts=(name,vals,label)=>`<select data-facet="${name}" aria-label="${label}"><option value="">${label}: all</option>${vals.map(v=>`<option value="${esc(v)}"${facetState[name]===v?' selected':''}>${esc(v)}</option>`).join('')}</select>`;
+  const personas=[...new Set(ALL_L2.flatMap(x=>x.persona_list))].sort();
+  const cadences=[...new Set(ALL_L2.map(x=>x.cadence_bucket))].sort();
+  const methods=[...new Set(ALL_L2.map(x=>x.budgeting_method).filter(Boolean))].sort();
+  const rows = filtered();
+  const applied = Object.entries(facetState).filter(([k,v])=>v&&k!=='q').map(([k,v])=>`<button data-unfacet="${k}" aria-label="Remove filter ${k}: ${esc(v)}">${esc(v)} ✕</button>`).join('');
+  const th=(k,n)=>`<th data-sort="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}">${n}${sortKey===k?`<span class="dir">${sortDir>0?'▲':'▼'}</span>`:''}</th>`;
+  return `<div class="pagehead"><div><p class="eyebrow">Register</p><h1>All processes</h1><p class="lede">One row per L2. Filter by any overlay, sort a column, expand a row to see the full record, tick rows to change status in batch.</p></div></div>
+  <div class="facets">
+    ${opts('l0',L0S.map(l=>'L0-'+l.id+' '+l.name),'Area')}${opts('product',['Targetprocess','Costing','Planning','Cloudability'],'Product')}${opts('persona',personas,'Persona')}${opts('cadence',cadences,'Cadence')}${opts('flow',FLOWS.map(f=>f.id),'Flow')}${opts('framework',['TBM','SPM','FinOps','SAFe','ITFM'],'Framework')}${opts('method',methods,'Budgeting method')}${opts('status',Object.values(STATUS),'Review status')}
+    <span class="applied">${applied}</span>${applied?'<button class="clear" data-clearfacets>Clear all</button>':''}
+    <label class="density" style="font-size:13px"><input type="checkbox" id="compact"${compact?' checked':''}> Compact</label>
+  </div>
+  <p class="count">${rows.length} of ${ALL_L2.length} processes</p>
+  <div class="batch"><span>${selected.size} selected</span><select id="batch-status" aria-label="Status to apply to selected">${Object.entries(STATUS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select><button id="batch-apply" ${selected.size?'':'disabled'}>Apply to selected</button><button id="batch-clear" ${selected.size?'':'disabled'}>Clear selection</button></div>
+  <div class="tablewrap"><table class="reg${compact?' compact':''}"><thead><tr><th style="cursor:default"><input type="checkbox" id="selall" aria-label="Select all shown"></th><th style="cursor:default"></th>${th('id','ID')}${th('name','Process')}${th('l1','Group')}${th('primary_product','Product')}${th('cadence_bucket','Cadence')}<th style="cursor:default">Who</th>${th('status','Status')}</tr></thead><tbody>
+  ${rows.map(x=>`<tr data-row="${x.id}"><td><input type="checkbox" data-sel="${x.eid}"${selected.has(x.eid)?' checked':''} aria-label="Select ${x.id}"></td><td class="exp"><button data-expand="${x.id}" aria-expanded="${expanded.has(x.id)}" aria-label="Expand ${x.id}">${expanded.has(x.id)?'▾':'▸'}</button></td><td class="id"><a href="#/l0/${x.l0}/${x.id}">${x.id}</a></td><td>${esc(x.name)}</td><td style="font-size:12.5px;color:var(--ink2)">${x.l1} ${esc(L1[x.l1].name)}</td><td><div class="chips">${prodChips(x)}</div></td><td>${esc(x.cadence_bucket)}</td><td><div class="chips">${x.persona_list.slice(0,2).map(p=>`<span class="chip">${esc(p)}</span>`).join('')}${x.persona_list.length>2?`<span class="chip">+${x.persona_list.length-2}</span>`:''}</div></td><td><span class="status" data-s="${statusOf(x)}">${STATUS[statusOf(x)]}</span></td></tr>${expanded.has(x.id)?`<tr class="detail"><td colspan="9">${recordHTML(x)}</td></tr>`:''}`).join('')}
+  </tbody></table></div>`;
+}
+function filtered(){
+  const f=facetState;
+  let rows = ALL_L2.filter(x=>
+    (!f.l0 || f.l0.startsWith('L0-'+x.l0)) && (!f.product || x.products.includes(f.product)) && (!f.persona || x.persona_list.includes(f.persona)) &&
+    (!f.cadence || x.cadence_bucket===f.cadence) && (!f.flow || x.flows.includes(f.flow)) && (!f.framework || x.framework_tags.includes(f.framework)) &&
+    (!f.method || x.budgeting_method===f.method) && (!f.status || STATUS[statusOf(x)]===f.status));
+  const key = sortKey==='status'? x=>Object.keys(STATUS).indexOf(statusOf(x)) : sortKey==='l1'? x=>x.l1 : x=>x[sortKey];
+  rows.sort((a,b)=>{const ka=key(a),kb=key(b);return (ka>kb?1:ka<kb?-1:0)*sortDir;});
+  return rows;
+}
+
+// ---------- BPMN: layout, SVG rendering, BPMN 2.0 XML export ----------
+const BP = {laneHead:150, colW:208, nodeW:162, taskH:74, laneBase:122, slotH:96, padX:28, evR:18, gwR:24};
+
+function bpmnKind(type){
+  const t=(type||'').toLowerCase();
+  if(t.startsWith('start')) return t.includes('timer')?'startTimer':'start';
+  if(t.startsWith('end')) return 'end';
+  if(t.includes('gateway')) return t.includes('parallel')?'gwPar':'gwXor';
+  if(t.startsWith('user')) return 'user';
+  if(t.startsWith('service')) return 'service';
+  if(t.startsWith('send')) return 'send';
+  if(t.startsWith('sub')) return 'sub';
+  return 'task';
+}
+function bpmnLayout(f){
+  const lanes = f.lanes.slice();
+  const laneIx = Object.fromEntries(lanes.map((l,i)=>[l,i]));
+  const nodes=[], edges=[], byN={};
+  let col=-1, group=null, prevStep=null; // group: {base, members:[]}
+  const isBranch = n => /^[a-z]?\d+[a-z]$/.test(n);
+  const baseOf = n => n.slice(0,-1);
+  const slotUse = {}; // `${lane}|${col}` -> count
+  const place = (node)=>{ const k=node.lane+'|'+node.col; node.slot=slotUse[k]||0; slotUse[k]=node.slot+1; };
+  const steps = f.steps.slice();
+  if(!/^start/i.test(steps[0].type)) steps.unshift({n:'',type:'Start event',lane:steps[0].lane,task:'',l2:[],implicit:true});
+  if(!/^end/i.test(steps[steps.length-1].type)) steps.push({n:'',type:'End event',lane:steps[steps.length-1].lane,task:'',l2:[],implicit:true});
+  steps.forEach((s,i)=>{
+    const kind=bpmnKind(s.type);
+    const node={id:s.implicit?('n_'+kind+'_implicit'):('n_'+s.n.replace(/[^\w]/g,'_')), n:s.n, kind, label:s.task, lane:laneIx[s.lane]??0, l2:s.l2, note:s.note||'', type:s.type, href:s.href||null};
+    if(isBranch(s.n) && byN[baseOf(s.n)]){
+      if(!group || group.base!==baseOf(s.n)){ group={base:baseOf(s.n), members:[]}; col++; }
+      node.col=col; group.members.push(node);
+    } else {
+      col++; node.col=col;
+      if(group && group.members.length){ group.members.forEach(m=>edges.push({from:m.id,to:node.id})); group=null; }
+      else if(prevStep){ const prev=prevStep; const e={from:prev.id,to:node.id}; if(prev.kind.startsWith('gw')) e.label=prev.yesLabel||'Yes'; edges.push(e); }
+    }
+    place(node); nodes.push(node); if(s.n) byN[s.n]=node; prevStep=node;
+    if(isBranch(s.n) && byN[baseOf(s.n)]){
+      const gw=byN[baseOf(s.n)]; const labels=gw.branchLabels||[]; edges.push({from:gw.id,to:node.id,label:labels[group.members.length-1]||''});
+    }
+    if(kind.startsWith('gw')){
+      const m=node.note.match(/(?:^|;\s*)(Yes|No)\s*:\s*([^;]+)/gi)||[];
+      const lab=m.map(x=>x.match(/^(?:;\s*)?(Yes|No)/i)[1]);
+      node.branchLabels=lab;                       // order of appearance for suffix branches
+      node.yesLabel='Yes';
+      const endM=node.note.match(/No:\s*end event\s*'([^']+)'/i);
+      if(endM){ const en={id:node.id+'_no', n:'', kind:'end', label:endM[1], lane:node.lane, col:node.col, l2:[], note:'', type:'End event', extra:true}; place(en); nodes.push(en); edges.push({from:node.id,to:en.id,label:'No'}); }
+      const loopM=node.note.match(/loop to\s+([\w.]+)/i);
+      if(loopM && byN[loopM[1]]) edges.push({from:node.id,to:byN[loopM[1]].id,label:'No',loop:true});
+    }
+  });
+  // geometry
+  const laneSlots = lanes.map((_,li)=>Math.max(1,...nodes.filter(n=>n.lane===li).map(n=>n.slot+1)));
+  const laneH = laneSlots.map(s=>BP.laneBase+(s-1)*BP.slotH);
+  const laneY = []; let y=0; laneH.forEach(h=>{laneY.push(y); y+=h;});
+  const H=y, W=BP.laneHead+(col+1)*BP.colW+BP.padX;
+  nodes.forEach(n=>{
+    n.cx = BP.laneHead + BP.padX + n.col*BP.colW + BP.nodeW/2;
+    n.cy = laneY[n.lane] + BP.laneBase/2 + n.slot*BP.slotH;
+    if(n.kind==='start'||n.kind==='startTimer'||n.kind==='end'){ n.w=BP.evR*2; n.h=BP.evR*2; }
+    else if(n.kind.startsWith('gw')){ n.w=BP.gwR*2; n.h=BP.gwR*2; }
+    else { n.w=BP.nodeW; n.h=BP.taskH; }
+    n.x=n.cx-n.w/2; n.y=n.cy-n.h/2;
+  });
+  const byId=Object.fromEntries(nodes.map(n=>[n.id,n]));
+  edges.forEach(e=>{
+    const a=byId[e.from], b=byId[e.to]; const pts=[];
+    if(e.loop){ // route below source lane row back to target
+      const yb = Math.max(a.y+a.h, b.y+b.h) + 18;
+      pts.push([a.cx,a.y+a.h],[a.cx,yb],[b.cx,yb],[b.cx,b.y+b.h]);
+    } else if(b.col===a.col){ // vertical drop (extra end event under a gateway)
+      pts.push([a.cx,a.y+a.h],[a.cx,b.y]);
+    } else if(Math.abs(a.cy-b.cy)<1){ pts.push([a.x+a.w,a.cy],[b.x,b.cy]); }
+    else { const mx=a.x+a.w+(b.x-(a.x+a.w))/2; pts.push([a.x+a.w,a.cy],[mx,a.cy],[mx,b.cy],[b.x,b.cy]); }
+    e.pts=pts;
+  });
+  return {lanes,laneY,laneH,nodes,edges,W,H,byId};
+}
+function wrapText(s, maxChars, maxLines){
+  const words=String(s).split(/\s+/), lines=[]; let cur='';
+  for(const w of words){ if((cur+' '+w).trim().length>maxChars && cur){ lines.push(cur); cur=w; } else cur=(cur+' '+w).trim(); }
+  if(cur) lines.push(cur);
+  if(lines.length>maxLines){ lines.length=maxLines; lines[maxLines-1]=lines[maxLines-1].replace(/.{2}$/,'')+'…'; }
+  return lines;
+}
+function bpmnIcon(kind,x,y){
+  const c='stroke="currentColor" fill="none" stroke-width="1.4"';
+  if(kind==='user') return `<g transform="translate(${x},${y})" ${c}><circle cx="6" cy="4" r="3"/><path d="M0 13c0-4 12-4 12 0"/></g>`;
+  if(kind==='service') return `<g transform="translate(${x},${y})" ${c}><circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="6" r="5.2" stroke-dasharray="2 1.6"/></g>`;
+  if(kind==='send') return `<g transform="translate(${x},${y})"><rect width="13" height="9" rx="1" fill="currentColor"/><path d="M0.5 1l6 4.5 6-4.5" stroke="var(--surface)" stroke-width="1.2" fill="none"/></g>`;
+  return '';
+}
+function bpmnSVG(f, laneColor){
+  const L=bpmnLayout(f);
+  const laneEls = L.lanes.map((name,i)=>{
+    const y=L.laneY[i], h=L.laneH[i], lines=wrapText(name,18,3);
+    return `<g><rect x="0" y="${y}" width="${L.W}" height="${h}" fill="${i%2?'var(--surface2)':'var(--surface)'}" stroke="currentColor" stroke-opacity=".35"/>
+      <rect x="0" y="${y}" width="6" height="${h}" fill="${laneColor[name]||'currentColor'}"/>
+      <text x="${BP.laneHead/2+3}" y="${y+h/2-(lines.length-1)*7}" text-anchor="middle" font-size="12" font-weight="600" fill="currentColor">${lines.map((t,k)=>`<tspan x="${BP.laneHead/2+3}" dy="${k?14:0}">${esc(t)}</tspan>`).join('')}</text>
+      <line x1="${BP.laneHead}" y1="${y}" x2="${BP.laneHead}" y2="${y+h}" stroke="currentColor" stroke-opacity=".35"/>${L.nodes.some(n=>n.lane===i)?'':`<text x="${BP.laneHead+BP.padX}" y="${y+h/2+4}" font-size="11" font-style="italic" fill="currentColor" fill-opacity=".55">Receiving system — no catalog step modeled in this lane</text>`}</g>`;
+  }).join('');
+  const nodeEls = L.nodes.map(n=>{
+    const href = n.href || (n.l2 && n.l2.length && L2[n.l2[0]] ? `#/l0/${L2[n.l2[0]].l0}/${n.l2[0]}` : null);
+    let body='';
+    const title=`<title>${esc((n.n?n.n+' · ':'')+n.label+(n.type?' ('+n.type+')':''))}${n.note?esc(' — '+n.note):''}</title>`;
+    if(n.kind==='start'||n.kind==='startTimer'||n.kind==='end'){
+      const thick=n.kind==='end'?3:1.5;
+      body=`<circle cx="${n.cx}" cy="${n.cy}" r="${BP.evR}" fill="var(--ground)" stroke="currentColor" stroke-width="${thick}"/>`;
+      if(n.kind==='startTimer') body+=`<circle cx="${n.cx}" cy="${n.cy}" r="11" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M${n.cx} ${n.cy-7}v7h5" fill="none" stroke="currentColor" stroke-width="1.4"/>`;
+      const lines=wrapText(n.label,22,2);
+      body+=`<text x="${n.cx}" y="${n.cy+BP.evR+13}" text-anchor="middle" font-size="10.5" fill="currentColor">${lines.map((t,k)=>`<tspan x="${n.cx}" dy="${k?12:0}">${esc(t)}</tspan>`).join('')}</text>`;
+    } else if(n.kind.startsWith('gw')){
+      const r=BP.gwR;
+      body=`<path d="M${n.cx} ${n.cy-r}L${n.cx+r} ${n.cy}L${n.cx} ${n.cy+r}L${n.cx-r} ${n.cy}Z" fill="var(--s-review-bg)" stroke="currentColor" stroke-width="1.5"/>`;
+      body+= n.kind==='gwPar' ? `<path d="M${n.cx} ${n.cy-10}v20M${n.cx-10} ${n.cy}h20" stroke="currentColor" stroke-width="2.2"/>` : `<path d="M${n.cx-7} ${n.cy-7}l14 14M${n.cx+7} ${n.cy-7}l-14 14" stroke="currentColor" stroke-width="2.2"/>`;
+      const lines=wrapText(n.label,24,2);
+      body+=`<text x="${n.cx}" y="${n.cy-r-8-(lines.length-1)*12}" text-anchor="middle" font-size="10.5" font-weight="600" fill="currentColor">${lines.map((t,k)=>`<tspan x="${n.cx}" dy="${k?12:0}">${esc(t)}</tspan>`).join('')}</text>`;
+      body+=`<text x="${n.cx+r+4}" y="${n.cy+r+2}" font-size="9.5" fill="currentColor" fill-opacity=".6" font-family="var(--mono)">${esc(n.n)}</text>`;
+    } else {
+      const lines=wrapText(n.label,26,3);
+      body=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="8" fill="var(--ground)" stroke="currentColor" stroke-width="${n.kind==='sub'?2.2:1.5}"/>`;
+      if(n.kind==='sub') body+=`<rect x="${n.cx-6}" y="${n.y+n.h-14}" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M${n.cx-3} ${n.y+n.h-8}h6M${n.cx} ${n.y+n.h-11}v6" stroke="currentColor" stroke-width="1.2"/>`;
+      if(n.kind==='send') body+=`<rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="8" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" transform="translate(3,3)" opacity=".5"/>`;
+      body+=bpmnIcon(n.kind,n.x+8,n.y+7);
+      body+=`<text x="${n.x+n.w-7}" y="${n.y+13}" text-anchor="end" font-size="9.5" fill="currentColor" fill-opacity=".6" font-family="var(--mono)">${esc(n.n)}${/ADM/.test(n.type)?' · ADM':''}</text>`;
+      const ty=n.y+18+(n.h-18)/2+4-(lines.length-1)*6.5;
+      body+=`<text x="${n.cx}" y="${ty}" text-anchor="middle" font-size="10.5" fill="currentColor">${lines.map((t,k)=>`<tspan x="${n.cx}" dy="${k?13:0}">${esc(t)}</tspan>`).join('')}</text>`;
+    }
+    const g=`<g class="bn" data-n="${esc(n.n)}">${title}${body}</g>`;
+    return href?`<a href="${href}" aria-label="${esc(n.label)} — open ${n.n||n.l2[0]}">${g}</a>`:g;
+  }).join('');
+  const edgeEls = L.edges.map(e=>{
+    const d='M'+e.pts.map(p=>p.join(' ')).join('L');
+    let lab='';
+    if(e.label){ let lx,ly,anchor='start';
+      if(e.loop){ lx=(e.pts[1][0]+e.pts[2][0])/2; ly=e.pts[1][1]-4; anchor='middle'; }
+      else if(e.pts.length===2 && e.pts[0][0]===e.pts[1][0]){ lx=e.pts[0][0]+7; ly=(e.pts[0][1]+e.pts[1][1])/2+4; }
+      else if(e.pts.length===2){ lx=(e.pts[0][0]+e.pts[1][0])/2; ly=e.pts[0][1]-6; anchor='middle'; }
+      else { lx=e.pts[2][0]+6; ly=e.pts[2][1]-6; }
+      lab=`<text x="${lx}" y="${ly}" font-size="10" font-weight="600" fill="currentColor" text-anchor="${anchor}">${esc(e.label)}</text>`; }
+    return `<path d="${d}" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#bp-arrow-${f.id})"/>${lab}`;
+  }).join('');
+  const aria=`BPMN swimlane diagram of ${f.kind?'':'flow '}${f.kind?f.name:f.id+' '+f.name}: ${L.lanes.length} lanes, ${f.steps.length} steps`;
+  const what = f.kind==='l1' ? `Process group ${esc(f.name)} as BPMN 2.0: one lane per persona from the area's default lanes, one task per L2 process in catalog order (person icon = user task, dashed gear = service task, envelope = send task). Click a task to jump to its record.`
+             : f.kind==='l0' ? `Area ${esc(f.name)} as BPMN 2.0: each box is a collapsed sub-process (one per process group) placed in the lane of the persona that performs most of its work. Click a box to jump to that group.`
+             : `${esc(f.id)} as BPMN 2.0: pool "${esc(f.title)}", one lane per system or role, steps left to right. Rounded boxes are tasks (person icon = user task, dashed gear = service task, envelope = send task across the ADM data highway), diamonds are exclusive gateways, thin circles start the flow and thick circles end it. Click any task to open the catalog process it invokes.`;
+  return `<figure class="bpmn"><div class="bpmn-scroll"><svg viewBox="0 0 ${L.W} ${L.H}" width="${L.W}" role="img" aria-label="${esc(aria)}" style="font-family:var(--sans)">
+    <defs><marker id="bp-arrow-${f.id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+    ${laneEls}${edgeEls}${nodeEls}</svg></div>
+    <figcaption>${what}</figcaption></figure>`;
+}
+function bpmnXML(f){
+  const L=bpmnLayout(f);
+  const x=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const pid='Process_'+f.id, ppid='Participant_'+f.id;
+  const tag={start:'startEvent',startTimer:'startEvent',end:'endEvent',gwXor:'exclusiveGateway',gwPar:'parallelGateway',user:'userTask',service:'serviceTask',send:'sendTask',task:'task',sub:'subProcess'};
+  const inc={}, out={}; L.edges.forEach((e,i)=>{ e.id='Flow_'+i; (out[e.from]=out[e.from]||[]).push(e.id); (inc[e.to]=inc[e.to]||[]).push(e.id); });
+  const laneXml = L.lanes.map((name,i)=>`      <bpmn:lane id="Lane_${f.id}_${i}" name="${x(name)}">\n${L.nodes.filter(n=>n.lane===i).map(n=>`        <bpmn:flowNodeRef>${n.id}</bpmn:flowNodeRef>`).join('\n')}\n      </bpmn:lane>`).join('\n');
+  const nodeXml = L.nodes.map(n=>{
+    const doc = (n.l2&&n.l2.length?`Catalog: ${n.l2.join(', ')}. `:'')+(n.note||'');
+    const inner = (doc?`\n      <bpmn:documentation>${x(doc)}</bpmn:documentation>`:'')+(inc[n.id]||[]).map(i=>`\n      <bpmn:incoming>${i}</bpmn:incoming>`).join('')+(out[n.id]||[]).map(o=>`\n      <bpmn:outgoing>${o}</bpmn:outgoing>`).join('')+(n.kind==='startTimer'?`\n      <bpmn:timerEventDefinition />`:'');
+    return `    <bpmn:${tag[n.kind]} id="${n.id}" name="${x(n.label)}">${inner}\n    </bpmn:${tag[n.kind]}>`;
+  }).join('\n');
+  const flowXml = L.edges.map(e=>`    <bpmn:sequenceFlow id="${e.id}" sourceRef="${e.from}" targetRef="${e.to}"${e.label?` name="${x(e.label)}"`:''} />`).join('\n');
+  const shapeXml = [`      <bpmndi:BPMNShape id="${ppid}_di" bpmnElement="${ppid}" isHorizontal="true"><dc:Bounds x="0" y="0" width="${L.W}" height="${L.H}" /></bpmndi:BPMNShape>`]
+    .concat(L.lanes.map((_,i)=>`      <bpmndi:BPMNShape id="Lane_${f.id}_${i}_di" bpmnElement="Lane_${f.id}_${i}" isHorizontal="true"><dc:Bounds x="30" y="${L.laneY[i]}" width="${L.W-30}" height="${L.laneH[i]}" /></bpmndi:BPMNShape>`))
+    .concat(L.nodes.map(n=>`      <bpmndi:BPMNShape id="${n.id}_di" bpmnElement="${n.id}"${n.kind==='sub'?' isExpanded="false"':''}><dc:Bounds x="${n.x.toFixed(0)}" y="${n.y.toFixed(0)}" width="${n.w}" height="${n.h}" /></bpmndi:BPMNShape>`))
+    .concat(L.edges.map(e=>`      <bpmndi:BPMNEdge id="${e.id}_di" bpmnElement="${e.id}">${e.pts.map(p=>`<di:waypoint x="${p[0].toFixed(0)}" y="${p[1].toFixed(0)}" />`).join('')}</bpmndi:BPMNEdge>`)).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_${f.id}" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="${DATA.version}">
+  <bpmn:collaboration id="Collaboration_${f.id}">
+    <bpmn:participant id="${ppid}" name="${x((f.kind?f.name:f.id+' '+f.name)+' — '+f.title)}" processRef="${pid}" />
+  </bpmn:collaboration>
+  <bpmn:process id="${pid}" name="${x(f.title)}" isExecutable="false">
+    <bpmn:documentation>${x(f.summary)}</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_${f.id}">
+${laneXml}
+    </bpmn:laneSet>
+${nodeXml}
+${flowXml}
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_${f.id}">
+    <bpmndi:BPMNPlane id="BPMNPlane_${f.id}" bpmnElement="Collaboration_${f.id}">
+${shapeXml}
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
+`;
+}
+
+const LANE_PAL=['var(--pl)','var(--tp)','var(--co)','var(--cl)','var(--all)'];
+function laneColors(f){ const c={}; f.lanes.forEach((l,i)=>c[l]=LANE_PAL[i%LANE_PAL.length]); return c; }
+function diagramFiles(f){
+  const base = f.kind==='l1' ? f.name.split(' ')[0] : f.kind==='l0' ? 'L0-'+f.name.split(' ')[0].replace('L0-','') : 'flow-'+f.id;
+  return {bpmn:`../diagrams/bpmn/generated/${base}.bpmn`, svg:`../assets/diagrams/${base}.svg`, base};
+}
+function diagramBlock(f, opts={}){
+  const files=diagramFiles(f);
+  const xmlId='bpmn-xml-'+f.id;
+  const inner = `${bpmnSVG(f, laneColors(f))}
+  <div class="dl"><span style="color:var(--ink3)">Download:</span><a href="${files.bpmn}" download>${files.base}.bpmn</a><a href="${files.svg}" download>${files.base}.svg</a><a href="viewer.html#${encodeURIComponent(files.bpmn)}">open in editor</a><button type="button" class="expand" style="min-height:26px;padding:2px 8px;font-size:12px" data-copy-bpmn="${f.id}">Copy BPMN XML</button><textarea readonly hidden id="${xmlId}" aria-hidden="true">${esc(bpmnXML(f))}</textarea></div>`;
+  if(opts.bare) return inner;
+  return `<details class="gdiag"${opts.open?' open':''}><summary>BPMN diagram — ${esc(f.kind==='l0'?'process groups as sub-processes':f.steps.length+' processes in '+f.lanes.length+' lane'+(f.lanes.length>1?'s':''))}</summary>${inner}</details>`;
+}
+function flowHTML(f){
+  const laneColor = {}; const lanePal=['var(--pl)','var(--tp)','var(--co)','var(--cl)','var(--all)'];
+  f.lanes.forEach((l,i)=>laneColor[l]=lanePal[i%lanePal.length]);
+  const idx=FLOWS.indexOf(f), prev=FLOWS[idx-1], next=FLOWS[idx+1];
+  return `<div class="pagehead"><div><p class="eyebrow">Cross-tool flow ${f.id} · formerly ${esc(f.legacy_id)}</p><h1>${esc(f.name)} — ${esc(f.title)}</h1><p class="lede">${crossref(f.summary)}</p><div class="meta"><span>Cadence: ${esc(f.cadence)}</span><span>${f.steps.length} steps</span><span>Products: ${f.products.map(p=>`<span class="chip prod" data-p="${p}">${p}</span>`).join(' ')}</span></div></div></div>
+  <div class="lanes" aria-label="Lanes">${f.lanes.map(l=>`<span><i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${laneColor[l]};margin-right:6px"></i>${esc(l)}</span>`).join('')}</div>
+  ${bpmnSVG(f, laneColor)}
+  <details class="bpmn-x"><summary>BPMN 2.0 XML for this flow — import into Camunda, bpmn.io, Visio, Signavio or Draw.io</summary><div class="xbar"><button type="button" data-copy-bpmn="${f.id}">Copy XML</button><span style="font-size:12px;color:var(--ink3)">Generated from the step table with diagram interchange (layout) included.</span></div><textarea readonly spellcheck="false" id="bpmn-xml-${f.id}" aria-label="BPMN XML for ${f.id}">${esc(bpmnXML(f))}</textarea></details>
+  <h2 style="margin:0 0 10px">Step table</h2>
+  <div style="overflow-x:auto"><table class="steps"><thead><tr><th>Step</th><th>Lane</th><th>Task / event</th><th>Catalog process</th></tr></thead><tbody>
+  ${f.steps.map(s=>`<tr><td class="n">${esc(s.n)}</td><td class="lane"><i style="background:${laneColor[s.lane]||'var(--ink3)'}"></i>${esc(s.lane)}</td><td class="${/gateway/i.test(s.type)?'gw':''}">${esc(s.task)}<span class="type">${esc(s.type)}</span>${s.note?`<div class="note">${crossref(s.note)}</div>`:''}</td><td><div class="l2s">${s.l2.map(id=>link(id)).join('')||'<span style="color:var(--ink3)">—</span>'}</div>${s.l2.length?`<div style="font-size:12px;color:var(--ink3);margin-top:4px">${s.l2.map(id=>esc(L2[id].name)).join(' · ')}</div>`:''}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="updown"><div class="panel"><h2>Upstream</h2>${f.upstream.length?f.upstream.map(u=>`<div><a href="#/flow/${u}">${u} · ${esc(FLOW[u].name)}</a></div>`).join(''):'<span style="color:var(--ink3)">None — this flow starts the chain.</span>'}</div><div class="panel"><h2>Downstream</h2>${f.downstream.length?f.downstream.map(u=>`<div><a href="#/flow/${u}">${u} · ${esc(FLOW[u].name)}</a></div>`).join(''):'<span style="color:var(--ink3)">None — this flow ends in reporting.</span>'}</div></div>
+  <div class="prevnext">${prev?`<a href="#/flow/${prev.id}"><span>Previous flow</span>← ${prev.id} ${esc(prev.name)}</a>`:'<span></span>'}${next?`<a href="#/flow/${next.id}" style="text-align:right"><span>Next flow</span>${next.id} ${esc(next.name)} →</a>`:'<span></span>'}</div>`;
+}
+function diagramsHTML(){
+  const card = (f, href, sub) => { const files=diagramFiles(f); return `<div class="card"><h3><a href="${href}">${esc(f.kind?f.name:f.id+' · '+f.name)}</a></h3><div class="sub">${esc(sub)}</div><div class="dl"><a href="${files.bpmn}" download>.bpmn</a><a href="${files.svg}" download>.svg</a><a href="viewer.html#${encodeURIComponent(files.bpmn)}">editor</a></div></div>`; };
+  const nA=L0S.filter(l=>l.bpmn).length, nG=Object.values(L1).filter(g=>g.bpmn).length;
+  return `<div class="pagehead"><div><p class="eyebrow">BPMN 2.0 diagrams · v${DATA.version}</p><h1>All ${nA+nG+FLOWS.length} diagrams</h1><p class="lede">One swimlane diagram per process area (${nA}), per process group (${nG}) and per cross-tool flow (${FLOWS.length}). Every diagram is generated from the catalog data: the live version is drawn on its page, and the same layout is exported as importable BPMN XML (with diagram interchange) and as an SVG snapshot. Hand-refined models live in <code>diagrams/bpmn/custom/</code> and are listed first in the <a href="viewer.html">editor</a>.</p></div></div>
+  <h2 style="margin:0 0 10px">Cross-tool flows</h2><div class="diagrid">${FLOWS.map(f=>card(f,'#/flow/'+f.id,f.title+' · '+f.steps.length+' steps · '+f.lanes.length+' lanes')).join('')}</div>
+  <h2 style="margin:24px 0 10px">Process areas</h2><div class="diagrid">${L0S.filter(l=>l.bpmn).map(l=>card(l.bpmn,'#/l0/'+l.id,l.l1s.length+' groups as sub-processes · lanes: '+l.bpmn.lanes.join(', '))).join('')}</div>
+  <h2 style="margin:24px 0 10px">Process groups</h2><div class="diagrid">${L0S.flatMap(l=>l.l1s.filter(g=>g.bpmn).map(g=>card(g.bpmn,'#/l0/'+l.id+'/'+g.id,g.l2s.length+' processes · lanes: '+g.bpmn.lanes.join(', ')))).join('')}</div>`;
+}
+function glossaryHTML(){ return `<div class="pagehead"><div><p class="eyebrow">Glossary</p><h1>Terms &amp; acronyms</h1><p class="lede">Every acronym used in the catalog. Business reviewers should be able to read any record with this page open beside it.</p></div></div><dl class="gloss">${DATA.glossary.map(([t,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('')}</dl>`; }
+function changelogHTML(){ return `<div class="pagehead"><div><p class="eyebrow">Changelog</p><h1>What changed</h1><p class="lede">Versioned major.minor.release. Changes are keyed to hierarchy IDs and, where they matter, permanent element IDs.</p></div></div>${DATA.changelog.map(r=>`<section class="release"><h2>v${r.version} <span class="d">${r.date}</span></h2><ul>${r.items.map(i=>`<li>${crossref(i)}</li>`).join('')}</ul></section>`).join('')}`; }
+function printHTML(){ return `<div class="pagehead"><div><p class="eyebrow">Print view · v${DATA.version}</p><h1>Apptio Process Catalog</h1><p class="lede">All areas expanded. Use your browser's print command; each group starts a new page.</p></div></div>${L0S.map(l0=>`<h1 style="margin:32px 0 12px">L0-${l0.id} ${esc(l0.name)}</h1><p style="max-width:70ch;color:var(--ink2)">${esc(l0.description)}</p>${l0.bpmn?diagramBlock(l0.bpmn,{bare:true}):''}${l0.l1s.map(g=>`<section class="group">${gheadHTML(g)}${g.bpmn?diagramBlock(g.bpmn,{bare:true}):''}${g.l2s.map(p=>recordHTML(p)).join('')}</section>`).join('')}`).join('')}`; }
+
+// ---------- routing ----------
+function route(){
+  const h = location.hash.replace(/^#\/?/, '');
+  const parts = h.split('/').filter(Boolean);
+  if(!parts.length) return {page:'hub'};
+  if(parts[0]==='l0' && L0[parts[1]]) return {page:'l0', l0:L0[parts[1]], target:parts[2]||null};
+  if(parts[0]==='register') return {page:'register'};
+  if(parts[0]==='flow' && FLOW[parts[1]]) return {page:'flow', flow:FLOW[parts[1]]};
+  if(parts[0]==='glossary') return {page:'glossary'};
+  if(parts[0]==='diagrams') return {page:'diagrams'};
+  if(parts[0]==='changelog') return {page:'changelog'};
+  if(parts[0]==='print') return {page:'print'};
+  return {page:'hub'};
+}
+let lastKey='', suppressScroll=false;
+function render(){
+  const r = route();
+  const main = $('#main');
+  main.className = 'page' + (r.page==='register'?' wide':'');
+  let crumbs = `<a href="#/">Catalog</a>`;
+  let title = 'Apptio Process Catalog';
+  if(r.page==='hub'){ main.innerHTML = hubHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Landscape</span>`; }
+  else if(r.page==='l0'){
+    main.innerHTML = l0HTML(r.l0, r.target);
+    crumbs += ` <span class="sep">/</span> <a href="#/l0/${r.l0.id}"><span class="id">L0-${r.l0.id}</span> ${esc(r.l0.short)}</a>`;
+    if(r.target && L2[r.target]) crumbs += ` <span class="sep">/</span> <span class="here"><span class="id">${r.target}</span> ${esc(L2[r.target].name)}</span>`;
+    else if(r.target && L1[r.target]) crumbs += ` <span class="sep">/</span> <span class="here"><span class="id">${r.target}</span> ${esc(L1[r.target].name)}</span>`;
+    title = `L0-${r.l0.id} ${r.l0.name}`;
+    const key = r.l0.id+'/'+(r.target||'');
+    if(r.target && key!==lastKey && !suppressScroll){ const el = document.getElementById((L2[r.target]?'rec-':'g-')+r.target+(L2[r.target]?'':'-sec')); if(el) requestAnimationFrame(()=>el.scrollIntoView({block:'start'})); }
+    lastKey = key; setupSpy();
+  }
+  else if(r.page==='register'){ main.innerHTML = registerHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Register</span>`; title='Register'; }
+  else if(r.page==='flow'){ main.innerHTML = flowHTML(r.flow); crumbs += ` <span class="sep">/</span> <span>Flows</span> <span class="sep">/</span> <span class="here"><span class="id">${r.flow.id}</span> ${esc(r.flow.name)}</span>`; title=r.flow.id+' '+r.flow.name; }
+  else if(r.page==='diagrams'){ main.innerHTML = diagramsHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Diagrams</span>`; title='Diagrams'; }
+  else if(r.page==='glossary'){ main.innerHTML = glossaryHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Glossary</span>`; }
+  else if(r.page==='changelog'){ main.innerHTML = changelogHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Changelog</span>`; }
+  else if(r.page==='print'){ main.innerHTML = printHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Print view</span>`; }
+  $('#crumbs').innerHTML = crumbs;
+  document.title = title + ' · Apptio Process Catalog';
+  if(r.page!=='l0') { lastKey=''; if(!suppressScroll) window.scrollTo({top:0}); }
+}
+let spyObs=null;
+function setupSpy(){
+  if(spyObs) spyObs.disconnect();
+  const links = [...document.querySelectorAll('.rail a[data-spy]')];
+  if(!links.length) return;
+  const byId = Object.fromEntries(links.map(a=>[a.dataset.spy,a]));
+  spyObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ links.forEach(a=>a.classList.remove('on')); const a=byId[e.target.id]; if(a){a.classList.add('on'); } } });
+  },{rootMargin:'-70px 0px -70% 0px',threshold:0});
+  links.forEach(a=>{const el=document.getElementById(a.dataset.spy); if(el) spyObs.observe(el);});
+}
+
+// ---------- search ----------
+const INDEX = ALL_L2.map(x=>({id:x.id,eid:x.eid,l0:x.l0,name:x.name,text:(x.id+' '+x.eid+' '+x.name+' '+x.description+' '+(x.config||'')+' '+(x.personas||'')+' '+x.tool+' '+(x.evidence||'')).toLowerCase()}))
+  .concat(FLOWS.map(f=>({flow:f.id,name:f.id+' · '+f.name+' — '+f.title,text:(f.id+' '+f.name+' '+f.title+' '+f.summary).toLowerCase()})))
+  .concat(Object.values(L1).map(g=>({g:g.id,l0:g.l0,name:g.id+' '+g.name,text:(g.id+' '+g.eid+' '+g.name+' '+(g.original_name||'')).toLowerCase()})));
+let qActive=-1;
+function doSearch(){
+  const q=$('#q').value.trim().toLowerCase(); const box=$('#qres');
+  if(q.length<2){ box.hidden=true; box.innerHTML=''; return; }
+  const terms=q.split(/\s+/);
+  const hits=INDEX.filter(i=>terms.every(t=>i.text.includes(t))).slice(0,12);
+  box.innerHTML = hits.length? hits.map(h=>h.flow?`<a href="#/flow/${h.flow}"><span class="k">FLOW</span>${esc(h.name)}</a>`:h.g?`<a href="#/l0/${h.l0}/${h.g}"><span class="k">GROUP</span>${esc(h.name)}</a>`:`<a href="#/l0/${h.l0}/${h.id}"><span class="k">${h.id}</span>${esc(h.name)}</a>`).join('') : '<a href="#/register">No matches — open the register</a>';
+  box.hidden=false; qActive=-1;
+}
+
+// ---------- events ----------
+document.addEventListener('input', e=>{
+  if(e.target.id==='q') doSearch();
+});
+document.addEventListener('keydown', e=>{
+  if(e.target.id==='q'){ const items=[...$('#qres').querySelectorAll('a')]; if(!items.length) return;
+    if(e.key==='ArrowDown'){ e.preventDefault(); qActive=Math.min(items.length-1,qActive+1); } else if(e.key==='ArrowUp'){ e.preventDefault(); qActive=Math.max(0,qActive-1); }
+    else if(e.key==='Enter'){ e.preventDefault(); (items[qActive]||items[0]).click(); $('#qres').hidden=true; $('#q').value=''; return; } else if(e.key==='Escape'){ $('#qres').hidden=true; return; }
+    items.forEach((a,i)=>a.classList.toggle('active',i===qActive)); }
+  if(e.key==='/' && !/input|textarea|select/i.test(e.target.tagName)){ e.preventDefault(); $('#q').focus(); }
+});
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.search')) $('#qres').hidden=true;
+  const a=e.target.closest('#qres a'); if(a){ $('#qres').hidden=true; $('#q').value=''; }
+  if(e.target.id==='lens-business'||e.target.id==='lens-sme'){ lens=e.target.id==='lens-sme'?'sme':'business'; ls.set('lens',lens); setLens(); render(); }
+  if(e.target.closest('#who')){ const n=prompt('Your name, as it should appear on statuses, verdicts and comments:', reviewer||''); if(n!=null){ reviewer=n.trim(); ls.set('reviewer',reviewer); setWho(); } }
+  const ex=e.target.closest('[data-expand]'); if(ex){ const id=ex.dataset.expand; expanded.has(id)?expanded.delete(id):expanded.add(id); render(); }
+  const th=e.target.closest('th[data-sort]'); if(th){ const k=th.dataset.sort; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=1;} render(); }
+  const uf=e.target.closest('[data-unfacet]'); if(uf){ facetState[uf.dataset.unfacet]=''; render(); }
+  if(e.target.closest('[data-clearfacets]')){ Object.keys(facetState).forEach(k=>facetState[k]=''); render(); }
+  if(e.target.id==='batch-apply'){ const s=$('#batch-status').value; [...selected].forEach(eid=>saveReview(eid,{status:s})); selected.clear(); render(); }
+  if(e.target.id==='batch-clear'){ selected.clear(); render(); }
+  const cb=e.target.closest('[data-copy-bpmn]'); if(cb){ const ta=document.getElementById('bpmn-xml-'+cb.dataset.copyBpmn); if(!ta.hidden) ta.select(); const done=()=>{ cb.textContent='Copied'; setTimeout(()=>cb.textContent='Copy XML',1500); }; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done,()=>{ try{document.execCommand('copy'); done();}catch(_){} }); else { const tmp=document.createElement('textarea'); tmp.value=ta.value; document.body.appendChild(tmp); tmp.select(); try{document.execCommand('copy'); done();}catch(_){} tmp.remove(); } }
+});
+document.addEventListener('toggle', e=>{ if(e.target.classList&&e.target.classList.contains('gdiag')) ls.set('diagClosed', !e.target.open); }, true);
+document.addEventListener('change', e=>{
+  const t=e.target;
+  if(t.dataset.setStatus){ saveReview(t.dataset.setStatus,{status:t.value}); }
+  if(t.dataset.verdict){ saveReview(t.dataset.verdict,{verdict:t.value}); }
+  if(t.dataset.owner!==undefined){ saveReview(t.dataset.owner,{owner:t.value}); }
+  if(t.dataset.facet!==undefined){ facetState[t.dataset.facet]=t.value; render(); }
+  if(t.id==='compact'){ compact=t.checked; render(); }
+  if(t.dataset.sel){ t.checked?selected.add(t.dataset.sel):selected.delete(t.dataset.sel); render(); }
+  if(t.id==='selall'){ filtered().forEach(x=>t.checked?selected.add(x.eid):selected.delete(x.eid)); render(); }
+});
+document.addEventListener('submit', e=>{
+  const f=e.target.closest('form[data-comment]'); if(!f) return; e.preventDefault();
+  const text=f.text.value.trim(); if(!text) return;
+  if(!reviewer){ const n=prompt('Your name for this comment:',''); if(n==null) return; reviewer=n.trim(); ls.set('reviewer',reviewer); setWho(); }
+  addComment(f.dataset.comment, f.attr.value, text); f.text.value='';
+});
+window.addEventListener('hashchange', render);
+function setLens(){ $('#lens-business').setAttribute('aria-pressed', lens==='business'); $('#lens-sme').setAttribute('aria-pressed', lens==='sme'); }
+function setWho(){ $('#who').innerHTML='Reviewing as <b>'+esc(reviewer||'—')+'</b>'; }
+
+setLens(); setWho(); renderProgress(); render(); initDb();
+})();
+</script>
+
+</body></html>

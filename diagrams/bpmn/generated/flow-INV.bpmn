@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_INV" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_INV">
+    <bpmn:participant id="Participant_INV" name="Investment loop — Portfolio-finance investment round-trip" processRef="Process_INV" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_INV" name="Portfolio-finance investment round-trip" isExecutable="false">
+    <bpmn:documentation>Investments, planned allocations and actual effort flow from Targetprocess to Costing/Planning; approved budgets and budget changes flow back - continuous portfolio-finance reconciliation.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_INV">
+      <bpmn:lane id="Lane_INV_0" name="Targetprocess / ATP">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_i1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_INV_1" name="Costing / TBM Studio">
+        <bpmn:flowNodeRef>n_i2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_INV_2" name="IT Planning (Finance)">
+        <bpmn:flowNodeRef>n_i3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="n_i1" name="Send investments, planned labor allocations, actual effort, budget-change requests to Costing/Planning">
+      <bpmn:documentation>Catalog: 02.2.3, 05.7.3. </bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="n_i2" name="Reconcile investment spend; update approved budgets">
+      <bpmn:documentation>Catalog: 05.7.1, 05.7.3. </bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sendTask id="n_i3" name="Send approved investment budgets &amp; budget changes to Targetprocess">
+      <bpmn:documentation>Catalog: 05.7.3, 02.4.2. Budgets, Labor Data, Objectives, Financial Guidance down; Progress, Actuals, Key Results up</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_i1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_i1" targetRef="n_i2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_i2" targetRef="n_i3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_i3" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_INV">
+    <bpmndi:BPMNPlane id="BPMNPlane_INV" bpmnElement="Collaboration_INV">
+      <bpmndi:BPMNShape id="Participant_INV_di" bpmnElement="Participant_INV" isHorizontal="true"><dc:Bounds x="0" y="0" width="1218" height="366" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_INV_0_di" bpmnElement="Lane_INV_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_INV_1_di" bpmnElement="Lane_INV_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_INV_2_di" bpmnElement="Lane_INV_2" isHorizontal="true"><dc:Bounds x="30" y="244" width="1188" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_i1_di" bpmnElement="n_i1"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_i2_di" bpmnElement="n_i2"><dc:Bounds x="594" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_i3_di" bpmnElement="n_i3"><dc:Bounds x="802" y="268" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1073" y="287" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="571" y="61" /><di:waypoint x="571" y="183" /><di:waypoint x="594" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="183" /><di:waypoint x="779" y="183" /><di:waypoint x="779" y="305" /><di:waypoint x="802" y="305" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="305" /><di:waypoint x="1073" y="305" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

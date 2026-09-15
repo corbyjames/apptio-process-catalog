@@ -1,162 +1,103 @@
 # -*- coding: utf-8 -*-
-"""Excel workbook generator — called by generate.py."""
+"""Excel workbook generator — called by generate.py. Reads the catalog.json shape."""
 import os
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
-def build(ROOT, L0, ALL, FLOWS_RAW, FRAMEWORKS, CFG_RAW, l1s_of, CALENDAR=None):
-    FLOWS = [(f["flow"], f["name"], f["step"], f["type"], f["lane"], f["task"], f.get("notes") or "") for f in FLOWS_RAW]
-    CFG_T = [(c["tool"], c["domain"], c["objects"], c.get("notes") or "") for c in CFG_RAW]
-    FONT = "Arial"
-    HDR_FILL = PatternFill("solid", fgColor="1F3864")
-    HDR_FONT = Font(name=FONT, bold=True, color="FFFFFF", size=10)
-    BASE = Font(name=FONT, size=10)
-    BOLD = Font(name=FONT, size=10, bold=True)
-    THIN = Border(*[Side(style="thin", color="BFBFBF")]*4)
-    WRAP = Alignment(wrap_text=True, vertical="top")
-    L0_FILLS = {"01":"DEEBF7","02":"DEEBF7","03":"DEEBF7","04":"E2EFDA","05":"FFF2CC","06":"FCE4D6","07":"E4DFEC","08":"FCE4D6","09":"D9D9D9","10":"EDEDED"}
+FONT = "Arial"
+HDR_FILL = PatternFill("solid", fgColor="1F3864"); HDR_FONT = Font(name=FONT, bold=True, color="FFFFFF", size=10)
+BASE = Font(name=FONT, size=10); BOLD = Font(name=FONT, size=10, bold=True)
+THIN = Border(*[Side(style="thin", color="BFBFBF")]*4); WRAP = Alignment(wrap_text=True, vertical="top")
+L0_FILLS = {"01":"DEEBF7","02":"DEEBF7","03":"DEEBF7","04":"E2EFDA","05":"FFF2CC","06":"FCE4D6","07":"E4DFEC","08":"FCE4D6","10":"EDEDED"}
+FLOW_FILLS = {"UC3":"DEEBF7","UC2":"E2EFDA","UC1":"FFF2CC","UC4":"FCE4D6","CLD":"E4DFEC","INV":"D9D9D9","ZBB":"FBE5D6"}
 
-    wb = Workbook()
-
+def build(ROOT, CAT, L0S, L1S, L2S, FLOWS, FW, CFG, CAL, DIAGRAMS):
+    wb = Workbook(); V = CAT["version"]
     def header(ws, cols, widths):
-        for i,(c,w) in enumerate(zip(cols,widths),1):
-            cell = ws.cell(1,i,c); cell.font = HDR_FONT; cell.fill = HDR_FILL; cell.alignment = WRAP; cell.border = THIN
+        for i, (c, w) in enumerate(zip(cols, widths), 1):
+            cell = ws.cell(1, i, c); cell.font = HDR_FONT; cell.fill = HDR_FILL; cell.alignment = WRAP; cell.border = THIN
             ws.column_dimensions[get_column_letter(i)].width = w
-        ws.freeze_panes = "A2"
-        ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}1"
+        ws.freeze_panes = "A2"; ws.auto_filter.ref = f"A1:{get_column_letter(len(cols))}1"
+    def put(ws, r, vals, fill=None, bold_col=None):
+        for j, val in enumerate(vals, 1):
+            c = ws.cell(r, j, val); c.font = BASE; c.alignment = WRAP; c.border = THIN
+        if fill: ws.cell(r, 1).fill = PatternFill("solid", fgColor=fill)
+        if bold_col: ws.cell(r, bold_col).font = BOLD
 
-    # ---- Sheet 1: Read Me ----
-    ws = wb.active; ws.title = "Read Me"
-    ws.sheet_view.showGridLines = False
+    ws = wb.active; ws.title = "Read Me"; ws.sheet_view.showGridLines = False
     ws.column_dimensions["A"].width = 4; ws.column_dimensions["B"].width = 120
     rows = [
-    ("IBM Apptio Process Catalog - Targetprocess, Costing, Planning, Cloudability", True),
-    ("Built 2026-08-18 from TBM Council / FinOps Foundation / SPM framework research, IBM product documentation research, and local demo, RFP and assessment material (incl. the cross-tool E2E BPMN).", False),
+    (f"IBM Apptio Process Catalog v{V} - Targetprocess, Costing, Planning, Cloudability", True),
+    (f"Generated {CAT['built']} from data/catalog.json in github.com/corbyjames/apptio-process-catalog. Structure: {len(L0S)} L0 areas · {len(L1S)} L1 groups · {len(L2S)} L2 processes · {len(FLOWS)} cross-tool flows · {len(DIAGRAMS)} BPMN diagrams.", False),
     ("", False),
-    ("Purpose: a single catalog of the business processes the four IBM Apptio products support and enable, structured to generate L0-L2 BPML/BPMN diagrams and to drive tool configuration.", False),
+    ("Purpose: a single catalog of the business processes the four IBM Apptio products support and enable, framed by TBM, SPM (hybrid and agile) and FinOps, structured to generate L0-L2 BPMN diagrams and to drive tool configuration.", False),
     ("", False),
     ("How the levels work", True),
-    ("L0 = process area (value-chain level). L1 = process. L2 = sub-process/activity - the unit you turn into BPMN tasks or sub-processes.", False),
-    ("IDs: L0 'NN', L1 'NN.N', L2 'NN.N.N'. Stable IDs - reference them from diagrams and configuration backlogs.", False),
-    ("Delivery Model column: 'Any' = methodology-agnostic; 'Agile' = SAFe/agile-specific (PI planning, Kanban, story points); 'Traditional' = waterfall/stage-gate specific; 'Hybrid' = explicitly about running agile and traditional side by side in one governed model (hybrid portfolio views, dual funding, role- and team-based capacity, multi-approach capitalization).", False),
-    ("", False),
-    ("How to build BPML diagrams from this workbook", True),
-    ("1. L0 diagram: use the 'L0 Map' sheet - one node per L0 area; the arrows are the cross-tool feeds listed on 'E2E Flow Steps'.", False),
-    ("2. L1 diagrams: for one L0, lay its L1 processes as sub-processes; lanes come from the 'Personas / Lanes' column.", False),
-    ("3. L2/BPMN: each L2 row gives the task set; 'Trigger / Cadence' = start events, 'Key Inputs/Outputs' = data objects, 'Personas' = lanes, cross-tool feeds = message flows. The 'E2E Flow Steps' sheet is already BPMN-ready (element types, lanes, gateways) and mirrors a real reviewed BPMN model.", False),
-    ("4. Tool configuration: the 'Configuration Objects' column per L2 plus the 'Tool Config Reference' sheet form the configuration backlog per product.", False),
+    ("L0 = process area. L1 = process group. L2 = process/activity - the unit that becomes a BPMN task. Positional IDs (NN, NN.N, NN.N.N) are the human-facing reference; permanent element IDs (P-0001..., G-011...) survive re-parenting.", False),
+    ("Delivery Model: 'Any' = methodology-agnostic; 'Agile' = SAFe/agile-specific; 'Traditional' = waterfall/stage-gate; 'Hybrid' = explicitly about running both side by side. Budgeting method (02.4, 05.1, 05.8, 07.6): Incremental, Driver-based, ZBB, Rolling, Lean/participatory, Any.", False),
+    ("BPMN lane / task type: derived per L2 from the Who text and the area's default lanes; these drive the generated group (NN.N.bpmn) and area (L0-NN.bpmn) diagrams. Flow diagrams (flow-XXX.bpmn) come from the E2E Flow Steps sheet.", False),
     ("", False),
     ("Sheets", True),
-    ("L0 Map - the ten process areas with tool coverage and framework framing.", False),
-    ("Process Catalog L0-L2 - the full catalog (~140 L2 activities).", False),
-    ("E2E Flow Steps - BPMN-ready step tables for the six cross-tool flows (UC1-UC4 + cloud-to-TBM + investment loop).", False),
+    ("L0 Map - the nine process areas with tool coverage, default BPMN lanes and counts.", False),
+    ("Process Catalog L0-L2 - the full catalog, one row per L2 with element ID, lane, task type, flows, personas and cadence.", False),
+    ("E2E Flow Steps - BPMN-ready step tables for the seven cross-tool flows (UC3, UC2, UC1, UC4, CLD, INV, ZBB).", False),
+    ("BPMN Diagrams - index of every generated diagram (file names in diagrams/bpmn/generated and assets/diagrams).", False),
     ("Tool Config Reference - configuration-object checklists per product.", False),
-    ("Framework Reference - TBM, FinOps, SPM, SAFe structures and maturity scales used as the catalog's framing.", False),
-    ("Sources - research and local source material.", False),
-    ("", False),
-    ("Known gap: Box-hosted RFP documents (Danske Bank, Florida Blue/GuideWell, AER, Honda transcripts, Amex) were cloud-only placeholders during this build and are not yet folded in. The Desjardins RFP solution deck and local demo/assessment corpus are included.", False),
+    ("Framework Reference - TBM, FinOps, SPM, SAFe structures and maturity scales.", False),
+    ("Operating Calendar - fiscal-month rhythm of the catalog's processes.", False),
+    ("Changelog - versions of the catalog.", False),
     ]
-    for i,(t,b) in enumerate(rows,2):
-        c = ws.cell(i,2,t); c.font = Font(name=FONT, size=14 if i==2 else 10, bold=b); c.alignment = Alignment(wrap_text=True, vertical="top")
+    for i, (t, b) in enumerate(rows, 2):
+        c = ws.cell(i, 2, t); c.font = Font(name=FONT, size=14 if i == 2 else 10, bold=b); c.alignment = WRAP
 
-    # ---- Sheet 2: L0 Map ----
     ws = wb.create_sheet("L0 Map")
-    cols = ["L0 ID","L0 Process Area","Description","Primary Tool","Supporting Tools","Framework Framing","Default BPMN Lanes","# L1","# L2"]
-    header(ws, cols, [7,30,60,16,20,50,40,7,7])
-    for i,(k,v) in enumerate(sorted(L0.items()),2):
-        n_l1 = len({r["l1id"] for r in ALL if r["l0id"]==k}); n_l2 = len([r for r in ALL if r["l0id"]==k])
-        vals = [k, v["name"], v["desc"], v["primary"], v.get("supporting",""), v["frameworks"], v["lanes"], n_l1, n_l2]
-        for j,val in enumerate(vals,1):
-            c = ws.cell(i,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
-            c.fill = PatternFill("solid", fgColor=L0_FILLS[k])
-        ws.cell(i,2).font = BOLD
+    header(ws, ["L0 ID","Process Area","Description","Primary Product","Band","Default BPMN Lanes","# L1","# L2"], [7,30,60,16,10,45,7,7])
+    for i, l0 in enumerate(L0S, 2):
+        put(ws, i, [l0["id"], l0["name"], l0["description"], l0["primary"], l0["band"], "; ".join(l0["lanes"]), len(l0["l1s"]), sum(len(g["l2s"]) for g in l0["l1s"])], L0_FILLS.get(l0["id"]), 2)
 
-    # ---- Sheet 3: Process Catalog ----
     ws = wb.create_sheet("Process Catalog L0-L2")
-    cols = ["L0 ID","L0 Area","L1 ID","L1 Process","L2 ID","L2 Sub-process / Activity","Description","Delivery Model","Primary Tool","Supporting Tools / Systems","Personas / Lanes","Trigger / Cadence","Key Inputs","Key Outputs","Configuration Objects (tool setup)","Framework Mapping","Source / Evidence"]
-    header(ws, cols, [6,22,7,26,8,32,45,11,14,16,26,16,26,26,50,34,30])
-    r_i = 2
-    for r in ALL:
-        vals = [r["l0id"], r["l0"], r["l1id"], r["l1"], r["l2id"], r["l2"], r["desc"], r["delivery"], r["tool"], r["support"], r["personas"], r["cadence"], r["inputs"], r["outputs"], r["config"], r["fw"], r["src"]]
-        for j,val in enumerate(vals,1):
-            c = ws.cell(r_i,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
-        ws.cell(r_i,1).fill = PatternFill("solid", fgColor=L0_FILLS[r["l0id"]])
-        ws.cell(r_i,6).font = BOLD
-        r_i += 1
+    cols = ["L0 ID","L0 Area","L1 ID","L1 Group","L1 EID","L2 ID","L2 Process","Element ID","Legacy ID","What you get","Description","Delivery Model","Budgeting Method","Product (tool)","Primary Product","Personas (source)","Persona roles","BPMN Lane","BPMN Task Type","Cadence","Cadence bucket","Inputs","Outputs","Configuration Objects","Framework Mapping","Framework tags","Flows","Evidence"]
+    header(ws, cols, [6,22,7,26,7,8,32,8,8,30,50,10,16,18,12,24,26,18,12,16,12,26,26,50,34,12,10,30])
+    r = 2
+    l0name = {l0["id"]: l0["name"] for l0 in L0S}; l1name = {g["id"]: g for g in L1S}
+    for l2 in L2S:
+        g = l1name[l2["l1"]]
+        put(ws, r, [l2["l0"], l0name[l2["l0"]], g["id"], g["name"], g["eid"], l2["id"], l2["name"], l2["eid"], l2.get("legacy_id") or "", l2["outcome"], l2["description"], l2["delivery_model"], l2.get("budgeting_method") or "", l2["tool"], l2["primary_product"], l2["personas"], ", ".join(l2["persona_list"]), l2.get("lane",""), l2.get("bpmn_type",""), l2["cadence"], l2["cadence_bucket"], l2["inputs"], l2["outputs"], l2["config"], l2["framework"], ", ".join(l2["framework_tags"]), ", ".join(l2["flows"]), l2["evidence"]], L0_FILLS.get(l2["l0"]), 7)
+        r += 1
 
-    # ---- Sheet 4: E2E Flow Steps ----
     ws = wb.create_sheet("E2E Flow Steps")
-    cols = ["Flow","Flow Name","Step","BPMN Element Type","Lane","Task / Event Name","Notes"]
-    header(ws, cols, [7,34,6,16,30,55,45])
-    fills = {"UC3":"DEEBF7","UC2":"E2EFDA","UC1":"FFF2CC","UC4":"FCE4D6","CLD":"E4DFEC","INV":"D9D9D9"}
-    for i,row in enumerate(FLOWS,2):
-        for j,val in enumerate(row,1):
-            c = ws.cell(i,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
-        ws.cell(i,1).fill = PatternFill("solid", fgColor=fills[row[0]])
+    header(ws, ["Flow","Flow Name","Title","Step","BPMN Element Type","Lane","Task / Event","Catalog L2s","Notes"], [7,18,30,6,16,26,55,18,45])
+    r = 2
+    for f in FLOWS:
+        for s in f["steps"]:
+            put(ws, r, [f["id"], f["name"], f["title"], s["n"], s["type"], s["lane"], s["task"], ", ".join(s["l2"]), s.get("note","") or ""], FLOW_FILLS.get(f["id"])); r += 1
 
-    # ---- Sheet 5: Tool Config Reference ----
+    ws = wb.create_sheet("BPMN Diagrams")
+    header(ws, ["File base name","Kind","Name","Lanes","Steps","BPMN file","SVG file"], [14,8,44,50,7,40,34])
+    for i, (base, f) in enumerate(DIAGRAMS, 2):
+        kind = "flow" if not f.get("kind") else ("area" if f["kind"] == "l0" else "group")
+        put(ws, i, [base, kind, f["name"] if f.get("kind") else f["id"]+" "+f["name"], "; ".join(f["lanes"]), len(f["steps"]), f"diagrams/bpmn/generated/{base}.bpmn", f"assets/diagrams/{base}.svg"], bold_col=1)
+
     ws = wb.create_sheet("Tool Config Reference")
-    cols = ["Tool","Config Domain","Configuration Objects","Notes"]
-    header(ws, cols, [16,28,70,45])
-    CFG = CFG_T
-    for i,row in enumerate(CFG,2):
-        for j,val in enumerate(row,1):
-            c = ws.cell(i,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
-        ws.cell(i,1).font = BOLD
+    header(ws, ["Tool","Config Domain","Configuration Objects","Notes"], [16,28,70,45])
+    for i, c in enumerate(CFG, 2): put(ws, i, [c["tool"], c["domain"], c["objects"], c.get("notes") or ""], bold_col=1)
 
-    # ---- Sheet 6: Framework Reference ----
     ws = wb.create_sheet("Framework Reference")
-    cols = ["Framework","Structure / Layers","Disciplines / Capabilities","Maturity & Personas"]
-    header(ws, cols, [12,55,70,55])
-    for i,(k,v) in enumerate(FRAMEWORKS.items(),2):
-        for j,val in enumerate([k, v["layers"], v["disciplines"], v["maturity"]],1):
-            c = ws.cell(i,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
-        ws.cell(i,1).font = BOLD
-    # ATUM taxonomy quick reference below
-    r0 = len(FRAMEWORKS)+3
-    ws.cell(r0,1,"TBM Taxonomy v4 quick reference (ATUM)").font = BOLD
-    atum = [
-    ("Cost Pools (OpEx)","Internal Labor; External Labor; Outside Services (Consulting, MSP, CSP); Hardware; Software; Facilities & Power; Telecom; Other; Internal Services (+ CapEx pool variants)"),
-    ("IT / Resource Towers","Data Center; Compute; Storage; Network; Platform; Output; End User; Application; Delivery; Security & Compliance; IT Management (each with sub-towers)"),
-    ("Solutions (6 types)","Delivery; Infrastructure; Platform; Workplace; Business; Shared & Corporate"),
-    ("Consumers","Business Units; Business Architecture (capabilities, processes, product lines); Customers & Partners"),
-    ]
-    for i,(a,b) in enumerate(atum, r0+1):
-        ws.cell(i,1,a).font = BOLD; ws.cell(i,1).border = THIN; ws.cell(i,1).alignment = WRAP
-        ws.cell(i,2,b).font = BASE; ws.cell(i,2).border = THIN; ws.cell(i,2).alignment = WRAP
+    header(ws, ["Framework","Structure / Layers","Disciplines / Capabilities","Maturity & Personas"], [12,55,70,55])
+    for i, (k, v) in enumerate(FW.items(), 2): put(ws, i, [k, v.get("layers",""), v.get("disciplines",""), v.get("maturity","")], bold_col=1)
 
-    # ---- Sheet 7: Sources ----
-    ws = wb.create_sheet("Sources")
-    cols = ["Type","Source","What it contributed"]
-    header(ws, cols, [18,60,70])
-    SRC = [
-    ("Local - BPMN","apptio-e2e-flow.bpmn + apptio-e2e-demo-script (MetLife E2E demo)","Anchor artifact: 3 lanes, 4 use cases (UC1-UC4), 20+ tasks/gateways - basis of L0-09 and E2E Flow Steps sheet"),
-    ("Local - demo","PI Planning Demo Script","PI readiness assessment + 4-phase preparation process (03.1)"),
-    ("Local - demo","LFM - Demo Talking Points","Labor financial management lifecycle: scoring > headcount > targets > allocations > leadership reporting"),
-    ("Local - deck","TBMC25 Integration of Apptio Product Suite (IBM Client Zero)","Suite integration map, sync cadences, ATUM product catalog, CIO monthly ops dashboard (08.4), TBM>EBM"),
-    ("Local - deck","ApptioOne Overview CFD","Costing/Planning capability depth, IIP, Billing/Benchmarking/EBM, virtuous cycle"),
-    ("Local - deck","Apptio TargetProcess WFM (BofA); SPM & EAP CFDs; Solution Overview (Desjardins RFP); SPM Framework; Customer PowerUp","SPM structural model, WFM use cases, demand/capacity activity lists, closed-loop processes, capability maps"),
-    ("Local - assessment","SPM Maturity Assessment (+ Metlife instance); TBM Practice Assessment (+ Metlife); FinOps Assessment (Metlife)","Maturity dimensions & scales framing L0/L1 areas and 10.6.4"),
-    ("Local - data","Targetprocess Customer Briefs; SPM Personas","Buying personas, real use-case mixes"),
-    ("Web - framework","tbmcouncil.org (framework, taxonomy v4); finops.org (framework, FOCUS); Gartner SPM definition; SAFe LPM","Framework layers, capabilities, maturity models"),
-    ("Web - product","IBM Docs (Costing Standard, TBM Studio, Datalink, Planning, Targetprocess, Cloudability incl. Savings Automation & Workload Planning); apptio.com product pages; IBM service descriptions","Product modules, configuration objects, edition differences"),
-    ("Gap","Box RFPs (Danske Bank, Florida Blue/GuideWell, AER, Honda transcripts, Amex WFM responses)","Not yet ingested - Box cloud placeholders; fold in when available offline"),
-    ]
-    for i,row in enumerate(SRC,2):
-        for j,val in enumerate(row,1):
-            c = ws.cell(i,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
+    ws = wb.create_sheet("Operating Calendar")
+    header(ws, ["Stream","Process","Cadence"] + ["FM%d" % i for i in range(1,13)] + ["Description","Catalog refs"], [22,34,15]+[5]*12+[60,22])
+    r = 2
+    for st in CAL["streams"]:
+        for en in st["entries"]:
+            put(ws, r, [st["name"], en["name"], en["cadence"]] + [("X" if m in en["fm"] else "") for m in range(1,13)] + [en["desc"], ", ".join(en.get("refs", []))]); r += 1
 
-    if CALENDAR:
-        ws = wb.create_sheet("Operating Calendar")
-        cols = ["Stream","Process","Cadence"] + ["FM%d"%i for i in range(1,13)] + ["Description","Catalog refs"]
-        header(ws, cols, [22,34,15]+[5]*12+[60,22])
-        ri = 2
-        for st in CALENDAR["streams"]:
-            for en in st["entries"]:
-                vals = [st["name"], en["name"], en["cadence"]] + [("X" if m in en["fm"] else "") for m in range(1,13)] + [en["desc"], ", ".join(en.get("refs",[]))]
-                for j,val in enumerate(vals,1):
-                    c = ws.cell(ri,j,val); c.font = BASE; c.alignment = WRAP; c.border = THIN
-                ri += 1
-    wb.save(os.path.join(ROOT,"dist","Apptio_Process_Catalog_L0-L2.xlsx"))
+    ws = wb.create_sheet("Changelog")
+    header(ws, ["Version","Date","Change"], [9,12,120])
+    r = 2
+    for rel in CAT["changelog"]:
+        for it in rel["items"]: put(ws, r, [rel["version"], rel["date"], it]); r += 1
 
+    wb.save(os.path.join(ROOT, "dist", "Apptio_Process_Catalog_L0-L2.xlsx"))

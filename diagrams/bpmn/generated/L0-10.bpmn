@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A10" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A10">
+    <bpmn:participant id="Participant_A10" name="L0-10 Platform Configuration, Data &amp; Administration — Platform Configuration, Data &amp; Administration" processRef="Process_A10" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A10" name="Platform Configuration, Data &amp; Administration" isExecutable="false">
+    <bpmn:documentation>The enabling processes: configure each product, operate the data pipelines and integrations, and run the TBM/FinOps/SPM practices that govern adoption and maturity.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A10">
+      <bpmn:lane id="Lane_A10_0" name="Platform Admins">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_10_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_10_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_10_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_10_4</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_A10_1" name="TBM Office">
+        <bpmn:flowNodeRef>n_10_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_10_6</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_A10_2" name="SPM Governance">
+        <bpmn:flowNodeRef>n_10_7</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_10_1" name="Configure Targetprocess" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 10.1.1. 5 processes: 10.1.1, 10.1.2, 10.1.3, 10.1.4, 10.1.5</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_10_2" name="Configure Costing" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 10.2.1. 2 processes: 10.2.1, 10.2.2</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_10_3" name="Configure Planning" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 10.3.1. 2 processes: 10.3.1, 10.3.2</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_10_4" name="Configure Cloudability" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 10.4.1. 2 processes: 10.4.1, 10.4.2</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_10_5" name="Operate cross-product data &amp; integrations" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 10.5.1. 2 processes: 10.5.1, 10.5.2</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_10_6" name="Run the practices &amp; grow maturity" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 10.6.1. 4 processes: 10.6.1, 10.6.2, 10.6.3, 10.6.4</bpmn:documentation>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_10_7" name="Run AI-assisted planning &amp; delivery intelligence" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 10.7.1. 3 processes: 10.7.1, 10.7.2, 10.7.3</bpmn:documentation>
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_10_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_10_1" targetRef="n_10_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_10_2" targetRef="n_10_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_10_3" targetRef="n_10_4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_10_4" targetRef="n_10_5" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_10_5" targetRef="n_10_6" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_10_6" targetRef="n_10_7" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="n_10_7" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A10">
+    <bpmndi:BPMNPlane id="BPMNPlane_A10" bpmnElement="Collaboration_A10">
+      <bpmndi:BPMNShape id="Participant_A10_di" bpmnElement="Participant_A10" isHorizontal="true"><dc:Bounds x="0" y="0" width="2050" height="366" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A10_0_di" bpmnElement="Lane_A10_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="2020" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A10_1_di" bpmnElement="Lane_A10_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="2020" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A10_2_di" bpmnElement="Lane_A10_2" isHorizontal="true"><dc:Bounds x="30" y="244" width="2020" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_10_1_di" bpmnElement="n_10_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_10_2_di" bpmnElement="n_10_2" isExpanded="false"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_10_3_di" bpmnElement="n_10_3" isExpanded="false"><dc:Bounds x="802" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_10_4_di" bpmnElement="n_10_4" isExpanded="false"><dc:Bounds x="1010" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_10_5_di" bpmnElement="n_10_5" isExpanded="false"><dc:Bounds x="1218" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_10_6_di" bpmnElement="n_10_6" isExpanded="false"><dc:Bounds x="1426" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_10_7_di" bpmnElement="n_10_7" isExpanded="false"><dc:Bounds x="1634" y="268" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1905" y="287" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="802" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="61" /><di:waypoint x="1010" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="61" /><di:waypoint x="1195" y="61" /><di:waypoint x="1195" y="183" /><di:waypoint x="1218" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="183" /><di:waypoint x="1426" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1588" y="183" /><di:waypoint x="1611" y="183" /><di:waypoint x="1611" y="305" /><di:waypoint x="1634" y="305" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="1796" y="305" /><di:waypoint x="1905" y="305" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

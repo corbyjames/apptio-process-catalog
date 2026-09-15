@@ -26,14 +26,14 @@ jobs:
         run: |
           git config user.name "catalog-bot"
           git config user.email "actions@github.com"
-          git add docs diagrams/mermaid diagrams/bpmn/generated site dist
+          git add docs diagrams/mermaid diagrams/bpmn/generated assets/diagrams site dist
           git diff --cached --quiet || git commit -m "chore: regenerate derived artifacts [skip ci]"
           git push
       - name: Check PRs are in sync with data/
         if: github.event_name == 'pull_request'
         run: |
           git add -A
-          if ! git diff --cached --quiet -- docs diagrams/mermaid diagrams/bpmn/generated site dist; then
+          if ! git diff --cached --quiet -- docs diagrams/mermaid diagrams/bpmn/generated assets/diagrams site dist; then
             echo "::warning::Generated files differ from data/. They will be regenerated on merge to main."
           fi
       - name: Upload Pages artifact

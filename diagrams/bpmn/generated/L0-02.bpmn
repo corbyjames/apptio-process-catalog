@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_A02" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+  <bpmn:collaboration id="Collaboration_A02">
+    <bpmn:participant id="Participant_A02" name="L0-02 Demand &amp; Portfolio Investment Management — Demand &amp; Portfolio Investment Management" processRef="Process_A02" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A02" name="Demand &amp; Portfolio Investment Management" isExecutable="false">
+    <bpmn:documentation>Capture all demand into one funnel, qualify and prioritize it against strategy and capacity, fund the winning investments, and manage the portfolio roadmap and its value realization.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_A02">
+      <bpmn:lane id="Lane_A02_0" name="Requesters/Business">
+        <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_02_1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_A02_1" name="Portfolio Management">
+        <bpmn:flowNodeRef>n_02_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_02_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_02_4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_02_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="n_start_implicit" name="">
+      <bpmn:outgoing>Flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="n_02_1" name="Capture &amp; qualify demand" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 02.1.1. 3 processes: 02.1.1, 02.1.2, 02.1.3</bpmn:documentation>
+      <bpmn:incoming>Flow_0</bpmn:incoming>
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_02_2" name="Prioritize &amp; decide investments" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 02.2.1. 3 processes: 02.2.1, 02.2.2, 02.2.3</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_02_3" name="Plan &amp; roadmap the portfolio" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 02.3.1. 4 processes: 02.3.1, 02.3.2, 02.3.3, 02.3.4</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_02_4" name="Fund the portfolio &amp; track budget" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 02.4.1. 3 processes: 02.4.1, 02.4.2, 02.4.3</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="n_02_5" name="Realize value &amp; benefits" triggeredByEvent="false">
+      <bpmn:documentation>Catalog: 02.5.1. 2 processes: 02.5.1, 02.5.2</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_02_1" />
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="n_02_1" targetRef="n_02_2" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="n_02_2" targetRef="n_02_3" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="n_02_3" targetRef="n_02_4" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="n_02_4" targetRef="n_02_5" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="n_02_5" targetRef="n_end_implicit" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_A02">
+    <bpmndi:BPMNPlane id="BPMNPlane_A02" bpmnElement="Collaboration_A02">
+      <bpmndi:BPMNShape id="Participant_A02_di" bpmnElement="Participant_A02" isHorizontal="true"><dc:Bounds x="0" y="0" width="1634" height="244" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A02_0_di" bpmnElement="Lane_A02_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1604" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_A02_1_di" bpmnElement="Lane_A02_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1604" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_02_1_di" bpmnElement="n_02_1" isExpanded="false"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_02_2_di" bpmnElement="n_02_2" isExpanded="false"><dc:Bounds x="594" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_02_3_di" bpmnElement="n_02_3" isExpanded="false"><dc:Bounds x="802" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_02_4_di" bpmnElement="n_02_4" isExpanded="false"><dc:Bounds x="1010" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_02_5_di" bpmnElement="n_02_5" isExpanded="false"><dc:Bounds x="1218" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1489" y="165" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="571" y="61" /><di:waypoint x="571" y="183" /><di:waypoint x="594" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="183" /><di:waypoint x="802" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="183" /><di:waypoint x="1010" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="183" /><di:waypoint x="1218" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="183" /><di:waypoint x="1489" y="183" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

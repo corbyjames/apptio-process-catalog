@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BPMN Viewer & Editor — Apptio Process Catalog</title>
-<script src="https://unpkg.com/bpmn-js@17/dist/bpmn-modeler.development.js"></script>
+<link rel="stylesheet" href="vendor/bpmn-js/assets/diagram-js.css"><link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-js.css"><link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-font/css/bpmn.css">
+<script src="vendor/bpmn-js/bpmn-modeler.production.min.js"></script>
 <style>
   body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column;height:100vh}
   header{display:flex;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid #ddd;flex-wrap:wrap}
@@ -15,6 +16,7 @@
 </head>
 <body>
 <header>
+  <a href="index.html" style="color:#1F5F4A;text-decoration:none">← Catalog</a>
   <b>BPMN Viewer / Editor</b>
   <select id="sel"></select>
   <button id="open">Open</button>
@@ -36,9 +38,12 @@ async function openPath(p){
 fetch("bpmn-manifest.json").then(r=>r.json()).then(m=>{
   const s = document.getElementById("sel");
   m.forEach(e=>{ const o=document.createElement("option"); o.value=e.path; o.textContent=e.label; s.append(o); });
-  if(m.length) openPath(m[0].path);
+  const want = decodeURIComponent(location.hash.slice(1));
+  if(want){ const o=[...s.options].find(x=>x.value===want); if(o) s.value=want; openPath(want); }
+  else if(m.length) openPath(m[0].path);
 });
-document.getElementById("open").onclick = ()=> openPath(document.getElementById("sel").value);
+window.addEventListener('hashchange', ()=>{ const w=decodeURIComponent(location.hash.slice(1)); if(w) openPath(w); });
+document.getElementById("open").onclick = ()=> { location.hash = encodeURIComponent(document.getElementById("sel").value); };
 document.getElementById("file").onchange = async e=>{
   const f=e.target.files[0]; if(!f) return;
   await modeler.importXML(await f.text()); modeler.get("canvas").zoom("fit-viewport");

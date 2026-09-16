@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_ZBB" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_ZBB" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_ZBB">
     <bpmn:participant id="Participant_ZBB" name="ZBB re-base — Zero-based re-base to investment uplift" processRef="Process_ZBB" />
   </bpmn:collaboration>
@@ -28,12 +28,12 @@
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="n_z0" name="ZBB cycle opens for this year&#x27;s rotation slice">
-      <bpmn:documentation>Catalog: 05.8.1. Rotational: each decision unit every 2-3 years</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.1. Rotational: each decision unit every 2-3 years Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:outgoing>Flow_0</bpmn:outgoing>
       <bpmn:timerEventDefinition />
     </bpmn:startEvent>
     <bpmn:userTask id="n_z1" name="Select decision units; name cost-category owners x budget owners; define zero base">
-      <bpmn:documentation>Catalog: 05.8.1. </bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.1.  Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_0</bpmn:incoming>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:userTask>
@@ -48,34 +48,34 @@
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:userTask id="n_z4" name="Build decision packages at Minimum / Current / Enhanced tiers">
-      <bpmn:documentation>Catalog: 05.8.3. Labor positions come from Targetprocess via UC3 steps 7-8</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.3. Labor positions come from Targetprocess via UC3 steps 7-8 Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:incoming>Flow_6</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="n_z5" name="Rank packages; compare cumulative cost to target; draw cut-line; pressure-test">
-      <bpmn:documentation>Catalog: 05.8.4. One Planning version per cut-line scenario</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.4. One Planning version per cut-line scenario Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="n_z6" name="Cut-line within target?">
-      <bpmn:documentation>Catalog: 05.8.4. No: return packages for rework (loop to z4); Yes: continue</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.4. No: return packages for rework (loop to z4); Yes: continue Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
       <bpmn:outgoing>Flow_7</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="n_z7" name="Approve; merge ZBB units into master plan; snapshot as budget of record &amp; savings baseline">
-      <bpmn:documentation>Catalog: 05.8.5, 05.1.4, 05.1.5. </bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.5, 05.1.4, 05.1.5.  Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_7</bpmn:incoming>
       <bpmn:outgoing>Flow_8</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sendTask id="n_z8" name="Send revised targets incl. freed-spend uplift to Targetprocess">
-      <bpmn:documentation>Catalog: 05.8.5. = UC3 step 2, re-run with the post-ZBB target</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.5. = UC3 step 2, re-run with the post-ZBB target Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_8</bpmn:incoming>
       <bpmn:outgoing>Flow_9</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:task id="n_z9" name="Apply uplift to value-stream / portfolio envelopes; fund change">
-      <bpmn:documentation>Catalog: 02.4.2, 02.2.3. </bpmn:documentation>
+      <bpmn:documentation>Catalog: 02.4.2, 02.2.3.  Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_9</bpmn:incoming>
       <bpmn:outgoing>Flow_10</bpmn:outgoing>
     </bpmn:task>

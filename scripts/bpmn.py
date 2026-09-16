@@ -12,6 +12,17 @@ site/templates/app.js so the static SVG snapshots and the live site agree.
 """
 import re, html
 
+DECISIONS = {}   # key -> decision dict; set by generate.py (bpmn.DECISIONS = {...})
+def cond_text(when):
+    if not when: return ""
+    parts = []
+    for k, opts in when.items():
+        d = DECISIONS.get(k); names = []
+        for o in opts:
+            names.append(next((x["name"] for x in (d or {}).get("options", []) if x["id"] == o), o))
+        parts.append(f"{d['name'] if d else k}: {' / '.join(names)}")
+    return "Only when " + "; ".join(parts)
+
 BP = dict(laneHead=150, colW=208, nodeW=162, taskH=74, laneBase=122, slotH=96, padX=28, evR=18, gwR=24)
 esc = lambda s: html.escape(str("" if s is None else s), quote=True)
 
@@ -79,8 +90,11 @@ def l1_to_flow(l0, l1):
     lanes = [x.rstrip(".") for x in l0["lanes"]]
     steps = []
     for l2 in l1["l2s"]:
-        steps.append({"n": l2["id"], "type": step_type_for(l2), "lane": lane_for(lanes, l2), "task": l2["name"],
-                      "note": l2.get("outcome") and ("Outcome: " + l2["outcome"]) or "", "l2": [l2["id"]]})
+        st = {"n": l2["id"], "type": step_type_for(l2), "lane": lane_for(lanes, l2), "task": l2["name"],
+              "note": l2.get("outcome") and ("Outcome: " + l2["outcome"]) or "", "l2": [l2["id"]]}
+        if l2.get("applies_when"): st["when"] = l2["applies_when"]
+        if l2.get("variants"): st["variants"] = len(l2["variants"])
+        steps.append(st)
     used = [ln for ln in lanes if any(s["lane"]==ln for s in steps)]
     return {"id": "G"+l1["id"].replace(".","_"), "kind": "l1", "name": l1["id"]+" "+l1["name"], "title": l1["name"],
             "summary": f"Process group {l1['id']} in L0-{l0['id']} {l0['name']}: {len(steps)} L2 processes laid out in the order of the catalog, in the BPMN lane of the persona that performs each one.",
@@ -131,7 +145,8 @@ def layout(f):
         kind = kind_of(s["type"])
         node = {"id": ("n_"+kind+"_implicit") if s.get("implicit") else ("n_"+re.sub(r"[^\w]","_",s["n"])),
                 "n": s["n"], "kind": kind, "label": s["task"], "lane": lane_ix.get(s["lane"],0), "l2": s.get("l2",[]),
-                "note": s.get("note","") or "", "type": s["type"], "href": s.get("href")}
+                "note": s.get("note","") or "", "type": s["type"], "href": s.get("href"),
+                "when": s.get("when"), "decision": s.get("decision"), "variants": s.get("variants")}
         branch = is_branch(s["n"]) and base_of(s["n"]) in byN
         if branch:
             if not group or group["base"] != base_of(s["n"]):
@@ -233,7 +248,11 @@ def svg(f, title=None, link_base=None):
             lab=f'<text x="{lx:.0f}" y="{ly:.0f}" font-size="10" font-weight="600" fill="currentColor" text-anchor="{anchor}">{esc(e["label"])}</text>'
         out.append(f'<path d="{d}" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>{lab}')
     for n in L["nodes"]:
-        t = f'<title>{esc((n["n"]+" · " if n["n"] else "")+n["label"]+(" ("+n["type"]+")" if n["type"] else ""))}{esc(" — "+n["note"]) if n["note"] else ""}</title>'
+        extra = ""
+        if n.get("decision") and n["decision"] in DECISIONS: d = DECISIONS[n["decision"]]; extra += f" — {d['id']} {d['name']}: {d['question']}"
+        if n.get("when"): extra += " — " + cond_text(n["when"])
+        if n.get("variants"): extra += f" — {n['variants']} approaches on record"
+        t = f'<title>{esc((n["n"]+" · " if n["n"] else "")+n["label"]+(" ("+n["type"]+")" if n["type"] else ""))}{esc(" — "+n["note"]) if n["note"] else ""}{esc(extra)}</title>'
         cx, cy = n["cx"], n["cy"]
         if n["kind"] in ("start","startTimer","end"):
             body = f'<circle cx="{cx}" cy="{cy}" r="{BP["evR"]}" class="ground" stroke="currentColor" stroke-width="{3 if n["kind"]=="end" else 1.5}"/>'
@@ -247,12 +266,16 @@ def svg(f, title=None, link_base=None):
             lines = wrap(n["label"],24,2)
             body += f'<text x="{cx}" y="{cy-r-8-(len(lines)-1)*12}" text-anchor="middle" font-size="10.5" font-weight="600" fill="currentColor">'+"".join(f'<tspan x="{cx}" dy="{12 if k else 0}">{esc(l)}</tspan>' for k,l in enumerate(lines))+'</text>'
             body += f'<text x="{cx+r+4}" y="{cy+r+2}" font-size="9.5" fill="currentColor" fill-opacity=".6" font-family="monospace">{esc(n["n"])}</text>'
+            if n.get("decision") and n["decision"] in DECISIONS:
+                body += f'<text x="{cx}" y="{cy+r+14}" text-anchor="middle" font-size="9.5" font-weight="600" fill="#1F5F4A" font-family="monospace">{esc(DECISIONS[n["decision"]]["id"])}</text>'
         else:
             lines = wrap(n["label"],26,3); x,y,w,h = n["x"],n["y"],n["w"],n["h"]
-            body = f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" class="ground" stroke="currentColor" stroke-width="{2.2 if n["kind"]=="sub" else 1.5}"/>'
+            dash = ' stroke-dasharray="6 3"' if n.get("when") else ""
+            body = f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" class="ground" stroke="currentColor" stroke-width="{2.2 if n["kind"]=="sub" else 1.5}"{dash}/>'
             if n["kind"]=="send": body += f'<rect x="{x+3}" y="{y+3}" width="{w}" height="{h}" rx="8" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>'
             if n["kind"]=="sub": body += f'<rect x="{cx-6}" y="{y+h-14}" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M{cx-3} {y+h-8}h6M{cx} {y+h-11}v6" stroke="currentColor" stroke-width="1.2"/>'
             body += icon(n["kind"], x+8, y+7)
+            if n.get("variants"): body += f'<text x="{x+w-7}" y="{y+h-6}" text-anchor="end" font-size="8.5" fill="#1F5F4A" font-family="monospace">{n["variants"]} approaches</text>'
             body += f'<text x="{x+w-7}" y="{y+13}" text-anchor="end" font-size="9.5" fill="currentColor" fill-opacity=".6" font-family="monospace">{esc(n["n"])}{" · ADM" if "ADM" in n["type"] else ""}</text>'
             ty = y+18+(h-18)/2+4-(len(lines)-1)*6.5
             body += f'<text x="{cx}" y="{ty}" text-anchor="middle" font-size="10.5" fill="currentColor">'+"".join(f'<tspan x="{cx}" dy="{13 if k else 0}">{esc(l)}</tspan>' for k,l in enumerate(lines))+'</text>'
@@ -277,6 +300,9 @@ def xml(f, version="0.6.0"):
     nodes = []
     for n in L["nodes"]:
         doc = (f"Catalog: {', '.join(n['l2'])}. " if n["l2"] else "") + (n["note"] or "")
+        if n.get("decision") and n["decision"] in DECISIONS: d = DECISIONS[n["decision"]]; doc += f" Decided by {d['id']} {d['name']}: {d['question']}"
+        if n.get("when"): doc += " " + cond_text(n["when"]) + "."
+        if n.get("variants"): doc += f" {n['variants']} approaches on record (see catalog variants)."
         inner = (f"\n      <bpmn:documentation>{x(doc)}</bpmn:documentation>" if doc else "")
         inner += "".join(f"\n      <bpmn:incoming>{i}</bpmn:incoming>" for i in inc.get(n["id"],[]))
         inner += "".join(f"\n      <bpmn:outgoing>{o}</bpmn:outgoing>" for o in out.get(n["id"],[]))

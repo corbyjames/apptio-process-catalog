@@ -1,4 +1,4 @@
-# BPMN diagram index · v0.6.0
+# BPMN diagram index · v0.7.0
 
 Generated. One BPMN 2.0 model (with diagram interchange) and one SVG snapshot per process area, process group and cross-tool flow. Open any `.bpmn` in the Pages [viewer/editor](../site/viewer.html), bpmn.io, Camunda Modeler, Signavio, Visio or Draw.io. Hand-refined models belong in `diagrams/bpmn/custom/`.
 

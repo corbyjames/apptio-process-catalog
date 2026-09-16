@@ -35,6 +35,13 @@ overwritten).
 - `delivery_model`: `Any` (methodology-agnostic), `Agile`, `Traditional`, or `Hybrid`
   (explicitly about running agile + traditional together).
 - `config`: the tool objects a consultant would set up for that activity.
+- **Multiple approaches to one process**: do not add sibling L2s. Add (or reuse) a decision in
+  `decisions[]`, list the L2 in its `affects`, and give the L2 a `variants[]` entry per option that
+  differs — only the fields that differ (`description`, `config`, `inputs`, `outputs`, `personas`,
+  `cadence`, `evidence`, `bpmn_type`, optionally a variant `name`). Keep the base record method-neutral.
+  Use `applies_when` when the whole process exists only under some options, and `when` / `decision`
+  on flow steps. `scripts/add_decisions_v07.py` is the seed and a worked example; it validates that
+  every variant's decision/option exists and that the L2 is in that decision's `affects`.
 - `evidence`: where the claim comes from (deck, demo, docs, framework) — keep it honest; mark
   unverified items "verify".
 

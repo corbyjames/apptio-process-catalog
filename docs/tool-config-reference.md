@@ -73,7 +73,7 @@ Generated from `data/tool-config.yaml` (per-product checklists) plus the per-L2 
 | 02.1.2 | Triage, categorize & qualify demand | Request workflow states, triage boards, automation rules (routing/auto-reply/linked entities), work-intake taxonomy (categories, CapEx/OpEx, non-labor categories); duplicate/overlap detection across descriptions, outcomes, journeys, capabilities |
 | 02.1.3 | Progress demand through Portfolio Kanban | Portfolio Epic workflow states, Kanban board views, WIP limits, per-state permissions |
 | 02.2.1 | Build lean business case / epic hypothesis | Budgeting solution templates (epic hypothesis, lean business case), rich-text/custom fields, Portfolio Epic Score report |
-| 02.2.2 | Prioritize by value (WSJF / scoring) | Numeric custom fields (BV, TC, RR/OE, size), calculated field/metric for WSJF, prioritized list views, objective-scoring |
+| 02.2.2 | Prioritize the portfolio backlog | Numeric custom fields (BV, TC, RR/OE, size), calculated field/metric for WSJF, prioritized list views, objective-scoring |
 | 02.2.3 | Approve & fund investments | Entity states + per-state role permissions (gates), automation rules for approvals, Budgeting solution (fund Portfolios/Work/People/Products), A1 approved-investment-budget feed |
 | 02.3.1 | Build & maintain roadmaps | Timeline/Roadmap views on Portfolio Epics/Epics/Features vs Releases/PIs, multi-level roadmaps |
 | 02.3.2 | Model scenarios & trade-offs | Scenario Planning solution (plan variants, promote scenario to baseline), demand vs capacity data, budget dashboards |
@@ -112,7 +112,7 @@ Generated from `data/tool-config.yaml` (per-product checklists) plus the per-L2 
 | 04.4.1 | Create position requests | Position Request entity (role, location, hours, employment type, department link) |
 | 04.4.2 | Approve positions (multi-level workflow) | Multi-level approval workflow (entity states + per-state permissions), automation rules (notifications, escalations), XOR outcome |
 | 04.4.3 | Sync approved positions to Planning & auto-update on fill | ADM/data highway position feed, open vs filled normalization in Planning, auto-update linkage |
-| 04.5.1 | Record time against work | Time entity, Time Tracking solution, timesheet views, billable/non-billable fields; alternative: work allocations instead of timesheets |
+| 04.5.1 | Capture effort against work | Depends on D-01: Time entity + Time Tracking solution (timesheets) or backlog/allocation data (no timesheets) |
 | 04.5.2 | Approve timesheets | Timesheet approval workflow (solution component), notifications |
 | 04.5.3 | Feed time/effort to finance processes | Time reports/exports, ADM feed to Costing, story-point/completed-work alternative (deprecates time writing) |
 | 10.1.1 | Design org, portfolio & team structure | Portfolios (Projects), Teams, ART/Groups, team-project assignment, user types, roles & per-process permissions, RBAC |
@@ -143,7 +143,7 @@ Generated from `data/tool-config.yaml` (per-product checklists) plus the per-L2 
 | 06.4.2 | Publish blended rates to Targetprocess | ADM rate feed, rate cadence config; true-up pattern for blended-vs-actual reconciliation (design decision) |
 | 06.4.3 | Ingest workforce & completed work data | ADM feed ATP->TBM Studio, involvement/profile/mapping datasets |
 | 06.4.4 | Compute monthly team cost & blended CapEx % | TBM Studio computation, job profile CapEx/OpEx splits, involvement math |
-| 06.4.5 | Allocate team costs to work or towers | Story-point/weightage allocation, fixed-capacity rules (team->app/tower), one normalized model for both team kinds |
+| 06.4.5 | Allocate team costs to work or towers | One normalized labor model in TBM Studio with an allocation strategy per team kind (see variants) |
 | 06.4.6 | Generate audit-ready capitalization actuals | SAP-ready extract format, audit documentation, contractor/PS normalization |
 | 06.5.1 | Consolidate & analyze vendor spend | Vendors master data, vendor insights reports, contract/PO feeds |
 | 06.5.2 | Track assets & depreciation | Fixed Asset Ledger, Is Depr flag, depreciation flows |

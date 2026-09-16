@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G05_1" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G05_1" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G05_1">
     <bpmn:participant id="Participant_G05_1" name="05.1 Build the annual IT budget — Build the annual IT budget" processRef="Process_G05_1" />
   </bpmn:collaboration>
@@ -24,7 +24,7 @@
       <bpmn:outgoing>Flow_0</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="n_05_1_1" name="Establish plan structure &amp; baseline">
-      <bpmn:documentation>Catalog: 05.1.1. Outcome: open plan with baseline</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.1.1. Outcome: open plan with baseline 4 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_0</bpmn:incoming>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:task>
@@ -34,7 +34,7 @@
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:userTask id="n_05_1_3" name="Enter bottom-up budgets">
-      <bpmn:documentation>Catalog: 05.1.3. Outcome: submitted budgets</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.1.3. Outcome: submitted budgets 4 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:userTask>

@@ -1,4 +1,4 @@
-# IBM Apptio Process Catalog — Overview (L0 map) · v0.6.0
+# IBM Apptio Process Catalog — Overview (L0 map) · v0.7.0
 
 Generated from `data/catalog.json` — **edit the JSON, not this file.** Structure: 9 L0 · 45 L1 · 149 L2 · 7 cross-tool flows. Live site: `site/index.html` (GitHub Pages).
 
@@ -122,9 +122,9 @@ Cadence: Monthly. Lanes: Targetprocess / ATP; Costing / TBM Studio; ERP (SAP). U
 | 14 | Task | Targetprocess / ATP | Maintain involvements %, job profiles, CapEx/OpEx & IT-tower mappings | 04.1.2, 04.1.3 | Three ingredients: job profiles, involvements, protected rates |
 | 15 | Send task (ADM) | Targetprocess / ATP | Send workforce & completed work data to Costing (TBM Studio) | 04.5.3, 06.4.3 |  |
 | 16 | Service task | Costing / TBM Studio | Calculate monthly team cost & blended CapEx % (protected rates) | 06.4.4 |  |
-| 17 | XOR gateway | Costing / TBM Studio | Team work visible? | 06.4.5 | Yes: story-point allocation; No: fixed-capacity |
-| 17a | Task | Costing / TBM Studio | Allocate team costs to completed work (story points, weightage) | 06.4.5 | Same allocation principles as TBM |
-| 17b | Task | Costing / TBM Studio | Allocate team costs to IT towers / apps (fixed capacity) | 06.4.5 | Ops teams without visible backlog (e.g. ServiceNow) |
+| 17 | XOR gateway | Costing / TBM Studio | Team work visible? | 06.4.5 | Yes: story-point allocation; No: fixed-capacity Decided by D-01 Labor effort signal. |
+| 17a | Task | Costing / TBM Studio | Allocate team costs to completed work (story points, weightage) | 06.4.5 | Same allocation principles as TBM *Only when Labor effort signal: Cost per story point / Cost per completed work item / Timesheets (hours x rate) / Planned work-effort units (allocation-based).* |
+| 17b | Task | Costing / TBM Studio | Allocate team costs to IT towers / apps (fixed capacity) | 06.4.5 | Ops teams without visible backlog (e.g. ServiceNow) *Only when Labor effort signal: Fixed capacity (team to tower/app).* |
 | 18 | Service task | Costing / TBM Studio | Generate SAP-ready monthly actuals - CapEx / OpEx by user | 06.4.6 | Deprecates time writing; join gateway before this step |
 
 ### UC4 — TCO up: Cost actuals to application TCO
@@ -179,18 +179,36 @@ Cadence: Per ZBB cycle (annual, rotational) + monthly monitoring. Lanes: IT Plan
 
 | Step | Type | Lane | Task / event | Catalog | Notes |
 |---|---|---|---|---|---|
-| z0 | Start event (timer) | IT Planning (Finance) | ZBB cycle opens for this year's rotation slice | 05.8.1 | Rotational: each decision unit every 2-3 years |
-| z1 | User task | IT Planning (Finance) | Select decision units; name cost-category owners x budget owners; define zero base | 05.8.1 |  |
+| z0 | Start event (timer) | IT Planning (Finance) | ZBB cycle opens for this year's rotation slice | 05.8.1 | Rotational: each decision unit every 2-3 years *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
+| z1 | User task | IT Planning (Finance) | Select decision units; name cost-category owners x budget owners; define zero base | 05.8.1 | *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
 | z2 | Service task | Costing / TBM Studio | Build activity & cost-driver fact base per decision unit | 05.8.2, 07.5.1 | Same allocated model as UC4; Cloudability rightsizing sets the cloud zero base |
 | z3 | Send task | Costing / TBM Studio | Publish fact base & zero-base floors to Planning (actuals import) | 05.3.1 | Reuses Costing to Planning actuals integration |
-| z4 | User task | Budget owners (in Planning) | Build decision packages at Minimum / Current / Enhanced tiers | 05.8.3 | Labor positions come from Targetprocess via UC3 steps 7-8 |
-| z5 | User task | IT Planning (Finance) | Rank packages; compare cumulative cost to target; draw cut-line; pressure-test | 05.8.4 | One Planning version per cut-line scenario |
-| z6 | XOR gateway | IT Planning (Finance) | Cut-line within target? | 05.8.4 | No: return packages for rework (loop to z4); Yes: continue |
-| z7 | User task | IT Planning (Finance) | Approve; merge ZBB units into master plan; snapshot as budget of record & savings baseline | 05.8.5, 05.1.4, 05.1.5 |  |
-| z8 | Send task (ADM) | IT Planning (Finance) | Send revised targets incl. freed-spend uplift to Targetprocess | 05.8.5 | = UC3 step 2, re-run with the post-ZBB target |
-| z9 | Task | Targetprocess / ATP | Apply uplift to value-stream / portfolio envelopes; fund change | 02.4.2, 02.2.3 |  |
+| z4 | User task | Budget owners (in Planning) | Build decision packages at Minimum / Current / Enhanced tiers | 05.8.3 | Labor positions come from Targetprocess via UC3 steps 7-8 *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
+| z5 | User task | IT Planning (Finance) | Rank packages; compare cumulative cost to target; draw cut-line; pressure-test | 05.8.4 | One Planning version per cut-line scenario *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
+| z6 | XOR gateway | IT Planning (Finance) | Cut-line within target? | 05.8.4 | No: return packages for rework (loop to z4); Yes: continue *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
+| z7 | User task | IT Planning (Finance) | Approve; merge ZBB units into master plan; snapshot as budget of record & savings baseline | 05.8.5, 05.1.4, 05.1.5 | *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
+| z8 | Send task (ADM) | IT Planning (Finance) | Send revised targets incl. freed-spend uplift to Targetprocess | 05.8.5 | = UC3 step 2, re-run with the post-ZBB target *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
+| z9 | Task | Targetprocess / ATP | Apply uplift to value-stream / portfolio envelopes; fund change | 02.4.2, 02.2.3 | *Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.* |
 | z10 | Task (monthly) | Costing / TBM Studio | Actuals vs package commitments; savings realization; block leakage | 05.8.6, 06.2.2, 05.3.2, 08.2.3 |  |
 | end | End event | IT Planning (Finance) | Cycle retrospective; next rotation slice selected | 05.8.6 |  |
+
+## Design decisions (customer profile)
+
+11 choices a customer makes once that ripple through several processes. Each has options with fit, prerequisites and trade-offs; processes carry a *variant* per option where the work differs, or an *applies-when* condition where the process only exists under some options; flow steps carry the same conditions. Full register: `docs/decisions.md`; on the site, `#/decisions` doubles as the profile picker.
+
+| ID | Decision | Question | Options (default in bold) | Shapes |
+|---|---|---|---|---|
+| D-01 | Labor effort signal | How is labor effort captured and attached to work so it can be costed, capitalized and rolled into App TCO? | **Cost per story point**, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) | 04.1.3, 04.5.1, 04.5.2, 04.5.3, 06.4.3, 06.4.5, 06.4.6 · flows UC1 |
+| D-02 | Labor rate exposure | Which labor rate is allowed to leave Costing and be used in Targetprocess to cost work? | **Blended team / ART rate**, Job-profile rate (role x location), Individual (actual) rates | 04.1.3, 06.4.1, 06.4.2, 04.3.1, 02.4.3 · flows UC2 |
+| D-03 | Budget build method | How is the IT budget built for a given decision unit and cycle? | Incremental, **Driver-based**, Zero-based - rotational, Zero-based - all units annually, Zero-based mindset (continuous) | 05.1.1, 05.1.3, 05.1.4, 05.1.5, 05.8.1, 05.8.2, 05.8.3, 05.8.4, 05.8.5, 05.8.6, 07.6.1 · flows ZBB |
+| D-04 | Portfolio funding model | Is change work funded per project, per value stream/product, or both during a transition? | Project-based funding, Value-stream / product funding (Lean Budgets), **Hybrid (both, side by side)** | 02.4.1, 02.4.2, 02.2.3, 05.7.1, 05.7.2, 05.7.3 · flows INV, UC3 |
+| D-05 | Investment approval governance | How does an investment get approved - phase gates, lean portfolio flow, or both? | Stage-gate, Lean portfolio flow (Portfolio Kanban), **Hybrid** | 02.1.3, 02.2.3, 03.3.3 · flows INV |
+| D-06 | Prioritization method | How is the portfolio backlog ranked? | **WSJF**, Weighted objective scoring, Manual / forum ranking | 02.2.2, 05.8.4 |
+| D-07 | Capacity planning basis | Is capacity planned and allocated per team, per role/named individual, or both? | Team-based, Role / individual-based, **Both (one capacity model)** | 04.2.1, 04.2.2, 04.3.1, 04.3.4, 05.7.2 · flows UC3 |
+| D-08 | Demand intake channel | Where do ideas and requests enter - the Targetprocess Service Desk, a ServiceNow front end, or email/forms? | **Targetprocess Service Desk portal**, ServiceNow ideation / demand front end, Email / forms | 02.1.1, 02.1.2, 10.1.5 |
+| D-09 | Cloud commitment management mode | Are reserved-instance / savings-plan / CUD commitments managed by hand, assisted by recommendations, or automated? | Manual (vendor consoles), **Assisted (recommendations + approval)**, Automated (Savings Automation) | 07.5.3, 07.5.4, 10.4.2 |
+| D-10 | IT cost recovery model | Does IT show costs back, charge them back at allocated cost, or charge priced services with over/under recovery? | **Showback**, Chargeback at allocated cost, Chargeback at service prices | 07.2.3, 08.1.1, 08.1.2, 08.1.3, 08.2.1 · flows UC4, CLD |
+| D-11 | Team tool of record | Do teams work in Targetprocess natively, or in Jira / Azure DevOps synced into Targetprocess as the aggregation layer? | Targetprocess native, **Jira / ADO synced** | 03.2.1, 03.2.4, 02.3.4 · flows UC1 |
 
 ## Hybrid planning vs agile-only
 

@@ -83,7 +83,7 @@ flowchart LR
 ```mermaid
 flowchart LR
   S((start))
-  N04_5_1["04.5.1 Record time against work<br/><i>Resource Management · Any</i>"]
+  N04_5_1["04.5.1 Capture effort against work<br/><i>Resource Management · Any</i>"]
   S --> N04_5_1
   N04_5_2["04.5.2 Approve timesheets<br/><i>Resource Management · Any</i>"]
   N04_5_1 --> N04_5_2

@@ -41,7 +41,7 @@ flowchart LR
   S((start))
   N02_2_1["02.2.1 Build lean business case / epic hypothesis<br/><i>Portfolio Management · Any</i>"]
   S --> N02_2_1
-  N02_2_2["02.2.2 Prioritize by value (WSJF / scoring)<br/><i>Portfolio Management · Agile</i>"]
+  N02_2_2["02.2.2 Prioritize the portfolio backlog<br/><i>Portfolio Management · Agile</i>"]
   N02_2_1 --> N02_2_2
   N02_2_3["02.2.3 Approve & fund investments<br/><i>Portfolio Management · Hybrid</i>"]
   N02_2_2 --> N02_2_3

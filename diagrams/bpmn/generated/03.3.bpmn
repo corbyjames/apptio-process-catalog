@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G03_3" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G03_3" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G03_3">
     <bpmn:participant id="Participant_G03_3" name="03.3 Manage releases &amp; hybrid projects — Manage releases &amp; hybrid projects" processRef="Process_G03_3" />
   </bpmn:collaboration>
@@ -28,7 +28,7 @@
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="n_03_3_3" name="Govern stage-gates &amp; milestones for traditional initiatives">
-      <bpmn:documentation>Catalog: 03.3.3. Outcome: gate decisions, milestone status</bpmn:documentation>
+      <bpmn:documentation>Catalog: 03.3.3. Outcome: gate decisions, milestone status Only when Investment approval governance: Stage-gate / Hybrid.</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:task>

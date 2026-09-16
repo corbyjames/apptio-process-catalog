@@ -12,7 +12,8 @@ THIN = Border(*[Side(style="thin", color="BFBFBF")]*4); WRAP = Alignment(wrap_te
 L0_FILLS = {"01":"DEEBF7","02":"DEEBF7","03":"DEEBF7","04":"E2EFDA","05":"FFF2CC","06":"FCE4D6","07":"E4DFEC","08":"FCE4D6","10":"EDEDED"}
 FLOW_FILLS = {"UC3":"DEEBF7","UC2":"E2EFDA","UC1":"FFF2CC","UC4":"FCE4D6","CLD":"E4DFEC","INV":"D9D9D9","ZBB":"FBE5D6"}
 
-def build(ROOT, CAT, L0S, L1S, L2S, FLOWS, FW, CFG, CAL, DIAGRAMS):
+def build(ROOT, CAT, L0S, L1S, L2S, FLOWS, FW, CFG, CAL, DIAGRAMS, DECISIONS=(), cond_text=lambda w: str(w), opt_name=lambda k, o: o):
+    DEC = {d["key"]: d for d in DECISIONS}
     wb = Workbook(); V = CAT["version"]
     def header(ws, cols, widths):
         for i, (c, w) in enumerate(zip(cols, widths), 1):
@@ -36,11 +37,14 @@ def build(ROOT, CAT, L0S, L1S, L2S, FLOWS, FW, CFG, CAL, DIAGRAMS):
     ("How the levels work", True),
     ("L0 = process area. L1 = process group. L2 = process/activity - the unit that becomes a BPMN task. Positional IDs (NN, NN.N, NN.N.N) are the human-facing reference; permanent element IDs (P-0001..., G-011...) survive re-parenting.", False),
     ("Delivery Model: 'Any' = methodology-agnostic; 'Agile' = SAFe/agile-specific; 'Traditional' = waterfall/stage-gate; 'Hybrid' = explicitly about running both side by side. Budgeting method (02.4, 05.1, 05.8, 07.6): Incremental, Driver-based, ZBB, Rolling, Lean/participatory, Any.", False),
+    ("Design decisions (sheet Decisions): the choices a customer makes once (e.g. labor effort signal = story points / timesheets / fixed capacity). A process done differently per option carries variants (sheet Variants); a process that only exists under some options has an 'Applies when' condition; flow steps carry the same conditions. The site's #/decisions page is the customer-profile picker.", False),
     ("BPMN lane / task type: derived per L2 from the Who text and the area's default lanes; these drive the generated group (NN.N.bpmn) and area (L0-NN.bpmn) diagrams. Flow diagrams (flow-XXX.bpmn) come from the E2E Flow Steps sheet.", False),
     ("", False),
     ("Sheets", True),
     ("L0 Map - the nine process areas with tool coverage, default BPMN lanes and counts.", False),
     ("Process Catalog L0-L2 - the full catalog, one row per L2 with element ID, lane, task type, flows, personas and cadence.", False),
+    ("Decisions - the design-decision register: question, options with fit / prerequisites / trade-offs, and the processes each one shapes.", False),
+    ("Variants - one row per process variant (process x decision x option) with the fields that differ from the base record.", False),
     ("E2E Flow Steps - BPMN-ready step tables for the seven cross-tool flows (UC3, UC2, UC1, UC4, CLD, INV, ZBB).", False),
     ("BPMN Diagrams - index of every generated diagram (file names in diagrams/bpmn/generated and assets/diagrams).", False),
     ("Tool Config Reference - configuration-object checklists per product.", False),
@@ -57,21 +61,37 @@ def build(ROOT, CAT, L0S, L1S, L2S, FLOWS, FW, CFG, CAL, DIAGRAMS):
         put(ws, i, [l0["id"], l0["name"], l0["description"], l0["primary"], l0["band"], "; ".join(l0["lanes"]), len(l0["l1s"]), sum(len(g["l2s"]) for g in l0["l1s"])], L0_FILLS.get(l0["id"]), 2)
 
     ws = wb.create_sheet("Process Catalog L0-L2")
-    cols = ["L0 ID","L0 Area","L1 ID","L1 Group","L1 EID","L2 ID","L2 Process","Element ID","Legacy ID","What you get","Description","Delivery Model","Budgeting Method","Product (tool)","Primary Product","Personas (source)","Persona roles","BPMN Lane","BPMN Task Type","Cadence","Cadence bucket","Inputs","Outputs","Configuration Objects","Framework Mapping","Framework tags","Flows","Evidence"]
-    header(ws, cols, [6,22,7,26,7,8,32,8,8,30,50,10,16,18,12,24,26,18,12,16,12,26,26,50,34,12,10,30])
+    cols = ["L0 ID","L0 Area","L1 ID","L1 Group","L1 EID","L2 ID","L2 Process","Element ID","Legacy ID","What you get","Description","Delivery Model","Budgeting Method","Product (tool)","Primary Product","Personas (source)","Persona roles","BPMN Lane","BPMN Task Type","Cadence","Cadence bucket","Inputs","Outputs","Configuration Objects","Framework Mapping","Framework tags","Flows","Evidence","Decisions","# Variants","Applies when"]
+    header(ws, cols, [6,22,7,26,7,8,32,8,8,30,50,10,16,18,12,24,26,18,12,16,12,26,26,50,34,12,10,30,22,8,30])
     r = 2
     l0name = {l0["id"]: l0["name"] for l0 in L0S}; l1name = {g["id"]: g for g in L1S}
     for l2 in L2S:
         g = l1name[l2["l1"]]
-        put(ws, r, [l2["l0"], l0name[l2["l0"]], g["id"], g["name"], g["eid"], l2["id"], l2["name"], l2["eid"], l2.get("legacy_id") or "", l2["outcome"], l2["description"], l2["delivery_model"], l2.get("budgeting_method") or "", l2["tool"], l2["primary_product"], l2["personas"], ", ".join(l2["persona_list"]), l2.get("lane",""), l2.get("bpmn_type",""), l2["cadence"], l2["cadence_bucket"], l2["inputs"], l2["outputs"], l2["config"], l2["framework"], ", ".join(l2["framework_tags"]), ", ".join(l2["flows"]), l2["evidence"]], L0_FILLS.get(l2["l0"]), 7)
+        put(ws, r, [l2["l0"], l0name[l2["l0"]], g["id"], g["name"], g["eid"], l2["id"], l2["name"], l2["eid"], l2.get("legacy_id") or "", l2["outcome"], l2["description"], l2["delivery_model"], l2.get("budgeting_method") or "", l2["tool"], l2["primary_product"], l2["personas"], ", ".join(l2["persona_list"]), l2.get("lane",""), l2.get("bpmn_type",""), l2["cadence"], l2["cadence_bucket"], l2["inputs"], l2["outputs"], l2["config"], l2["framework"], ", ".join(l2["framework_tags"]), ", ".join(l2["flows"]), l2["evidence"], ", ".join(DEC[k]["id"] + " " + DEC[k]["name"] for k in l2.get("decisions", []) if k in DEC), len(l2.get("variants", [])), cond_text(l2["applies_when"]) if l2.get("applies_when") else ""], L0_FILLS.get(l2["l0"]), 7)
         r += 1
 
+    ws = wb.create_sheet("Decisions")
+    header(ws, ["Decision ID","Key","Decision","Domain","Question","Why it matters","Pick","Option ID","Option","Default","What it is","Fits","Prerequisites","Trade-offs","Evidence","Shapes (L2s)","Flows","Related"], [9,20,22,20,40,50,9,16,26,8,50,36,36,36,28,30,10,22])
+    r = 2
+    for d in DECISIONS:
+        for o in d["options"]:
+            put(ws, r, [d["id"], d["key"], d["name"], d["domain"], d["question"], d["why"], "one or more" if d.get("multi") else "one", o["id"], o["name"], "yes" if o["id"] == d["default"] else "", o["summary"], o["fit"], o["prereqs"], o["tradeoffs"], o["evidence"], ", ".join(d["affects"]), ", ".join(d["flows"]), ", ".join(DEC[k]["id"] for k in d["related"] if k in DEC)], bold_col=3); r += 1
+
+    ws = wb.create_sheet("Variants")
+    header(ws, ["L2 ID","L2 Process","Element ID","Decision ID","Decision","Option ID","Option","Variant name","Description","Inputs","Outputs","Configuration Objects","Personas","Cadence","BPMN Task Type","Evidence"], [8,32,8,9,22,16,26,32,55,26,26,50,24,16,14,30])
+    r = 2
+    for l2 in L2S:
+        for v in l2.get("variants", []):
+            d = DEC.get(v["decision"], {})
+            put(ws, r, [l2["id"], l2["name"], l2["eid"], d.get("id", ""), d.get("name", v["decision"]), v["option"], opt_name(v["decision"], v["option"]), v.get("name", ""), v.get("description", ""), v.get("inputs", ""), v.get("outputs", ""), v.get("config", ""), v.get("personas", ""), v.get("cadence", ""), v.get("bpmn_type", ""), v.get("evidence", "")], L0_FILLS.get(l2["l0"]), 1); r += 1
+
     ws = wb.create_sheet("E2E Flow Steps")
-    header(ws, ["Flow","Flow Name","Title","Step","BPMN Element Type","Lane","Task / Event","Catalog L2s","Notes"], [7,18,30,6,16,26,55,18,45])
+    header(ws, ["Flow","Flow Name","Title","Step","BPMN Element Type","Lane","Task / Event","Catalog L2s","Notes","Condition"], [7,18,30,6,16,26,55,18,45,34])
     r = 2
     for f in FLOWS:
         for s in f["steps"]:
-            put(ws, r, [f["id"], f["name"], f["title"], s["n"], s["type"], s["lane"], s["task"], ", ".join(s["l2"]), s.get("note","") or ""], FLOW_FILLS.get(f["id"])); r += 1
+            cond = ("Decided by " + DEC[s["decision"]]["id"] + " " + DEC[s["decision"]]["name"]) if s.get("decision") in DEC else (("Only when " + cond_text(s["when"])) if s.get("when") else "")
+            put(ws, r, [f["id"], f["name"], f["title"], s["n"], s["type"], s["lane"], s["task"], ", ".join(s["l2"]), s.get("note","") or "", cond], FLOW_FILLS.get(f["id"])); r += 1
 
     ws = wb.create_sheet("BPMN Diagrams")
     header(ws, ["File base name","Kind","Name","Lanes","Steps","BPMN file","SVG file"], [14,8,44,50,7,40,34])

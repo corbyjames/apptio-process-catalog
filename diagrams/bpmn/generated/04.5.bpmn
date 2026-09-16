@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G04_5" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G04_5" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G04_5">
     <bpmn:participant id="Participant_G04_5" name="04.5 Track &amp; approve time — Track &amp; approve time" processRef="Process_G04_5" />
   </bpmn:collaboration>
@@ -19,18 +19,18 @@
     <bpmn:startEvent id="n_start_implicit" name="">
       <bpmn:outgoing>Flow_0</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="n_04_5_1" name="Record time against work">
-      <bpmn:documentation>Catalog: 04.5.1. Outcome: time entries / effort data</bpmn:documentation>
+    <bpmn:userTask id="n_04_5_1" name="Capture effort against work">
+      <bpmn:documentation>Catalog: 04.5.1. Outcome: time entries / effort data 5 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_0</bpmn:incoming>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="n_04_5_2" name="Approve timesheets">
-      <bpmn:documentation>Catalog: 04.5.2. Outcome: approved time</bpmn:documentation>
+      <bpmn:documentation>Catalog: 04.5.2. Outcome: approved time Only when Labor effort signal: Timesheets (hours x rate). 1 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sendTask id="n_04_5_3" name="Feed time/effort to finance processes">
-      <bpmn:documentation>Catalog: 04.5.3. Outcome: effort data for costing &amp; CapEx</bpmn:documentation>
+      <bpmn:documentation>Catalog: 04.5.3. Outcome: effort data for costing &amp; CapEx 5 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:sendTask>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G03_2" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G03_2" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G03_2">
     <bpmn:participant id="Participant_G03_2" name="03.2 Deliver at team level — Deliver at team level" processRef="Process_G03_2" />
   </bpmn:collaboration>
@@ -19,7 +19,7 @@
       <bpmn:outgoing>Flow_0</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="n_03_2_1" name="Plan &amp; execute iterations">
-      <bpmn:documentation>Catalog: 03.2.1. Outcome: working increments, updated states</bpmn:documentation>
+      <bpmn:documentation>Catalog: 03.2.1. Outcome: working increments, updated states 2 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_0</bpmn:incoming>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:task>
@@ -34,7 +34,7 @@
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sendTask id="n_03_2_4" name="Sync with dev tools">
-      <bpmn:documentation>Catalog: 03.2.4. Outcome: unified hierarchy over team tools</bpmn:documentation>
+      <bpmn:documentation>Catalog: 03.2.4. Outcome: unified hierarchy over team tools Only when Team tool of record: Jira / ADO synced.</bpmn:documentation>
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:sendTask>

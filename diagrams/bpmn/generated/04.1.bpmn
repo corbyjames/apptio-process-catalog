@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G04_1" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G04_1" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G04_1">
     <bpmn:participant id="Participant_G04_1" name="04.1 Maintain the workforce baseline — Maintain the workforce baseline" processRef="Process_G04_1" />
   </bpmn:collaboration>
@@ -30,7 +30,7 @@
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:task id="n_04_1_3" name="Maintain job profiles &amp; financial mappings">
-      <bpmn:documentation>Catalog: 04.1.3. Outcome: job profiles with rate &amp; CapEx/OpEx mapping; team-tower mapping</bpmn:documentation>
+      <bpmn:documentation>Catalog: 04.1.3. Outcome: job profiles with rate &amp; CapEx/OpEx mapping; team-tower mapping 2 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:task>

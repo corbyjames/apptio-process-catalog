@@ -1,4 +1,4 @@
-# Full catalog — L0-L2 · v0.6.0
+# Full catalog — L0-L2 · v0.7.0
 
 Generated from `data/catalog.json` — **edit the JSON, not this file.** 9 areas · 45 groups · 149 processes. Each group links to its BPMN diagram; every process shows its BPMN lane and task type.
 
@@ -83,6 +83,10 @@ Original name: Demand Intake & Qualification. BPMN: [`02.1.bpmn`](../diagrams/bp
 - Inputs: Ideas, requests, mandates → Outputs: Logged demand records
 - Config: Service Desk portal, Request entity + request types, email integration, voting; ServiceNow intake integration
 - Framework: SPM: Demand Intake | FinOps n/a | Flows: — | Evidence: TP guide Service Desk; WFM deck (ServiceNow ideation front-end)
+- Shaped by: D-08 Demand intake channel
+  - **D-08 · Targetprocess Service Desk portal**: Collect demand through the Targetprocess Service Desk portal into Request entities with request types and voting. **Config:** Service Desk portal, Request entity + request types, voting, automation rules
+  - **D-08 · ServiceNow ideation / demand front end**: Collect ideas in ServiceNow; the integration creates Request/idea records in Targetprocess for qualification and keeps status in sync. **Config:** ServiceNow intake integration (10.1.5), field/status mapping, Request entity
+  - **D-08 · Email / forms**: Collect demand by email or form; automation rules create Request records for triage. **Config:** Email integration, form/webhook automation rules, Request entity
 
 **02.1.2 Triage, categorize & qualify demand** `P-0008` — Route, categorize (work item taxonomy, BAU vs change, CapEx/OpEx) and qualify requests against strategy before they enter the portfolio funnel. Includes detecting materially similar or duplicate demand (overlapping investments, teams pursuing similar outcomes) beyond title matching.
 - What you get: qualified demand in funnel
@@ -90,6 +94,7 @@ Original name: Demand Intake & Qualification. BPMN: [`02.1.bpmn`](../diagrams/bp
 - Inputs: Demand records → Outputs: Qualified demand in funnel
 - Config: Request workflow states, triage boards, automation rules (routing/auto-reply/linked entities), work-intake taxonomy (categories, CapEx/OpEx, non-labor categories); duplicate/overlap detection across descriptions, outcomes, journeys, capabilities
 - Framework: SPM: Demand Intake | Flows: — | Evidence: SPM journey map (work-intake model taxonomy); TP guide; PI Planning/EVD Agent requirements (IBM, anonymized) §6.2, §8.3
+- Shaped by: D-08 Demand intake channel
 
 **02.1.3 Progress demand through Portfolio Kanban** `P-0009` — Move epics Funnel-Reviewing-Analyzing-Backlog-Implementing-Done with WIP limits and visible decision states.
 - What you get: decided/scheduled portfolio backlog
@@ -97,6 +102,7 @@ Original name: Demand Intake & Qualification. BPMN: [`02.1.bpmn`](../diagrams/bp
 - Inputs: Qualified demand → Outputs: Decided/scheduled portfolio backlog
 - Config: Portfolio Epic workflow states, Kanban board views, WIP limits, per-state permissions
 - Framework: SAFe: Portfolio Kanban | SPM: Demand Intake | Flows: — | Evidence: SAFe LPM; TP entity workflows
+- Shaped by: D-05 Investment approval governance | Applies when: Investment approval governance: Lean portfolio flow (Portfolio Kanban) / Hybrid
 
 
 ### 02.2 Prioritize & decide investments `G-022`
@@ -110,12 +116,16 @@ Original name: Prioritization & Investment Decision. BPMN: [`02.2.bpmn`](../diag
 - Config: Budgeting solution templates (epic hypothesis, lean business case), rich-text/custom fields, Portfolio Epic Score report
 - Framework: SAFe: Epic/LPM | SPM: Demand Intake | Flows: — | Evidence: TP Budgeting solution; LFM demo (epic scoring); PI Planning/EVD Agent requirements (IBM, anonymized) §6.3
 
-**02.2.2 Prioritize by value (WSJF / scoring)** `P-0011` — Rank the portfolio backlog by WSJF or configurable value scoring against strategy. Hybrid alternative: manual or objective-scoring prioritization for non-agile work.
+**02.2.2 Prioritize the portfolio backlog** `P-0011` — Rank the portfolio backlog against strategy using the prioritization method chosen (D-06): WSJF, weighted objective scoring or manual forum ranking.
 - What you get: ranked backlog
 - BPMN: lane *Portfolio Management*, User task | Delivery model: Agile | Product: Targetprocess | Who: Executive leadership, Portfolio management (Portfolio Mgmt, Business owners) | When: Event-driven (Per planning cadence)
 - Inputs: Business cases, capacity signal → Outputs: Ranked backlog
 - Config: Numeric custom fields (BV, TC, RR/OE, size), calculated field/metric for WSJF, prioritized list views, objective-scoring
 - Framework: SAFe: WSJF | SPM: Demand Intake | Flows: — | Evidence: TP calculated fields; WFM deck prioritization
+- Shaped by: D-06 Prioritization method
+  - **D-06 · WSJF** — *Prioritize by WSJF*: Rank the portfolio backlog by weighted shortest job first: (business value + time criticality + risk reduction/opportunity enablement) / job size, recalculated each planning cadence. **Config:** Numeric custom fields (BV, TC, RR/OE, size), calculated field/metric for WSJF, prioritized list views
+  - **D-06 · Weighted objective scoring** — *Prioritize by weighted objective scoring*: Score candidates against weighted criteria (strategic alignment, value, risk, cost, compliance) and rank by score, with weights governed per portfolio. **Config:** Scoring custom fields per criterion, weighted score calculated field, Portfolio Epic Score report, objective-scoring configuration
+  - **D-06 · Manual / forum ranking** — *Rank manually in the governance forum*: The portfolio forum orders candidates by hand informed by business cases; the rank is recorded on the epic. **Config:** Rank/order field, prioritized list views, forum minutes as comments
 
 **02.2.3 Approve & fund investments** `P-0012` — Make funding decisions - stage-gate approval or lean value-stream funding - and record approved budget against the investment. Supports both stage-gate (phase approvals via entity states) and lean value-stream funding.
 - What you get: funded investments/epics
@@ -123,6 +133,10 @@ Original name: Prioritization & Investment Decision. BPMN: [`02.2.bpmn`](../diag
 - Inputs: Ranked backlog, budget envelope → Outputs: Funded investments/epics
 - Config: Entity states + per-state role permissions (gates), automation rules for approvals, Budgeting solution (fund Portfolios/Work/People/Products), A1 approved-investment-budget feed
 - Framework: SAFe: Lean Budgets & Guardrails | TBM: Investment in Innovation | Flows: INV, ZBB | Evidence: TP Budgeting; ApptioOne CFD IIP bi-directional loop
+- Shaped by: D-04 Portfolio funding model, D-05 Investment approval governance
+  - **D-05 · Stage-gate** — *Approve investments at phase gates*: Approve initiatives at defined gates (entity states) with per-state role permissions and gate evidence; record the approved budget on the project and feed it to Planning (A1 approved-investment-budget). **Config:** Entity states as gates + per-state role permissions, gate checklists/evidence fields, automation rules for gate notifications, A1 approved-investment-budget feed
+  - **D-05 · Lean portfolio flow (Portfolio Kanban)** — *Fund epics within value-stream envelopes*: Approval is the move of a Portfolio Epic into Backlog/Implementing within the value stream's guardrails, decided at the participatory budgeting / LPM forum; no per-epic funding record beyond the envelope. **Config:** Portfolio Epic workflow states, Lean Budget guardrails, Budgeting solution (fund Portfolios/People), LPM forum cadence
+  - **D-05 · Hybrid**: Gate approval for large or regulated initiatives; lean envelope approval for value-stream work; one approved-investment feed to Planning covers both.
 
 
 ### 02.3 Plan & roadmap the portfolio `G-023`
@@ -156,6 +170,7 @@ Original name: Portfolio Planning & Roadmapping. BPMN: [`02.3.bpmn`](../diagrams
 - Inputs: Agile work (synced), project plans → Outputs: Unified hybrid portfolio views & status
 - Config: Hybrid portfolio views (agile + waterfall side by side), Hybrid Project Management solution, common work categorization fields, Jira/ADO sync for agile initiatives
 - Framework: SPM: Hybrid Portfolio Mgmt (HPM solution area) | Flows: — | Evidence: WFM deck (View all work across Hybrid Programs); Customer PowerUp (hybrid planning)
+- Shaped by: D-11 Team tool of record
 
 
 ### 02.4 Fund the portfolio & track budget `G-024`
@@ -168,6 +183,10 @@ Original name: Portfolio Funding & Budget Tracking. BPMN: [`02.4.bpmn`](../diagr
 - Inputs: Operating model decisions → Outputs: Configured funding structure
 - Config: Budgeting solution (annual or custom periods, value-stream funding), portfolio structure, budget guardrails by horizon/capacity/initiative
 - Framework: SAFe: Lean Budgets | SPM: Financial Mgmt | Flows: — | Evidence: EAP CFD (annual->continuous); TP Budgeting
+- Shaped by: D-04 Portfolio funding model
+  - **D-04 · Project-based funding** — *Define project-based funding*: Budgets are approved and tracked per project/initiative with annual planning periods; investment tags carry the project into Planning. **Config:** Budgeting solution (project budgets, annual periods), project entities, investment tags (05.7.1)
+  - **D-04 · Value-stream / product funding (Lean Budgets)** — *Define value-stream funding*: Fund value streams/ARTs as capacity envelopes with guardrails by horizon and initiative size; epics are approved inside envelopes. Where IT Finance runs ZBB (05.8) the envelope is the change budget that receives freed run spend. **Config:** Budgeting solution (value-stream funding, custom periods), Portfolio/Group structure as value streams, Lean Budget guardrails
+  - **D-04 · Hybrid (both, side by side)**: Run project-based and value-stream funding side by side during transition, with common categorization (BAU vs change, CapEx/OpEx) so both reconcile to Planning.
 
 **02.4.2 Receive & apply top-down targets** `P-0018` — Consume target spend/budget artifacts from IT Planning and apply them as portfolio budget targets (UC3 receive side). In a ZBB cycle the target carries the freed-spend uplift from 05.8.5.
 - What you get: top-down budget/target artifacts in ATP
@@ -175,6 +194,7 @@ Original name: Portfolio Funding & Budget Tracking. BPMN: [`02.4.bpmn`](../diagr
 - Inputs: Portfolio spend targets (ADM from Planning) → Outputs: Top-down budget/target artifacts in ATP
 - Config: Budget Targets report, target budget entities, ADM/data highway feed
 - Framework: SPM: Financial Mgmt | TBM: Plan & Govern | Flows: UC3, INV, ZBB | Evidence: E2E BPMN UC3; LFM demo (Target Budget from planning solution)
+- Shaped by: D-04 Portfolio funding model
 
 **02.4.3 Track portfolio budget vs actuals** `P-0019` — Compare proposed/funded budgets against costed work and actuals; adjust funding in-year.
 - What you get: variance signals, funding adjustments
@@ -182,6 +202,7 @@ Original name: Portfolio Funding & Budget Tracking. BPMN: [`02.4.bpmn`](../diagr
 - Inputs: Costed allocations, actuals, budgets → Outputs: Variance signals, funding adjustments
 - Config: Budget vs actuals dashboards, money custom fields, blended-rate costed work allocations, Budgeting view (Proposed Labor vs Target)
 - Framework: SPM: Financial Mgmt | Flows: UC3, UC2 | Evidence: LFM demo; WFM deck Finance Manager activities
+- Shaped by: D-02 Labor rate exposure
 
 
 ### 02.5 Realize value & benefits `G-025`
@@ -269,6 +290,9 @@ Original name: Team Delivery. BPMN: [`03.2.bpmn`](../diagrams/bpmn/generated/03.
 - Inputs: Team backlog, capacity → Outputs: Working increments, updated states
 - Config: Team Iteration entities, Scrum/Kanban team boards, story/bug/task workflows, estimation fields
 - Framework: SAFe/Scrum/Kanban | Flows: — | Evidence: TP entity model
+- Shaped by: D-11 Team tool of record
+  - **D-11 · Targetprocess native**: Teams plan sprints/iterations and execute stories, bugs and tasks on Targetprocess boards.
+  - **D-11 · Jira / ADO synced**: Teams plan and execute in Jira/ADO; iterations, states and estimates sync into Targetprocess Team Iterations so the portfolio sees progress without duplicate entry. **Config:** Jira/ADO connectors (03.2.4), Team Iteration mapping, state/estimate mapping
 
 **03.2.2 Track flow & progress** `P-0027` — Measure velocity, cycle/lead time, cumulative flow and rollups to features/epics/releases.
 - What you get: flow metrics, forecasts
@@ -290,6 +314,7 @@ Original name: Team Delivery. BPMN: [`03.2.bpmn`](../diagrams/bpmn/generated/03.
 - Inputs: Issues, commits, PRs → Outputs: Unified hierarchy over team tools
 - Config: Native Jira/ADO bi-directional connectors (issue-level, area/iteration path), Git/GitHub/GitLab via automation rules/webhooks
 - Framework: EAP: aggregation layer | Flows: — | Evidence: TP integrations; anti-pattern: no story-level Jira import to cost systems (e2e script)
+- Shaped by: D-11 Team tool of record | Applies when: Team tool of record: Jira / ADO synced
 
 
 ### 03.3 Manage releases & hybrid projects `G-033`
@@ -316,6 +341,7 @@ Original name: Release & Hybrid Project Management. BPMN: [`03.3.bpmn`](../diagr
 - Inputs: Project plans, gate criteria → Outputs: Gate decisions, milestone status
 - Config: Entity states as gates with per-state role permissions, milestone entities, timeline/Gantt views, automation rules for gate notifications, Traditional Project Management solution
 - Framework: Stage-gate governance | SPM: Portfolio Mgmt | Flows: — | Evidence: SPM/TP research (stage-gate vs lean funding); Traditional PM solution
+- Shaped by: D-05 Investment approval governance | Applies when: Investment approval governance: Stage-gate / Hybrid
 
 
 ### 03.4 Manage value streams `G-034`
@@ -370,6 +396,9 @@ Original name: Workforce Baseline & Team Structure. BPMN: [`04.1.bpmn`](../diagr
 - Inputs: HR role data, finance rules → Outputs: Job profiles with rate & CapEx/OpEx mapping; team-tower mapping
 - Config: Job Profile entities, CapEx/OpEx split mapping per profile, team->IT Tower mapping (fixed capacity rule), rate linkage (rates held in Costing)
 - Framework: TBM: labor costing | SPM: WFM | Flows: UC1 | Evidence: E2E BPMN t_data; e2e script UC1 three ingredients
+- Shaped by: D-01 Labor effort signal, D-02 Labor rate exposure
+  - **D-02 · Blended team / ART rate**: Keep job profiles (role x location) mapped to CapEx/OpEx splits and teams mapped to IT towers; rates stay in Costing and only blended team rates come back (UC2).
+  - **D-02 · Job-profile rate (role x location)**: Keep job profiles (role x location) with a rate-card rate attached, CapEx/OpEx splits and team->tower mappings; the rate card is the published rate source. **Config:** Job Profile entities with rate field (rate card), CapEx/OpEx split per profile, team->IT Tower mapping, annual rate-card refresh
 
 
 ### 04.2 Plan capacity `G-042`
@@ -382,6 +411,10 @@ Original name: Capacity Planning. BPMN: [`04.2.bpmn`](../diagrams/bpmn/generated
 - Inputs: Roster, involvements, calendars → Outputs: Capacity model & forward view
 - Config: Capacity dashboards, availability (total/reserved/available), Vacation Tracking solution feeding availability, regional calendars
 - Framework: SPM: WFM capacity | Flows: — | Evidence: SPM Framework WFM use cases; WFM deck capacity activities
+- Shaped by: D-07 Capacity planning basis
+  - **D-07 · Team-based**: Model capacity per team/ART across the horizon (people x involvement x calendar); vacations reduce team availability.
+  - **D-07 · Role / individual-based**: Model capacity per role, location, level and skill and per named individual across the horizon, integrating vacation/holiday schedules.
+  - **D-07 · Both (one capacity model)**: Model team capacity for agile work and role/individual capacity for project work in one model; involvements must sum to 100% per person.
 
 **04.2.2 Balance demand vs capacity** `P-0039` — Compare bottom-up demand rollups against available capacity and targets; resolve over/under allocation (e.g. 'three months out, demand exceeds FTE').
 - What you get: rebalanced allocations, hiring signals
@@ -389,6 +422,7 @@ Original name: Capacity Planning. BPMN: [`04.2.bpmn`](../diagrams/bpmn/generated
 - Inputs: Work allocations/demand, capacity model, target spend → Outputs: Rebalanced allocations, hiring signals
 - Config: Demand & Capacity Mgmt solution (Work Allocation entity %/hours/man-days, auto-generated Demand per period, load reports, demand processing screens), capacity/FTE reports vs targets
 - Framework: SPM: WFM | SAFe: capacity | Flows: UC3 | Evidence: E2E BPMN t_cmp; TP Demand & Capacity solution
+- Shaped by: D-07 Capacity planning basis
 
 **04.2.3 Run workforce scenarios** `P-0040` — Model alternative workforce/demand scenarios (mix, location, hiring) and promote decisions into plans.
 - What you get: chosen workforce scenario
@@ -408,6 +442,10 @@ Original name: Resource Allocation & Utilization. BPMN: [`04.3.bpmn`](../diagram
 - Inputs: Funded work, capacity → Outputs: Work allocations (bottom-up demand)
 - Config: Work Allocation entities, allocation timelines, team-to-work assignment at any level
 - Framework: SPM: WFM | SAFe | Flows: UC3, UC2 | Evidence: E2E BPMN t_alloc; LFM demo work allocations
+- Shaped by: D-02 Labor rate exposure, D-07 Capacity planning basis
+  - **D-07 · Team-based**: Assign teams, ARTs and solution trains to portfolio work at any hierarchy level (bottom-up demand as team %).
+  - **D-07 · Role / individual-based**: Assign named individuals and roles to projects with requested man-days/hours (see 04.3.4).
+  - **D-07 · Both (one capacity model)**: Assign teams to agile work and individuals/roles to project work in the same Work Allocation model.
 
 **04.3.2 Track utilization & productivity** `P-0042` — Compare planned vs actual utilization; monitor bottlenecks and efficiency by role/location/team.
 - What you get: utilization & efficiency reports
@@ -429,6 +467,7 @@ Original name: Resource Allocation & Utilization. BPMN: [`04.3.bpmn`](../diagram
 - Inputs: Project demand (roles, man-days), roster → Outputs: Individual/role assignments in the same capacity model
 - Config: Work Allocations (person-level man-days/hours), role-based demand requests, New Requested Demand workflow, availability integration
 - Framework: SPM: WFM | Hybrid resourcing | Flows: — | Evidence: LFM demo (requested man-days from individuals/teams); WFM deck
+- Shaped by: D-07 Capacity planning basis | Applies when: Capacity planning basis: Role / individual-based / Both (one capacity model)
 
 
 ### 04.4 Manage positions `G-044`
@@ -461,12 +500,18 @@ Original name: Position Management. BPMN: [`04.4.bpmn`](../diagrams/bpmn/generat
 
 Original name: Time Tracking & Approval. BPMN: [`04.5.bpmn`](../diagrams/bpmn/generated/04.5.bpmn) · ![04.5](../assets/diagrams/04.5.svg)
 
-**04.5.1 Record time against work** `P-0048` — Log task-level time or use work allocations as the effort signal; capture estimate vs actual vs remaining, billable flags. Timesheets matter most for traditional/hybrid delivery; pure agile teams can rely on work allocations and completed-work signals instead.
+**04.5.1 Capture effort against work** `P-0048` — Establish the effort record for each team according to the labor effort signal chosen (D-01): recorded hours, completed work from the backlog, confirmed work allocations, or nothing for fixed-capacity teams.
 - What you get: time entries / effort data
 - BPMN: lane *Resource Management*, User task | Delivery model: Any | Product: Targetprocess | Who: Agile teams & RTEs (Team members) | When: Continuous (Daily/weekly)
 - Inputs: Work items → Outputs: Time entries / effort data
-- Config: Time entity, Time Tracking solution, timesheet views, billable/non-billable fields; alternative: work allocations instead of timesheets
+- Config: Depends on D-01: Time entity + Time Tracking solution (timesheets) or backlog/allocation data (no timesheets)
 - Framework: SPM: Financial Mgmt | capitalization input | Flows: — | Evidence: TP Time Tracking; Timesheet solution sheet; LFM demo
+- Shaped by: D-01 Labor effort signal
+  - **D-01 · Cost per story point** — *Use completed work as the effort signal*: No time is recorded. The completed stories/features on the team backlog are the effort signal; involvements and rates supply the cost. Estimate vs remaining stays on the work item for planning only. **Inputs:** Completed work items with story points **Outputs:** Completed-work data per team per month **Config:** No Time entity for these teams; backlog hygiene rules (every story estimated, closed in-period); Jira/ADO sync of story points **Bpmn_type:** Service task
+  - **D-01 · Cost per completed work item** — *Use completed items as the effort signal*: As story points, but the count of completed work items is the signal - no estimation required. **Inputs:** Completed work items **Outputs:** Item counts per team per month **Config:** No Time entity; closed-item rules per period **Bpmn_type:** Service task
+  - **D-01 · Timesheets (hours x rate)** — *Record hours on timesheets*: Team members log hours against work items or projects daily/weekly in the Time entity; billable flags and estimate vs actual vs remaining are captured for each entry. **Inputs:** Work items, projects, calendar **Outputs:** Time entries pending approval **Config:** Time entity, Time Tracking solution, timesheet views, billable/non-billable fields, reminders/compliance report
+  - **D-01 · Planned work-effort units (allocation-based)** — *Maintain work allocations as the effort record*: Planned Work Allocations (% or man-days per person/team per period) stand in for recorded effort; owners confirm or adjust them at period end instead of logging hours. **Inputs:** Work allocations, availability **Outputs:** Confirmed allocation-based effort per period **Config:** Work Allocation entities (%, hours, man-days), period-end confirmation view, true-up rule
+  - **D-01 · Fixed capacity (team to tower/app)** — *No effort capture (fixed capacity)*: Nothing is recorded at work level; the team's cost is attributed by a standing team->tower/app rule downstream (06.4.5). **Inputs:** Team roster **Outputs:** — **Config:** None in Targetprocess beyond team membership **Bpmn_type:** Task
 
 **04.5.2 Approve timesheets** `P-0049` — Managers review and approve weekly timesheets under governance rules.
 - What you get: approved time
@@ -474,13 +519,21 @@ Original name: Time Tracking & Approval. BPMN: [`04.5.bpmn`](../diagrams/bpmn/ge
 - Inputs: Time entries → Outputs: Approved time
 - Config: Timesheet approval workflow (solution component), notifications
 - Framework: Governance | Flows: — | Evidence: 2026.03 Timesheet with Approval Workflow solution sheet; Solution Overview (time recording)
+- Shaped by: D-01 Labor effort signal | Applies when: Labor effort signal: Timesheets (hours x rate)
+  - **D-01 · Timesheets (hours x rate)**: Managers review and approve weekly timesheets under governance rules; unapproved time is chased before the month closes.
 
-**04.5.3 Feed time/effort to finance processes** `P-0050` — Deliver approved time or allocation-based effort to capitalization, costing and billing processes (or deprecate time writing via the UC1 model).
+**04.5.3 Feed time/effort to finance processes** `P-0050` — Deliver the effort record chosen in D-01 (approved hours, completed work, confirmed allocations or roster only) to capitalization, costing and billing over the ADM feed.
 - What you get: effort data for costing & CapEx
 - BPMN: lane *Finance (IT Planning)*, Send task (ADM) | Delivery model: Any | Product: Targetprocess (+ Costing) | Who: IT Finance & FP&A (Finance) | When: Monthly (Monthly)
 - Inputs: Approved time / completed work → Outputs: Effort data for costing & CapEx
 - Config: Time reports/exports, ADM feed to Costing, story-point/completed-work alternative (deprecates time writing)
 - Framework: TBM: labor allocation options | Flows: UC1 | Evidence: E2E script UC1 payoff; Costing labor allocation options
+- Shaped by: D-01 Labor effort signal
+  - **D-01 · Cost per story point** — *Feed completed work to Costing*: Send completed work (story points by epic/feature/app) with involvements and job profiles to Costing over ADM; time writing is deprecated for these teams. **Inputs:** Completed work, involvements, profiles **Outputs:** Work-attached effort data for costing & CapEx **Config:** ADM feed ATP->TBM Studio: completed-work dataset (points, weightage) + workforce data **Bpmn_type:** Send task (ADM)
+  - **D-01 · Cost per completed work item** — *Feed completed item counts to Costing*: Send completed-item counts by epic/feature/app with workforce data to Costing over ADM. **Inputs:** Completed items, involvements, profiles **Outputs:** Work-attached effort data for costing & CapEx **Config:** ADM feed ATP->TBM Studio: completed-work dataset (counts) + workforce data **Bpmn_type:** Send task (ADM)
+  - **D-01 · Timesheets (hours x rate)** — *Feed approved hours to Costing*: Export approved hours by person x work item/project x period to Costing (and to billing where hours are invoiced). **Inputs:** Approved time **Outputs:** Hours-based effort data for costing, CapEx & billing **Config:** Time reports/exports, ADM feed of approved Time entries, billing extract **Bpmn_type:** Send task (ADM)
+  - **D-01 · Planned work-effort units (allocation-based)** — *Feed confirmed allocations to Costing*: Send confirmed Work Allocations (planned effort, trued up) by person/team x work x period to Costing. **Inputs:** Confirmed allocations **Outputs:** Allocation-based effort data for costing & CapEx **Config:** ADM feed of Work Allocation records per period; true-up flag **Bpmn_type:** Send task (ADM)
+  - **D-01 · Fixed capacity (team to tower/app)** — *Feed team roster & tower mapping to Costing*: Only the team roster, involvements and team->tower/app mapping cross; there is no work-level effort record. **Inputs:** Roster, mappings **Outputs:** Capacity-rule inputs for costing **Config:** ADM feed of teams, involvements and tower mapping **Bpmn_type:** Send task (ADM)
 
 
 ## L0-05 IT Financial Planning & Budgeting
@@ -502,6 +555,11 @@ Original name: Annual IT Budgeting. BPMN: [`05.1.bpmn`](../diagrams/bpmn/generat
 - Inputs: Prior plan, actuals, reference data → Outputs: Open plan with baseline
 - Config: Plan creation, plan folders, working calendar, Adjust Baseline Values, actuals import, cost center/account hierarchies
 - Framework: ITFM: budgeting | TBM: Plan & Govern | Flows: — | Evidence: IBM Docs Planning; planning research
+- Shaped by: D-03 Budget build method
+  - **D-03 · Incremental**: Create the plan, fiscal calendar and hierarchy; seed the baseline from the prior plan or actuals and adjust by line. **Config:** Plan creation, plan folders, working calendar, Adjust Baseline Values (prior plan/actuals), cost center/account hierarchies
+  - **D-03 · Driver-based**: Create the plan, fiscal calendar and hierarchy; regenerate the baseline from drivers (positions, contracts, assets, volumes) rather than copying prior-year values. **Config:** Plan creation, working calendar, driver-based line items, driver data imports (positions from ATP, contracts, asset register)
+  - **D-03 · Zero-based - rotational**: Create the plan and calendar; seed in-scope decision units at zero or driver-only (05.8) and the rest from drivers. **Config:** Plan creation, ZBB plan/folder per cycle, Adjust Baseline Values = zero/driver-only for in-scope units, 'ZBB Rotation Year' attribute
+  - **D-03 · Zero-based - all units annually**: Create the plan and calendar; seed every decision unit at zero or driver-only. **Config:** Plan creation, Adjust Baseline Values = zero/driver-only for all units
 
 **05.1.2 Set & distribute top-down targets** `P-0052` — Set target spend and headcount envelopes by department/cost center/ART and distribute to budget owners. Targets are the same regardless of method; under ZBB they become the funding cut-line reference for 05.8.4.
 - What you get: distributed targets
@@ -516,6 +574,11 @@ Original name: Annual IT Budgeting. BPMN: [`05.1.bpmn`](../diagrams/bpmn/generat
 - Inputs: Targets, driver data → Outputs: Submitted budgets
 - Config: Worksheets/line items, cost categorization, multi-currency, transaction-level entry
 - Framework: ITFM | Flows: — | Evidence: Planning docs
+- Shaped by: D-03 Budget build method
+  - **D-03 · Incremental**: Budget owners adjust seeded OpEx/CapEx line items per cost center against the prior-year baseline, with justification for changes.
+  - **D-03 · Driver-based**: Budget owners build OpEx/CapEx lines from drivers and rates per cost center in resource-based views (labor from positions, contracts from the register, assets from the refresh plan).
+  - **D-03 · Zero-based - rotational**: For in-scope units budget owners build decision packages at tiered service levels (05.8.3) instead of line-item entry; other units enter driver-based lines here.
+  - **D-03 · Zero-based - all units annually**: All units build decision packages at tiered service levels (05.8.3); line-item entry is replaced.
 
 **05.1.4 Review, iterate & approve budget** `P-0054` — Run submit/review/approve/return cycles until targets and bottom-up plans reconcile. ZBB units arrive ranked with a cut-line (05.8.4-05.8.5) and are approved through the same workflow.
 - What you get: approved budget
@@ -523,6 +586,7 @@ Original name: Annual IT Budgeting. BPMN: [`05.1.bpmn`](../diagrams/bpmn/generat
 - Inputs: Submitted budgets → Outputs: Approved budget
 - Config: Approval workflow (submit/review/approve/return), plan states New>Open>Final, conversational insights
 - Framework: ITFM governance | Flows: ZBB | Evidence: Planning docs
+- Shaped by: D-03 Budget build method
 
 **05.1.5 Finalize budget of record** `P-0055` — Lock the approved plan as budget of record with a snapshot for variance baselines (and, in a ZBB year, as the savings baseline for 05.8.6).
 - What you get: budget of record + snapshot
@@ -530,6 +594,7 @@ Original name: Annual IT Budgeting. BPMN: [`05.1.bpmn`](../diagrams/bpmn/generat
 - Inputs: Approved budget → Outputs: Budget of record + snapshot
 - Config: Plan state Final, snapshots/version compare
 - Framework: ITFM | Flows: ZBB | Evidence: Planning docs
+- Shaped by: D-03 Budget build method
 
 
 ### 05.2 Forecast on a rolling cadence `G-052`
@@ -672,6 +737,7 @@ Original name: Project & Investment Financial Planning. BPMN: [`05.7.bpmn`](../d
 - Inputs: Funded investments (from ATP) → Outputs: Investment financial structures
 - Config: Integrated Investment Planning: investment tags on budget lines, Project Cost Type (build/run), Project Total & Charges KPIs, project permissions
 - Framework: TBM: run/grow/transform | SPM: Financial Mgmt | Flows: INV | Evidence: ApptioOne CFD IIP
+- Shaped by: D-04 Portfolio funding model
 
 **05.7.2 Plan investment labor & cross-charge** `P-0072` — Plan labor effort (hours/days/FTE) by role or named resource with rate cards; configure internal cross-charge to avoid double counting. Pre-PI financial validation checks planned work against approved funding, guardrails and capitalization policy, flagging unfunded commitments and funding shortfalls.
 - What you get: investment labor plan
@@ -679,6 +745,7 @@ Original name: Project & Investment Financial Planning. BPMN: [`05.7.bpmn`](../d
 - Inputs: Labor demand from portfolio → Outputs: Investment labor plan
 - Config: Labor resource planning (rates x effort), flexible rate cards, configurable cross-charge, demand vs capacity balancing
 - Framework: ITFM | SPM: WFM | Flows: — | Evidence: ApptioOne CFD IIP; PI Planning/EVD Agent requirements (IBM, anonymized) §7.5
+- Shaped by: D-04 Portfolio funding model, D-07 Capacity planning basis
 
 **05.7.3 Operate the investment loop with ATP** `P-0073` — Exchange approved budgets and budget-change requests with Targetprocess; receive planned allocations and actual effort back.
 - What you get: approved budgets & changes (to ATP)
@@ -686,6 +753,7 @@ Original name: Project & Investment Financial Planning. BPMN: [`05.7.bpmn`](../d
 - Inputs: Investments, allocations, actual effort (ATP) → Outputs: Approved budgets & changes (to ATP)
 - Config: Bi-directional A1<->ATP integration (A1->ATP: approved investment budget, budget changes; ATP->A1: investments, planned labor allocations, actual labor effort, change requests)
 - Framework: SPM+TBM integration | Flows: INV | Evidence: ApptioOne CFD; Desjardins architecture
+- Shaped by: D-04 Portfolio funding model
 
 
 ### 05.8 Build & review a zero-based budget `G-058`
@@ -698,6 +766,10 @@ Original name: Zero-Based Budget Build & Review. BPMN: [`05.8.bpmn`](../diagrams
 - Inputs: Prior-cycle rotation, benchmark gaps (06.6.2), run/grow/transform mix (06.2.3), corporate cost targets → Outputs: ZBB scope list, decision-unit register, owner matrix (cost category x budget owner), cycle calendar
 - Config: Dedicated ZBB plan/folder per cycle, cost object permissions per decision unit, custom list 'Cost Category Owner', decision-unit hierarchy sourced from Costing towers/services/cost centers, 'ZBB Rotation Year' attribute on cost objects
 - Framework: TBM: Plan & Govern; Benchmarking (target-setting) | Gartner: choose departments selectively, rotate 2-3 yrs | McKinsey: dual-ownership governance | Flows: ZBB | Evidence: Gartner ZBB rightsizing; McKinsey 'return of zero-base budgeting'; Apptio ZBB blog
+- Shaped by: D-03 Budget build method | Applies when: Budget build method: Zero-based - rotational / Zero-based - all units annually / Zero-based mindset (continuous)
+  - **D-03 · Zero-based - rotational**: Select this cycle's rotation slice of decision units (each every 2-3 years, plus units under cost pressure or misaligned with strategy); define the zero base; name cost-category owners paired with budget owners; publish calendar and training.
+  - **D-03 · Zero-based - all units annually**: All decision units are in scope; define the zero base per unit; name cost-category owners paired with budget owners; publish calendar and training. Plan FP&A facilitation capacity for full scale.
+  - **D-03 · Zero-based mindset (continuous)**: No cycle scoping: maintain the standing decision-unit register and owner matrix; the zero-based challenge runs continuously in 05.8.6.
 
 **05.8.2 Build the cost-driver fact base & activity inventory** `P-0075` — For each in-scope decision unit, assemble what it does and what it costs from the TBM model: cost pools x towers x services x apps, fixed vs variable, discretionary flags, vendor/contract lines, labor FTE and positions; identify redundancies (duplicate apps, overlapping vendor services, underused contracts) before any package is written.
 - What you get: activity inventory with unit costs and drivers per decision unit; redundancy list; 'zero-base' floor per unit
@@ -705,6 +777,7 @@ Original name: Zero-Based Budget Build & Review. BPMN: [`05.8.bpmn`](../diagrams
 - Inputs: Allocated cost model (06.1), App TCO (06.3.3), vendor insights (06.5.1), cloud utilization/rightsizing (07.5), roster & involvements (04.1) → Outputs: Activity inventory with unit costs and drivers per decision unit; redundancy list; 'zero-base' floor per unit
 - Config: Cost Source fields (Fixed/Variable, Discretionary, Is Depr), Applications Overview / App TCO & AppRat reports, vendor consolidation reports, Cloudability rightsizing & idle reports, Planning 'Adjust Baseline Values' set to zero or driver-only for in-scope units
 - Framework: TBM: Cost Transparency as the ZBB fact base (McKinsey 'cost-driver visibility') | FinOps: Usage Optimization feeds the cloud zero base | Flows: ZBB | Evidence: McKinsey; Deloitte/Anaplan ZBB (driver-based activity justification); Apptio ITFM foundation
+- Shaped by: D-03 Budget build method | Applies when: Budget build method: Zero-based - rotational / Zero-based - all units annually / Zero-based mindset (continuous)
 
 **05.8.3 Build decision packages at tiered service levels** `P-0076` — Budget owners write decision packages per activity/service: minimum viable (zero base), current and enhanced levels - each with scope, driver assumptions, labor (positions/FTE), contracts, assets and cloud, the outcome/KPI delivered and the consequence of not funding. Change/investment demand is not re-justified here; it enters through 02.2.1 lean business cases.
 - What you get: decision packages (3 tiers) per decision unit with costs, drivers, KPIs and justification
@@ -712,6 +785,7 @@ Original name: Zero-Based Budget Build & Review. BPMN: [`05.8.bpmn`](../diagrams
 - Inputs: Activity inventory, service catalog & SLAs, driver data, rate cards → Outputs: Decision packages (3 tiers) per decision unit with costs, drivers, KPIs and justification
 - Config: Worksheets/line items tagged by custom lists 'Decision Package' and 'Service Level Tier' (Minimum/Current/Enhanced), driver-based line items, labor planning positions & comp (05.4), contract lines (05.5), asset lines (05.6), justification/comment fields, package templates
 - Framework: Classic ZBB: decision-package formulation at alternative funding levels | TBM: cost pools & taxonomy as package structure | SPM: change demand stays in Demand Intake | Flows: ZBB | Evidence: Wikipedia/Pyhrr; CIO Wiki (3 funding levels); Deloitte
+- Shaped by: D-03 Budget build method | Applies when: Budget build method: Zero-based - rotational / Zero-based - all units annually
 
 **05.8.4 Rank packages & set the funding cut-line** `P-0077` — Cost-category owners and budget owners jointly rank packages by business criticality, strategic alignment and value; cumulative cost is compared with the top-down target (05.1.2) and a cut-line drawn; estimates are pressure-tested; run spend freed below the line is earmarked for grow/transform.
 - What you get: ranked package list, cut-line scenario, freed-spend figure, unfunded-package register
@@ -719,6 +793,7 @@ Original name: Zero-Based Budget Build & Review. BPMN: [`05.8.bpmn`](../diagrams
 - Inputs: Decision packages, targets, benchmarks, strategic themes (01.1.1) → Outputs: Ranked package list, cut-line scenario, freed-spend figure, unfunded-package register
 - Config: Scoring custom fields (criticality, alignment, value, risk) on line items/packages, Compare Versions/Plans (one version per cut-line scenario), Set Targets, what-if modeling; Targetprocess objective-scoring for any change packages; unfunded initiatives list
 - Framework: Classic ZBB: ranking & cut-line | TBM: Run/Grow/Transform; Benchmarking targets | SAFe: participatory budgeting is the analogous forum for change | Flows: ZBB | Evidence: Gartner (prioritize & allocate, pressure-test); Apptio ZBB blog (visibility into unfunded initiatives)
+- Shaped by: D-03 Budget build method, D-06 Prioritization method | Applies when: Budget build method: Zero-based - rotational / Zero-based - all units annually
 
 **05.8.5 Approve zero-based budget & release freed spend to the investment envelope** `P-0078` — Route the ranked, cut-line budget through approval; lock approved packages into the budget of record (05.1.5) merged with non-ZBB units from 05.1; publish the freed run spend as an uplift to portfolio targets (UC3) so grow/transform capacity increases without a net budget rise.
 - What you get: approved zero-based budget merged into budget of record; revised portfolio targets to ATP; savings baseline
@@ -726,6 +801,7 @@ Original name: Zero-Based Budget Build & Review. BPMN: [`05.8.bpmn`](../diagrams
 - Inputs: Ranked packages & cut-line → Outputs: Approved zero-based budget merged into budget of record; revised portfolio targets to ATP; savings baseline
 - Config: Approval workflow (submit/review/approve/return), plan state Final + snapshot as ZBB baseline, merge of ZBB plan into master plan, target feed to ATP (ADM), Budget Targets report in Targetprocess
 - Framework: TBM: Investment in Innovation (run to grow/transform) | SPM/SAFe: Lean Budgets receive the uplift | Flows: ZBB | Evidence: E2E BPMN UC3; Apptio ZBB blog ('redirect run-the-business spend to grow-the-business innovation')
+- Shaped by: D-03 Budget build method | Applies when: Budget build method: Zero-based - rotational / Zero-based - all units annually
 
 **05.8.6 Monitor package commitments & sustain the zero-based mindset** `P-0079` — Cost-category owners review actuals against package commitments monthly, track savings realization, block silent re-allocation of freed spend, and feed learnings into the next rotation. ZBx alternative: run this as a continuous zero-based review of cost categories rather than a cycle.
 - What you get: savings-realization tracker, leakage exceptions, incentives/scorecard inputs, next-cycle rotation candidates
@@ -733,6 +809,9 @@ Original name: Zero-Based Budget Build & Review. BPMN: [`05.8.bpmn`](../diagrams
 - Inputs: Monthly actuals (06.1), variance analysis (05.3.2), cloud budget alerts (07.6.1) → Outputs: Savings-realization tracker, leakage exceptions, incentives/scorecard inputs, next-cycle rotation candidates
 - Config: Variance thresholds per package/cost category, budget dataset in Costing (06.2.2), CIO Monthly Ops Dashboard financial-attainment tile (08.2.3), savings-tracking custom fields, snapshot compare vs ZBB baseline
 - Framework: McKinsey: rigorous planning & monitoring, aligned incentives, mindset shift | Accenture ZBx: owner-operator ethos | FinOps: Budgeting (Run maturity: rolling review) | Flows: ZBB | Evidence: McKinsey; Accenture ZBx; FinOps Framework Budgeting capability
+- Shaped by: D-03 Budget build method | Applies when: Budget build method: Zero-based - rotational / Zero-based - all units annually / Zero-based mindset (continuous)
+  - **D-03 · Zero-based - rotational**: Cost-category owners review actuals against package commitments monthly, track savings realization, block silent re-allocation of freed spend, and feed learnings into the next rotation slice.
+  - **D-03 · Zero-based mindset (continuous)** — *Run the continuous zero-based review*: Cost-category owners run a standing zero-based review of their categories inside the monthly rhythm - challenging run spend, re-basing where drivers change - without an annual ZBB event. **Config:** Package-level variance thresholds, category review agenda in the CIO monthly ops review (08.2.3), savings tracker **Cadence:** Monthly (standing)
 
 
 ## L0-06 Cost Transparency & TBM Operations
@@ -846,6 +925,10 @@ Original name: Labor Costing & Capitalization. BPMN: [`06.4.bpmn`](../diagrams/b
 - Inputs: HR comp data, org structure → Outputs: Blended rates by team/ART
 - Config: ATP CM Rate Transform, protected rate tables, blending logic; rate-level exposure design decision (blended vs individual)
 - Framework: TBM: labor | privacy | Flows: UC2 | Evidence: E2E BPMN t_rates; e2e script UC2
+- Shaped by: D-02 Labor rate exposure
+  - **D-02 · Blended team / ART rate**: Keep individual rates protected inside Costing; compute one blended rate per team/ART/solution train from involvements and loaded cost.
+  - **D-02 · Job-profile rate (role x location)** — *Maintain protected rates & the job-profile rate card*: Keep individual rates protected; derive and govern a standard rate per job profile (role x location) as the rate card that is published. **Outputs:** Job-profile rate card **Config:** Protected rate tables, job-profile rate derivation, rate-card version control
+  - **D-02 · Individual (actual) rates** — *Maintain individual rates for publication*: Individual loaded rates are maintained and permitted to leave Costing under restricted access. **Outputs:** Individual rates (restricted) **Config:** Rate tables, HR/privacy approval record, restricted-access role mapping
 
 **06.4.2 Publish blended rates to Targetprocess** `P-0092` — Send blended rates to ATP on cadence so portfolio can cost work without exposing compensation.
 - What you get: rates available in ATP
@@ -853,6 +936,10 @@ Original name: Labor Costing & Capitalization. BPMN: [`06.4.bpmn`](../diagrams/b
 - Inputs: Blended rates → Outputs: Rates available in ATP
 - Config: ADM rate feed, rate cadence config; true-up pattern for blended-vs-actual reconciliation (design decision)
 - Framework: Integration | Flows: UC2 | Evidence: E2E BPMN t_send4; e2e script
+- Shaped by: D-02 Labor rate exposure
+  - **D-02 · Blended team / ART rate**: Send blended team/ART rates to Targetprocess on cadence; define the true-up pattern for blended-vs-actual reconciliation.
+  - **D-02 · Job-profile rate (role x location)**: Send the job-profile rate card to Targetprocess on cadence (typically annual + on change); profiles inherit rates. **Outputs:** Rate card available in ATP **Config:** ADM rate-card feed, job-profile key mapping, refresh cadence
+  - **D-02 · Individual (actual) rates**: Send individual rates to Targetprocess under field-level restricted access. **Outputs:** Individual rates in ATP (restricted) **Config:** ADM rate feed with restricted-access target fields
 
 **06.4.3 Ingest workforce & completed work data** `P-0093` — Receive involvements, job profiles, CapEx/OpEx mappings, tower mappings and completed work from ATP.
 - What you get: labor model inputs
@@ -860,6 +947,12 @@ Original name: Labor Costing & Capitalization. BPMN: [`06.4.bpmn`](../diagrams/b
 - Inputs: ATP workforce & work data → Outputs: Labor model inputs
 - Config: ADM feed ATP->TBM Studio, involvement/profile/mapping datasets
 - Framework: Integration | Flows: UC1 | Evidence: E2E BPMN t_send3
+- Shaped by: D-01 Labor effort signal
+  - **D-01 · Cost per story point**: Receive involvements, job profiles, CapEx/OpEx and tower mappings plus completed work with story points per epic/feature/app from Targetprocess.
+  - **D-01 · Cost per completed work item**: Receive involvements, job profiles, CapEx/OpEx and tower mappings plus completed-item counts per epic/feature/app from Targetprocess.
+  - **D-01 · Timesheets (hours x rate)**: Receive involvements, job profiles and mappings plus approved hours by person x work item/project x period from Targetprocess (or the timesheet system of record). **Config:** ADM feed ATP->TBM Studio; approved-hours dataset; contractor/PS hours normalization
+  - **D-01 · Planned work-effort units (allocation-based)**: Receive involvements, job profiles and mappings plus confirmed Work Allocations per period from Targetprocess. **Config:** ADM feed ATP->TBM Studio; allocation dataset with true-up flag
+  - **D-01 · Fixed capacity (team to tower/app)**: Receive the team roster, involvements and team->tower/app mapping only. **Config:** ADM feed ATP->TBM Studio; team/tower mapping dataset
 
 **06.4.4 Compute monthly team cost & blended CapEx %** `P-0094` — Combine involvements, profiles and protected rates into monthly cost and a blended CapEx percentage per team.
 - What you get: team cost & CapEx % per team
@@ -868,12 +961,18 @@ Original name: Labor Costing & Capitalization. BPMN: [`06.4.bpmn`](../diagrams/b
 - Config: TBM Studio computation, job profile CapEx/OpEx splits, involvement math
 - Framework: TBM: labor capitalization | Flows: UC1 | Evidence: E2E BPMN t_calc; e2e script UC1
 
-**06.4.5 Allocate team costs to work or towers** `P-0095` — Allocate visible-backlog team costs to completed work (story points, weightage); allocate no-backlog teams (e.g. ServiceNow ops) to apps/towers by fixed capacity. Capitalization approaches span agile and traditional: Story Points, Story Count, Timesheet, or Project/Work Effort Unit.
+**06.4.5 Allocate team costs to work or towers** `P-0095` — Attach each team's monthly cost to work (epics/features/applications) or to towers/apps, using the labor effort signal chosen for that team kind (D-01): story points, item counts, approved hours, confirmed allocations, or fixed capacity.
 - What you get: work-attached & tower-attached labor costs
 - BPMN: lane *TBM Office/IT Finance*, Service task | Delivery model: Hybrid | Product: Costing (+ ServiceNow) | Who: TBM Office & analysts (TBM Analyst) | When: Monthly (Monthly)
 - Inputs: Team costs, completed work / capacity rules → Outputs: Work-attached & tower-attached labor costs
-- Config: Story-point/weightage allocation, fixed-capacity rules (team->app/tower), one normalized model for both team kinds
+- Config: One normalized labor model in TBM Studio with an allocation strategy per team kind (see variants)
 - Framework: TBM: allocation principles | Flows: UC1 | Evidence: E2E BPMN g_vis/t_work/t_tower; e2e script UC1
+- Shaped by: D-01 Labor effort signal
+  - **D-01 · Cost per story point** — *Allocate team cost by story points*: Divide each team's monthly cost by the story points it completed to get a cost per point; allocate cost to epics, features and applications in proportion to points delivered (optionally weighted by item type). Points are normalized per team only. **Inputs:** Team costs, completed work with points **Outputs:** Work-attached labor cost (per epic/feature/app) **Config:** Story-point/weightage allocation strategy in TBM Studio, per-team normalization, weightage table by work-item type, carry-over rule **Evidence:** E2E BPMN g_vis/t_work; e2e script UC1
+  - **D-01 · Cost per completed work item** — *Allocate team cost by completed items*: Divide each team's monthly cost by completed work items and allocate evenly per item to the epics/features/apps they belong to. **Inputs:** Team costs, completed item counts **Outputs:** Work-attached labor cost (per epic/feature/app) **Config:** Item-count allocation strategy, per-team normalization
+  - **D-01 · Timesheets (hours x rate)** — *Allocate labor cost by approved hours*: Approved hours x rate (blended, job-profile or individual per D-02) attach labor cost directly to the work items/projects and applications the hours were logged against; unlogged hours are absorbed by a policy rule. **Inputs:** Approved hours, rates **Outputs:** Work-attached labor cost (per project/app) **Config:** Hours-based allocation strategy (hours x rate), unlogged-hours absorption rule, billable/non-billable handling **Evidence:** TP Time Tracking; Costing labor allocation options
+  - **D-01 · Planned work-effort units (allocation-based)** — *Allocate labor cost by confirmed allocations*: Confirmed Work Allocation % or man-days x rate attach labor cost to the work and applications planned, with a periodic true-up against completion. **Inputs:** Confirmed allocations, rates **Outputs:** Work-attached labor cost (planned, trued up) **Config:** Allocation-based strategy (allocation x rate), true-up adjustment period
+  - **D-01 · Fixed capacity (team to tower/app)** — *Allocate team cost to towers/apps by fixed capacity*: Allocate the team's cost to IT towers and applications by the standing team->tower/app mapping (percent splits); no work-level attribution. **Inputs:** Team costs, capacity rules **Outputs:** Tower-/app-attached labor cost **Config:** Fixed-capacity rules (team->app/tower), percent allocation strategy in Model Studio **Evidence:** E2E BPMN t_tower; e2e script (ServiceNow)
 
 **06.4.6 Generate audit-ready capitalization actuals** `P-0096` — Produce the monthly SAP-ready file of actuals split CapEx/OpEx by user - accurate enough to deprecate time writing; validate fixed-bid/PS work against invoices.
 - What you get: sAP-ready CapEx/OpEx actuals file
@@ -881,6 +980,11 @@ Original name: Labor Costing & Capitalization. BPMN: [`06.4.bpmn`](../diagrams/b
 - Inputs: Allocated labor costs → Outputs: SAP-ready CapEx/OpEx actuals file
 - Config: SAP-ready extract format, audit documentation, contractor/PS normalization
 - Framework: Compliance: software capitalization | Flows: UC1 | Evidence: E2E BPMN t_sap; e2e script UC1 payoff
+- Shaped by: D-01 Labor effort signal
+  - **D-01 · Cost per story point**: Produce the monthly SAP-ready file of actuals split CapEx/OpEx by user from the work-attached costs and job-profile CapEx %; document the story-point policy so the file stands up to audit without timesheets.
+  - **D-01 · Timesheets (hours x rate)**: Produce the monthly SAP-ready file of actuals split CapEx/OpEx by user from approved hours x rate; hours are the audit evidence, so retain approved timesheets with the extract. **Config:** SAP-ready extract format, approved-hours retention, contractor/PS normalization against invoices
+  - **D-01 · Planned work-effort units (allocation-based)**: Produce the monthly SAP-ready file from confirmed allocations x rate; add the period-end confirmation as the audit evidence and post true-up adjustments when they occur.
+  - **D-01 · Fixed capacity (team to tower/app)**: Capitalization for fixed-capacity teams is by policy percentage (or none); the extract carries the OpEx tower allocation.
 
 
 ### 06.5 Manage vendor & asset cost `G-065`
@@ -987,6 +1091,7 @@ Original name: Cloud Allocation & Tagging Governance. BPMN: [`07.2.bpmn`](../dia
 - Inputs: Shared cost pools, telemetry → Outputs: Fully allocated cloud cost
 - Config: Cost Sharing & Telemetry rules, CSV rule import/export
 - Framework: FinOps: Allocation, Invoicing & Chargeback | Flows: CLD | Evidence: Cloudability cost sharing
+- Shaped by: D-10 IT cost recovery model
 
 **07.2.4 Map cloud spend to TBM taxonomy** `P-0108` — Apply ATUM dimensions and share cloud cost/capacity data into Costing for hybrid TCO.
 - What you get: tBM-aligned cloud spend in cost model
@@ -1072,6 +1177,7 @@ Original name: Usage & Rate Optimization. BPMN: [`07.5.bpmn`](../diagrams/bpmn/g
 - Inputs: Usage patterns → Outputs: Commitment purchases & coverage
 - Config: Commitment Overview / Portfolio / Recommendations
 - Framework: FinOps: Rate Optimization | Flows: — | Evidence: IBM Docs commitments
+- Shaped by: D-09 Cloud commitment management mode | Applies when: Cloud commitment management mode: Assisted (recommendations + approval)
 
 **07.5.4 Automate commitments (Savings Automation)** `P-0118` — Run commitment management on autopilot within guardrails (per-account/per-region), monitoring coverage (>90%) and savings-share billing.
 - What you get: automated RI/SP portfolio & savings
@@ -1079,6 +1185,7 @@ Original name: Usage & Rate Optimization. BPMN: [`07.5.bpmn`](../diagrams/bpmn/g
 - Inputs: Payer spend, guardrails → Outputs: Automated RI/SP portfolio & savings
 - Config: Guardrails (ingestion account selection, active-management toggles, advanced config), savings assessment, coverage monitoring
 - Framework: FinOps: Rate Optimization (Run maturity) | Flows: — | Evidence: IBM Docs Savings Automation
+- Shaped by: D-09 Cloud commitment management mode | Applies when: Cloud commitment management mode: Automated (Savings Automation)
 
 
 ### 07.6 Plan & forecast cloud spend `G-076`
@@ -1091,6 +1198,7 @@ Original name: Cloud Planning & Forecasting. BPMN: [`07.6.bpmn`](../diagrams/bpm
 - Inputs: Forecasts, targets → Outputs: Budgets with alerts
 - Config: Budgets on Views, breach alerts
 - Framework: FinOps: Budgeting | Flows: — | Evidence: IBM Docs
+- Shaped by: D-03 Budget build method
 
 **07.6.2 Forecast cloud spend** `P-0120` — Produce rolling AI-backed forecasts with driver dimensions; analyze variance.
 - What you get: rolling forecast & variance
@@ -1126,6 +1234,7 @@ Original name: Showback & Bill of IT. BPMN: [`08.1.bpmn`](../diagrams/bpmn/gener
 - Inputs: App/service costs, consumption drivers → Outputs: BU consumption costs
 - Config: Business Units module, drivers (headcount, users, transactions, volume), Cloudability cost sharing results
 - Framework: TBM: Cost Transparency>consumers | FinOps: Invoicing & Chargeback | Flows: UC4, CLD | Evidence: IBM Docs; ApptioOne Plus
+- Shaped by: D-10 IT cost recovery model
 
 **08.1.2 Publish showback / Bill of IT** `P-0123` — Deliver periodic Bill of IT statements per BU with traceability to sources.
 - What you get: bill of IT statements
@@ -1133,6 +1242,10 @@ Original name: Showback & Bill of IT. BPMN: [`08.1.bpmn`](../diagrams/bpmn/gener
 - Inputs: BU consumption costs → Outputs: Bill of IT statements
 - Config: Billing product (Bill of IT reports), Business Units Report Collection, scheduled distribution
 - Framework: TBM: Delivering Value | Flows: CLD | Evidence: Apptio Billing; TBM assessment (showback at service level)
+- Shaped by: D-10 IT cost recovery model
+  - **D-10 · Showback**: Deliver periodic Bill of IT statements per BU for information, with traceability to sources; no accounting entries.
+  - **D-10 · Chargeback at allocated cost**: Deliver Bill of IT statements and post the allocated cost as journal entries to BU cost centers each period. **Config:** Billing product (Bill of IT), GL journal export, dispute/adjustment process
+  - **D-10 · Chargeback at service prices**: Deliver invoices at service prices (consumption x rate) per BU with a variance view against allocated cost. **Config:** Billing product (priced invoices), price list, recovery variance report
 
 **08.1.3 Price services & run chargeback** `P-0124` — Set strategic service prices, model what-if allocation changes, execute chargeback and manage over/under recovery.
 - What you get: chargeback invoices, recovery position
@@ -1140,6 +1253,7 @@ Original name: Showback & Bill of IT. BPMN: [`08.1.bpmn`](../diagrams/bpmn/gener
 - Inputs: Unit costs, pricing strategy → Outputs: Chargeback invoices, recovery position
 - Config: Billing pricing, what-if scenario modeling, O/U recovery management
 - Framework: TBM: Shaping Demand | FinOps: Invoicing & Chargeback | Flows: — | Evidence: Apptio Billing
+- Shaped by: D-10 IT cost recovery model | Applies when: IT cost recovery model: Chargeback at service prices
 
 
 ### 08.2 Engage the business & steer value `G-082`
@@ -1152,6 +1266,7 @@ Original name: Demand Shaping & BU Engagement. Merged in: 08.3 Enterprise Busine
 - Inputs: Bill of IT, drivers → Outputs: Demand decisions, behavior change
 - Config: BU reports, cost driver drill-downs, per-employee spend views
 - Framework: TBM: Shaping Demand, four value conversations | Flows: — | Evidence: TBM assessment (Engagement, Taxonomy)
+- Shaped by: D-10 IT cost recovery model
 
 **08.2.2 Extend costing beyond IT** `P-0126` (was 08.3.1) — Model total spend (tech + non-tech) to TCO of business processes, products and services; align digital KPIs to enterprise workflows.
 - What you get: business process/product TCO
@@ -1215,6 +1330,7 @@ Original name: Targetprocess Configuration. BPMN: [`10.1.bpmn`](../diagrams/bpmn
 - Inputs: Integration requirements → Outputs: Working integrations, promoted config
 - Config: Native connectors, REST API/webhooks, SSO/SAML, environment promotion (incl. validation & automation rules)
 - Framework: Enabling | Flows: — | Evidence: Customer PowerUp (env promotion); TP integrations
+- Shaped by: D-08 Demand intake channel
 
 
 ### 10.2 Configure Costing `G-102`
@@ -1272,6 +1388,7 @@ Original name: Cloudability Configuration. BPMN: [`10.4.bpmn`](../diagrams/bpmn/
 - Inputs: Cloud estate, org model → Outputs: Tuned FinOps operating controls
 - Config: Dashboards/reports/scorecards, budgets & forecast settings, anomaly rules, rightsizing prefs, commitment/SA guardrails, governance policies, workload planning prefs
 - Framework: FinOps: Manage the Practice | Flows: — | Evidence: Cloudability research checklist
+- Shaped by: D-09 Cloud commitment management mode
 
 
 ### 10.5 Operate cross-product data & integrations `G-105`

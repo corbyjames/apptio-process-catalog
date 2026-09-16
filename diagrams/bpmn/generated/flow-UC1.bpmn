@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_UC1" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_UC1" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_UC1">
     <bpmn:participant id="Participant_UC1" name="Actuals in — Labor capitalization" processRef="Process_UC1" />
   </bpmn:collaboration>
@@ -42,18 +42,18 @@
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="n_17" name="Team work visible?">
-      <bpmn:documentation>Catalog: 06.4.5. Yes: story-point allocation; No: fixed-capacity</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.5. Yes: story-point allocation; No: fixed-capacity Decided by D-01 Labor effort signal: How is labor effort captured and attached to work so it can be costed, capitalized and rolled into App TCO?</bpmn:documentation>
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="n_17a" name="Allocate team costs to completed work (story points, weightage)">
-      <bpmn:documentation>Catalog: 06.4.5. Same allocation principles as TBM</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.5. Same allocation principles as TBM Only when Labor effort signal: Cost per story point / Cost per completed work item / Timesheets (hours x rate) / Planned work-effort units (allocation-based).</bpmn:documentation>
       <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="n_17b" name="Allocate team costs to IT towers / apps (fixed capacity)">
-      <bpmn:documentation>Catalog: 06.4.5. Ops teams without visible backlog (e.g. ServiceNow)</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.5. Ops teams without visible backlog (e.g. ServiceNow) Only when Labor effort signal: Fixed capacity (team to tower/app).</bpmn:documentation>
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_7</bpmn:outgoing>
     </bpmn:task>

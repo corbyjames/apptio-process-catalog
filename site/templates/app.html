@@ -327,6 +327,51 @@ table.steps td .l2s a{font-family:var(--mono);font-size:12px;padding:2px 6px;bor
 .topnav{display:flex;gap:12px;font-size:13px;flex-wrap:wrap}
 .topnav a{color:var(--ink2)}
 @media print{.gdiag{display:block} .gdiag summary{display:none} .topnav{display:none}}
+
+/* ---- v0.7: decisions, variants, profile ---- */
+.prof{font-size:12px;color:var(--ink2);background:none;border:1px solid var(--rule);border-radius:6px;padding:5px 9px;min-height:32px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.prof b{color:var(--ink);font-weight:500}
+.prof i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ink3)}
+.prof.set i{background:var(--accent)}
+.prof:hover{text-decoration:none;border-color:var(--accent)}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.tabs button{border:1px solid var(--rule);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer;min-height:26px;color:var(--ink2)}
+.tabs button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.tabs button.chosen::after{content:" ✓";font-size:10px}
+.tabs .dk{font-size:11px;color:var(--ink3);margin-right:4px}
+.sl dd.var{border-left:3px solid var(--accent);padding-left:8px;margin-left:-11px}
+.sl dt.var{color:var(--accent)}
+.vname{font-size:13px;color:var(--ink2);margin:6px 0 0}
+.vname b{color:var(--ink);font-weight:500}
+.cond{font-size:12px;color:var(--ink2);background:var(--s-review-bg);border-radius:4px;padding:2px 8px;display:inline-block}
+.record.off{opacity:.55}
+.record.off .rhead::after{content:"Not on this profile's path";font-size:11px;color:var(--s-review);flex:1 0 100%}
+tr.off td{opacity:.5}
+.deccard{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:16px 18px;box-shadow:var(--shadow);margin:0 0 16px;scroll-margin-top:80px}
+.deccard .dh{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;margin-bottom:4px}
+.deccard .dh h2{font:600 18px/1.3 var(--sans)}
+.deccard .dh .id{font:500 13px var(--mono);color:var(--ink3)}
+.deccard .q{font:500 15px/1.4 var(--serif);margin:4px 0 6px}
+.deccard .why{font-size:13.5px;color:var(--ink2);max-width:90ch;margin:0 0 12px}
+.opts{display:grid;gap:8px;margin:0 0 12px}
+.opt{display:grid;grid-template-columns:22px minmax(0,1fr);gap:4px 10px;padding:10px 12px;border:1px solid var(--rule2);border-radius:6px;background:var(--ground);align-items:start}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.opt input{width:16px;height:16px;margin-top:3px}
+.opt .on-name{font-weight:600;font-size:14px}
+.opt .on-name .def{font-size:11px;color:var(--ink3);font-weight:400;margin-left:6px}
+.opt .os{font-size:13.5px;margin-top:2px}
+.opt .of{font-size:12.5px;color:var(--ink2);margin-top:4px}
+.opt .of b{font-weight:500;color:var(--ink3)}
+.deccard .aff{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12.5px;color:var(--ink2)}
+.deccard .aff a{font-family:var(--mono);font-size:12px;padding:2px 6px;border:1px solid var(--rule);border-radius:4px;background:var(--ground)}
+.deccard .aff a.v{border-color:var(--accent)}
+.deccard .aff a.c{border-style:dashed}
+.decnav{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 20px}
+.decnav a{font-size:12.5px;padding:4px 10px;border:1px solid var(--rule);border-radius:999px;background:var(--surface)}
+.decnav a.set{border-color:var(--accent);background:var(--accent-soft)}
+.profbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:10px 14px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);margin:0 0 16px;font-size:13px}
+.profbar button{border:1px solid var(--rule);background:var(--surface);border-radius:6px;padding:5px 10px;font-size:13px;min-height:32px;cursor:pointer}
+@media print{.prof,.profbar{display:none!important} .record.off{opacity:1} .record.off .rhead::after{content:""}}
 </style>
 </head>
 <body>
@@ -343,6 +388,7 @@ table.steps td .l2s a{font-family:var(--mono);font-size:12px;padding:2px 6px;bor
     <button id="lens-sme" aria-pressed="false">SME</button>
   </div>
   <div class="progress" id="progress" title="Review progress across all L2 records"></div>
+  <a class="prof" id="prof" href="#/decisions" title="Customer profile: the option chosen for each design decision. Records, diagrams and flows render for this profile."><i></i>Profile: <b>default</b></a>
   <button class="who" id="who" title="Set the name attached to your statuses, verdicts and comments">Reviewing as <b>—</b></button>
 </header>
 <main id="main" class="page"></main>
@@ -359,7 +405,10 @@ const L1 = {}, L2 = {}, L2BYEID = {};
 L0S.forEach(l0=>l0.l1s.forEach(l1=>{L1[l1.id]=l1; l1.l0=l0.id; l1.l2s.forEach(l2=>{L2[l2.id]=l2; L2BYEID[l2.eid]=l2; l2.l1=l1.id; l2.l0=l0.id;});}));
 const ALL_L2 = Object.values(L2);
 const FLOW = Object.fromEntries(FLOWS.map(f=>[f.id,f]));
-const STATUS = {draft:'Draft',review:'In review',changes:'Changes requested',confirmed:'Confirmed'};
+const DECISIONS = DATA.decisions||[];
+const DEC = Object.fromEntries(DECISIONS.map(d=>[d.key,d]));
+const OPT = (key,id)=>{ const d=DEC[key]; return d && d.options.find(o=>o.id===id); };
+const STATUS ={draft:'Draft',review:'In review',changes:'Changes requested',confirmed:'Confirmed'};
 const VERDICT = {'':'No verdict yet',confirmed:'Confirmed',updated:'Updated',flagged:'Flagged'};
 const PCOLOR = {Targetprocess:'var(--tp)',Costing:'var(--co)',Planning:'var(--pl)',Cloudability:'var(--cl)','All four':'var(--all)'};
 const BUSINESS_FIELDS = ['inputs','description','outcome','who','where','cadence'];
@@ -443,6 +492,33 @@ function softRender(){
   const y=window.scrollY; suppressScroll=true; render(); suppressScroll=false; window.scrollTo({top:y});
 }
 
+// ---------- customer profile (one choice per design decision) ----------
+// profile = {decisionKey: [optionId,...]}; unset decisions fall back to the register default.
+let profile = ls.get('profile', {});
+const variantView = {};   // `${l2.id}|${decisionKey}` -> optionId the reader is looking at
+function activeOpts(key){ const d=DEC[key]; if(!d) return []; const p=profile[key]; return (p && p.length)? p.filter(o=>OPT(key,o)) : [d.default]; }
+function profileSet(){ return Object.keys(profile).filter(k=>DEC[k] && profile[k] && profile[k].length); }
+function matches(when){ if(!when) return true; return Object.entries(when).every(([k,opts])=>{ if(!profileSet().includes(k)) return true; /* unset decision: everything stays on-path */ const a=activeOpts(k); return !a.length || opts.some(o=>a.includes(o)); }); }
+function onPath(l2){ return matches(l2.applies_when); }
+function variantsOf(l2,key){ return (l2.variants||[]).filter(v=>v.decision===key); }
+function activeVariant(l2,key){
+  const vs=variantsOf(l2,key); if(!vs.length) return null;
+  const want=variantView[l2.id+'|'+key];
+  if(want){ const v=vs.find(x=>x.option===want); if(v) return v; }
+  for(const o of activeOpts(key)){ const v=vs.find(x=>x.option===o); if(v) return v; }
+  return vs.find(x=>x.option===DEC[key].default) || vs[0];
+}
+function effective(l2){
+  // base record with the active variant of each decision merged over it
+  const eff=Object.assign({}, l2); const over={};
+  (l2.decisions||[]).forEach(k=>{ const v=activeVariant(l2,k); if(v){ Object.entries(v).forEach(([f,val])=>{ if(f!=='decision'&&f!=='option'){ eff[f]=val; over[f]=k; } }); } });
+  eff._over=over; return eff;
+}
+function condText(when){ return Object.entries(when||{}).map(([k,opts])=>`${DEC[k]?DEC[k].name:k}: ${opts.map(o=>{const x=OPT(k,o);return x?x.name:o;}).join(' / ')}`).join('; '); }
+function setProf(){ const n=profileSet().length; const el=$('#prof'); el.classList.toggle('set',n>0); el.innerHTML=`<i></i>Profile: <b>${n?n+' choice'+(n>1?'s':''):'default'}</b>`; }
+function saveProfile(){ ls.set('profile',profile); setProf(); }
+function rerenderKeep(){ const y=window.scrollY; suppressScroll=true; render(); suppressScroll=false; window.scrollTo({top:y}); }
+
 // ---------- helpers ----------
 function prodChips(l2){ return l2.products.map(p=>`<span class="chip prod" data-p="${p}">${p}</span>`).join('') || `<span class="chip prod" data-p="${esc(l2.primary_product)}">${esc(l2.primary_product)}</span>`; }
 function flowChips(l2){ return l2.flows.map(f=>`<a class="chip flow" href="#/flow/${f}" title="${esc(FLOW[f].title)}">${f} · ${esc(FLOW[f].name)}</a>`).join(''); }
@@ -451,29 +527,51 @@ function link(id){ const l2=L2[id]; return l2?`<a href="#/l0/${l2.l0}/${id}" tit
 function crossref(text){ return esc(text).replace(/\b(\d\d\.\d\.\d)\b/g,(m)=>L2[m]?`<a href="#/l0/${L2[m].l0}/${m}">${m}</a>`:m); }
 
 // ---------- record ----------
+function approachRows(l2, eff){
+  // one "Approach" row per design decision the record is bound to
+  const rows=[];
+  (l2.decisions||[]).forEach(k=>{
+    const d=DEC[k]; if(!d) return;
+    const vs=variantsOf(l2,k); const act=activeVariant(l2,k); const chosen=activeOpts(k);
+    if(vs.length){
+      const tabs=vs.map(v=>{ const o=OPT(k,v.option); return `<button type="button" data-variant="${l2.id}|${k}|${v.option}" aria-pressed="${act&&act.option===v.option}" class="${chosen.includes(v.option)?'chosen':''}" title="${esc(o?o.summary:'')}">${esc(o?o.name:v.option)}</button>`; }).join('');
+      const vname = act && act.name && act.name!==l2.name ? `<p class="vname">Under this approach: <b>${esc(act.name)}</b></p>` : '';
+      rows.push(`<div><dt>Approach</dt><dd><div class="tabs"><span class="dk"><a href="#/decisions/${k}" title="${esc(d.question)}">${d.id} ${esc(d.name)}</a></span>${tabs}</div>${vname}${sme()?`<span class="raw">✓ = chosen in the current profile. Fields marked with a green edge come from this approach; the rest are common to every approach.</span>`:''}</dd></div>`);
+    } else {
+      rows.push(`<div><dt>Approach</dt><dd><span class="cond">Shaped by <a href="#/decisions/${k}">${d.id} ${esc(d.name)}</a></span> <span style="font-size:12.5px;color:var(--ink2)">— ${esc(d.question)}</span></dd></div>`);
+    }
+  });
+  if(l2.applies_when) rows.push(`<div><dt>Applies when</dt><dd><span class="cond">${esc(condText(l2.applies_when))}</span>${onPath(l2)?'':' <span style="font-size:12px;color:var(--s-review)">— not selected in the current profile</span>'}</dd></div>`);
+  return rows;
+}
+const sme = ()=>lens==='sme';
 function recordHTML(l2, opts={}){
-  const st = statusOf(l2), sme = lens==='sme';
+  const st = statusOf(l2), smeL = lens==='sme';
   const v = review.verdicts[l2.eid];
   const comments = review.comments[l2.eid]||[];
+  const e = effective(l2), ov = e._over;
+  const V = f => ov[f]?' class="var"':'';           // mark fields supplied by the active variant
   const rows = [];
-  rows.push(`<div><dt>Inputs → outputs</dt><dd><div class="io"><div><span class="lbl">Inputs</span>${np(l2.inputs)}</div><span class="arr">→</span><div><span class="lbl">Outputs</span>${np(l2.outputs)}</div></div></dd></div>`);
-  rows.push(`<div><dt>What happens</dt><dd>${crossref(l2.description)}</dd></div>`);
-  rows.push(`<div><dt>Who</dt><dd><div class="chips">${l2.persona_list.map(p=>`<span class="chip">${esc(p)}</span>`).join('')}</div>${sme?`<span class="raw">Source text: ${esc(l2.personas)}</span>`:''}</dd></div>`);
-  rows.push(`<div><dt>Where</dt><dd><div class="chips">${prodChips(l2)}</div>${sme?`<span class="raw">${esc(l2.tool)}</span>`:''}</dd></div>`);
-  if(sme) rows.push(`<div><dt>Configuration objects</dt><dd>${np(l2.config)}</dd></div>`);
-  rows.push(`<div><dt>When</dt><dd><span class="chip">${esc(l2.cadence_bucket)}</span> <span style="color:var(--ink2);font-size:13px;margin-left:6px">${esc(l2.cadence)}</span></dd></div>`);
+  rows.push(...approachRows(l2, e));
+  rows.push(`<div><dt${V('inputs')||V('outputs')}>Inputs → outputs</dt><dd${V('inputs')||V('outputs')}><div class="io"><div><span class="lbl">Inputs</span>${np(e.inputs)}</div><span class="arr">→</span><div><span class="lbl">Outputs</span>${np(e.outputs)}</div></div></dd></div>`);
+  rows.push(`<div><dt${V('description')}>What happens</dt><dd${V('description')}>${crossref(e.description)}</dd></div>`);
+  rows.push(`<div><dt${V('personas')}>Who</dt><dd${V('personas')}><div class="chips">${l2.persona_list.map(p=>`<span class="chip">${esc(p)}</span>`).join('')}</div>${smeL?`<span class="raw">Source text: ${esc(e.personas)}</span>`:''}</dd></div>`);
+  rows.push(`<div><dt>Where</dt><dd><div class="chips">${prodChips(l2)}</div>${smeL?`<span class="raw">${esc(e.tool)}</span>`:''}</dd></div>`);
+  if(smeL) rows.push(`<div><dt${V('config')}>Configuration objects</dt><dd${V('config')}>${np(e.config)}</dd></div>`);
+  rows.push(`<div><dt${V('cadence')}>When</dt><dd${V('cadence')}><span class="chip">${esc(l2.cadence_bucket)}</span> <span style="color:var(--ink2);font-size:13px;margin-left:6px">${esc(e.cadence)}</span></dd></div>`);
   if(l2.flows.length) rows.push(`<div><dt>Part of flows</dt><dd><div class="chips">${flowChips(l2)}</div></dd></div>`);
-  if(sme){
+  if(smeL){
     rows.push(`<div><dt>Frameworks</dt><dd><div class="chips">${l2.frameworks.map(f=>`<span class="chip">${esc(f)}</span>`).join('')}</div></dd></div>`);
-    rows.push(`<div><dt>Delivery model</dt><dd>${esc(l2.delivery_model)}${l2.budgeting_method?` · <span style="color:var(--ink2)">Budgeting method: ${esc(l2.budgeting_method)}</span>`:''}</dd></div>`);
-    rows.push(`<div><dt>Evidence</dt><dd class="evidence">${np(l2.evidence)}</dd></div>`);
+    rows.push(`<div><dt>Delivery model</dt><dd>${esc(l2.delivery_model)}${l2.budgeting_method?` · <span style="color:var(--ink2)">Budgeting method: ${esc(l2.budgeting_method)}</span>`:''}${ov.bpmn_type?` · <span class="var" style="border:0;padding:0;margin:0;color:var(--accent)">BPMN task type under this approach: ${esc(e.bpmn_type)}</span>`:''}</dd></div>`);
+    rows.push(`<div><dt${V('evidence')}>Evidence</dt><dd class="evidence${ov.evidence?' var':''}">${np(e.evidence)}</dd></div>`);
   }
   const verdictRow = v && v.verdict ? `<span>Group verdict: <b>${esc(VERDICT[v.verdict])}</b></span>`:'';
-  return `<article class="record${opts.target?' target':''}" id="rec-${l2.id}" data-eid="${l2.eid}" aria-labelledby="h-${l2.id}">
+  const off = !onPath(l2);
+  return `<article class="record${opts.target?' target':''}${off?' off':''}" id="rec-${l2.id}" data-eid="${l2.eid}" aria-labelledby="h-${l2.id}">
     <div class="rhead">
       <div class="ttl">
         <h3 id="h-${l2.id}"><span class="id">${l2.id}</span><span>${esc(l2.name)}</span><a class="perma" href="#/l0/${l2.l0}/${l2.id}" aria-label="Permalink to ${l2.id}">#</a></h3>
-        <div class="eid">${l2.eid}${l2.legacy_id?` · was ${esc(l2.legacy_id)}`:''}${sme?` · ${esc(L1[l2.l1].name)}`:''}</div>
+        <div class="eid">${l2.eid}${l2.legacy_id?` · was ${esc(l2.legacy_id)}`:''}${smeL?` · ${esc(L1[l2.l1].name)}`:''}${(l2.variants||[]).length?` · ${l2.variants.length} approaches`:''}</div>
       </div>
       <div class="ctl">
         <span class="status" data-s="${st}">${STATUS[st]}</span>
@@ -525,7 +623,7 @@ function hubHTML(){
   const total = ALL_L2.length, c = counts(ALL_L2);
   const sourcesTop = `<div class="notice">Reading order, not execution order: <b>Steer</b> sets direction, the <b>Plan-to-Value</b> chain runs left to right, <b>Enable</b> underpins everything, and the seven <b>flows</b> cut across the chain. Every process keeps a permanent ID (P-0001…) so comments survive re-parenting.</div>`;
   return `<div class="pagehead"><div><p class="eyebrow">IBM Apptio · Targetprocess · Costing · Planning · Cloudability</p><h1>Apptio Process Catalog</h1><p class="lede">Business processes supported by the four Apptio products, framed by TBM, SPM and FinOps. Nine process areas, ${Object.keys(L1).length} groups, ${total} processes and seven cross-tool flows, each drawn as a BPMN 2.0 swimlane diagram, presented through a Business or SME lens for review.</p></div>
-  <div class="statlist"><div class="stat"><b>${total}</b><span>L2 processes</span></div><div class="stat"><b>${c.confirmed}</b><span>confirmed</span></div><div class="stat"><b>${c.changes}</b><span>changes requested</span></div><div class="stat"><b>${FLOWS.length}</b><span>E2E flows</span></div></div></div>
+  <div class="statlist"><div class="stat"><b>${total}</b><span>L2 processes</span></div><div class="stat"><b>${c.confirmed}</b><span>confirmed</span></div><div class="stat"><b>${FLOWS.length}</b><span>E2E flows</span></div><div class="stat"><b>${DECISIONS.length}</b><span>design decisions</span></div></div></div>
   ${sourcesTop}
   <div class="landscape">
     <section class="band steer"><div class="bhead"><h2>Steer</h2><span>Direction, objectives and the executive rhythm</span></div><div class="tiles">${bands.steer.map(l=>tile(l)).join('')}<a class="tile" data-p="Costing" href="#/l0/08/08.2.3"><span class="n">08.2.3</span><span class="t">Run the CIO monthly operations review</span><span class="sub">Executive value operating rhythm · in L0-08</span></a><a class="tile" data-p="All four" href="#/l0/10/10.6.1"><span class="n">10.6</span><span class="t">Run the practices &amp; grow maturity</span><span class="sub">TBM office · FinOps practice · SPM governance · in L0-10</span></a></div></section>
@@ -535,7 +633,8 @@ function hubHTML(){
   </div>
   <div class="hubgrid">
     <section class="panel"><h2>Other ways in</h2><dl class="kv">
-      <dt><a href="#/register">Register</a></dt><dd>One sortable, filterable table of all ${total} processes — slice by product, persona, cadence, flow, framework or review status; confirm or flag in batches.</dd>
+      <dt><a href="#/decisions">Decisions</a></dt><dd>The ${DECISIONS.length} design decisions a customer makes once — how labor effort is captured, which rate leaves Costing, how the budget is built, how work is funded — with the options, trade-offs and the ${ALL_L2.filter(x=>x.decisions).length} processes each one shapes. Choose options to render the catalog as that customer's profile.</dd>
+      <dt><a href="#/register">Register</a></dt><dd>One sortable, filterable table of all ${total} processes — slice by product, persona, cadence, flow, framework, decision or review status; confirm or flag in batches.</dd>
       <dt><a href="#/diagrams">Diagrams</a></dt><dd>Every BPMN 2.0 swimlane diagram — ${L0S.length} areas, ${Object.keys(L1).length} groups and ${FLOWS.length} flows — with .bpmn and .svg downloads and a <a href="viewer.html">bpmn-js editor</a>.</dd>
       <dt><a href="#/glossary">Glossary</a></dt><dd>Every acronym in the catalog, in plain language.</dd>
       <dt><a href="#/changelog">Changelog</a></dt><dd>What changed since v0.2 and why — keyed to element IDs.</dd>
@@ -557,7 +656,7 @@ function l0HTML(l0, targetId){
   return `<div class="l0">${rail}<div>${main}</div></div>`;
 }
 
-const facetState = {product:'',persona:'',cadence:'',flow:'',framework:'',status:'',l0:'',method:'',q:''};
+const facetState = {product:'',persona:'',cadence:'',flow:'',framework:'',status:'',l0:'',method:'',decision:'',q:''};
 let sortKey='id', sortDir=1, compact=false; const expanded=new Set(), selected=new Set();
 function registerHTML(){
   const opts=(name,vals,label)=>`<select data-facet="${name}" aria-label="${label}"><option value="">${label}: all</option>${vals.map(v=>`<option value="${esc(v)}"${facetState[name]===v?' selected':''}>${esc(v)}</option>`).join('')}</select>`;
@@ -569,14 +668,14 @@ function registerHTML(){
   const th=(k,n)=>`<th data-sort="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}">${n}${sortKey===k?`<span class="dir">${sortDir>0?'▲':'▼'}</span>`:''}</th>`;
   return `<div class="pagehead"><div><p class="eyebrow">Register</p><h1>All processes</h1><p class="lede">One row per L2. Filter by any overlay, sort a column, expand a row to see the full record, tick rows to change status in batch.</p></div></div>
   <div class="facets">
-    ${opts('l0',L0S.map(l=>'L0-'+l.id+' '+l.name),'Area')}${opts('product',['Targetprocess','Costing','Planning','Cloudability'],'Product')}${opts('persona',personas,'Persona')}${opts('cadence',cadences,'Cadence')}${opts('flow',FLOWS.map(f=>f.id),'Flow')}${opts('framework',['TBM','SPM','FinOps','SAFe','ITFM'],'Framework')}${opts('method',methods,'Budgeting method')}${opts('status',Object.values(STATUS),'Review status')}
+    ${opts('l0',L0S.map(l=>'L0-'+l.id+' '+l.name),'Area')}${opts('product',['Targetprocess','Costing','Planning','Cloudability'],'Product')}${opts('persona',personas,'Persona')}${opts('cadence',cadences,'Cadence')}${opts('flow',FLOWS.map(f=>f.id),'Flow')}${opts('framework',['TBM','SPM','FinOps','SAFe','ITFM'],'Framework')}${opts('decision',DECISIONS.map(d=>d.id+' '+d.name),'Decision')}${opts('method',methods,'Budgeting method')}${opts('status',Object.values(STATUS),'Review status')}
     <span class="applied">${applied}</span>${applied?'<button class="clear" data-clearfacets>Clear all</button>':''}
     <label class="density" style="font-size:13px"><input type="checkbox" id="compact"${compact?' checked':''}> Compact</label>
   </div>
   <p class="count">${rows.length} of ${ALL_L2.length} processes</p>
   <div class="batch"><span>${selected.size} selected</span><select id="batch-status" aria-label="Status to apply to selected">${Object.entries(STATUS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select><button id="batch-apply" ${selected.size?'':'disabled'}>Apply to selected</button><button id="batch-clear" ${selected.size?'':'disabled'}>Clear selection</button></div>
-  <div class="tablewrap"><table class="reg${compact?' compact':''}"><thead><tr><th style="cursor:default"><input type="checkbox" id="selall" aria-label="Select all shown"></th><th style="cursor:default"></th>${th('id','ID')}${th('name','Process')}${th('l1','Group')}${th('primary_product','Product')}${th('cadence_bucket','Cadence')}<th style="cursor:default">Who</th>${th('status','Status')}</tr></thead><tbody>
-  ${rows.map(x=>`<tr data-row="${x.id}"><td><input type="checkbox" data-sel="${x.eid}"${selected.has(x.eid)?' checked':''} aria-label="Select ${x.id}"></td><td class="exp"><button data-expand="${x.id}" aria-expanded="${expanded.has(x.id)}" aria-label="Expand ${x.id}">${expanded.has(x.id)?'▾':'▸'}</button></td><td class="id"><a href="#/l0/${x.l0}/${x.id}">${x.id}</a></td><td>${esc(x.name)}</td><td style="font-size:12.5px;color:var(--ink2)">${x.l1} ${esc(L1[x.l1].name)}</td><td><div class="chips">${prodChips(x)}</div></td><td>${esc(x.cadence_bucket)}</td><td><div class="chips">${x.persona_list.slice(0,2).map(p=>`<span class="chip">${esc(p)}</span>`).join('')}${x.persona_list.length>2?`<span class="chip">+${x.persona_list.length-2}</span>`:''}</div></td><td><span class="status" data-s="${statusOf(x)}">${STATUS[statusOf(x)]}</span></td></tr>${expanded.has(x.id)?`<tr class="detail"><td colspan="9">${recordHTML(x)}</td></tr>`:''}`).join('')}
+  <div class="tablewrap"><table class="reg${compact?' compact':''}"><thead><tr><th style="cursor:default"><input type="checkbox" id="selall" aria-label="Select all shown"></th><th style="cursor:default"></th>${th('id','ID')}${th('name','Process')}${th('l1','Group')}${th('primary_product','Product')}${th('cadence_bucket','Cadence')}<th style="cursor:default">Who</th><th style="cursor:default" title="Design decisions that shape this process; number = variants on record">Approaches</th>${th('status','Status')}</tr></thead><tbody>
+  ${rows.map(x=>`<tr data-row="${x.id}"${onPath(x)?'':' class="off"'}><td><input type="checkbox" data-sel="${x.eid}"${selected.has(x.eid)?' checked':''} aria-label="Select ${x.id}"></td><td class="exp"><button data-expand="${x.id}" aria-expanded="${expanded.has(x.id)}" aria-label="Expand ${x.id}">${expanded.has(x.id)?'▾':'▸'}</button></td><td class="id"><a href="#/l0/${x.l0}/${x.id}">${x.id}</a></td><td>${esc(x.name)}</td><td style="font-size:12.5px;color:var(--ink2)">${x.l1} ${esc(L1[x.l1].name)}</td><td><div class="chips">${prodChips(x)}</div></td><td>${esc(x.cadence_bucket)}</td><td><div class="chips">${x.persona_list.slice(0,2).map(p=>`<span class="chip">${esc(p)}</span>`).join('')}${x.persona_list.length>2?`<span class="chip">+${x.persona_list.length-2}</span>`:''}</div></td><td><div class="chips">${(x.decisions||[]).map(k=>`<a class="chip flow" href="#/decisions/${k}" title="${esc(DEC[k].name)}">${DEC[k].id}${variantsOf(x,k).length?' · '+variantsOf(x,k).length:''}</a>`).join('')}${x.applies_when?`<span class="chip" title="${esc(condText(x.applies_when))}">conditional</span>`:''}</div></td><td><span class="status" data-s="${statusOf(x)}">${STATUS[statusOf(x)]}</span></td></tr>${expanded.has(x.id)?`<tr class="detail"><td colspan="10">${recordHTML(x)}</td></tr>`:''}`).join('')}
   </tbody></table></div>`;
 }
 function filtered(){
@@ -584,7 +683,7 @@ function filtered(){
   let rows = ALL_L2.filter(x=>
     (!f.l0 || f.l0.startsWith('L0-'+x.l0)) && (!f.product || x.products.includes(f.product)) && (!f.persona || x.persona_list.includes(f.persona)) &&
     (!f.cadence || x.cadence_bucket===f.cadence) && (!f.flow || x.flows.includes(f.flow)) && (!f.framework || x.framework_tags.includes(f.framework)) &&
-    (!f.method || x.budgeting_method===f.method) && (!f.status || STATUS[statusOf(x)]===f.status));
+    (!f.method || x.budgeting_method===f.method) && (!f.decision || (x.decisions||[]).some(k=>f.decision.startsWith(DEC[k].id+' '))) && (!f.status || STATUS[statusOf(x)]===f.status));
   const key = sortKey==='status'? x=>Object.keys(STATUS).indexOf(statusOf(x)) : sortKey==='l1'? x=>x.l1 : x=>x[sortKey];
   rows.sort((a,b)=>{const ka=key(a),kb=key(b);return (ka>kb?1:ka<kb?-1:0)*sortDir;});
   return rows;
@@ -619,6 +718,10 @@ function bpmnLayout(f){
   steps.forEach((s,i)=>{
     const kind=bpmnKind(s.type);
     const node={id:s.implicit?('n_'+kind+'_implicit'):('n_'+s.n.replace(/[^\w]/g,'_')), n:s.n, kind, label:s.task, lane:laneIx[s.lane]??0, l2:s.l2, note:s.note||'', type:s.type, href:s.href||null};
+    // v0.7: profile awareness — a step with `when`, or a group-diagram task whose L2 has applies_when, is off-path when the profile doesn't select it
+    const cond = s.when || (s.l2 && s.l2.length===1 && L2[s.l2[0]] && L2[s.l2[0]].applies_when) || null;
+    if(cond){ node.cond=cond; node.off=!matches(cond); }
+    if(s.decision && DEC[s.decision]){ node.decision=DEC[s.decision]; node.note=(node.note?node.note+' — ':'')+DEC[s.decision].id+' '+DEC[s.decision].name+': '+DEC[s.decision].question; }
     if(isBranch(s.n) && byN[baseOf(s.n)]){
       if(!group || group.base!==baseOf(s.n)){ group={base:baseOf(s.n), members:[]}; col++; }
       node.col=col; group.members.push(node);
@@ -719,8 +822,9 @@ function bpmnSVG(f, laneColor){
       const ty=n.y+18+(n.h-18)/2+4-(lines.length-1)*6.5;
       body+=`<text x="${n.cx}" y="${ty}" text-anchor="middle" font-size="10.5" fill="currentColor">${lines.map((t,k)=>`<tspan x="${n.cx}" dy="${k?13:0}">${esc(t)}</tspan>`).join('')}</text>`;
     }
-    const g=`<g class="bn" data-n="${esc(n.n)}">${title}${body}</g>`;
-    return href?`<a href="${href}" aria-label="${esc(n.label)} — open ${n.n||n.l2[0]}">${g}</a>`:g;
+    const dmark = n.decision ? `<text x="${n.cx}" y="${n.cy+BP.gwR+14}" text-anchor="middle" font-size="9.5" font-weight="600" fill="var(--accent)" font-family="var(--mono)">${esc(n.decision.id)}</text>` : '';
+    const g=`<g class="bn" data-n="${esc(n.n)}"${n.off?' opacity=".32" stroke-dasharray="4 3"':''}>${title}${body}${dmark}</g>`;
+    return href?`<a href="${href}" aria-label="${esc(n.label)} — open ${n.n||n.l2[0]}${n.off?' (not on this profile\'s path)':''}">${g}</a>`:g;
   }).join('');
   const edgeEls = L.edges.map(e=>{
     const d='M'+e.pts.map(p=>p.join(' ')).join('L');
@@ -731,7 +835,8 @@ function bpmnSVG(f, laneColor){
       else if(e.pts.length===2){ lx=(e.pts[0][0]+e.pts[1][0])/2; ly=e.pts[0][1]-6; anchor='middle'; }
       else { lx=e.pts[2][0]+6; ly=e.pts[2][1]-6; }
       lab=`<text x="${lx}" y="${ly}" font-size="10" font-weight="600" fill="currentColor" text-anchor="${anchor}">${esc(e.label)}</text>`; }
-    return `<path d="${d}" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#bp-arrow-${f.id})"/>${lab}`;
+    const off=(L.byId[e.to]&&L.byId[e.to].off)||(L.byId[e.from]&&L.byId[e.from].off);
+    return `<g${off?' opacity=".32"':''}><path d="${d}" fill="none" stroke="currentColor" stroke-width="1.5" marker-end="url(#bp-arrow-${f.id})"/>${lab}</g>`;
   }).join('');
   const aria=`BPMN swimlane diagram of ${f.kind?'':'flow '}${f.kind?f.name:f.id+' '+f.name}: ${L.lanes.length} lanes, ${f.steps.length} steps`;
   const what = f.kind==='l1' ? `Process group ${esc(f.name)} as BPMN 2.0: one lane per persona from the area's default lanes, one task per L2 process in catalog order (person icon = user task, dashed gear = service task, envelope = send task). Click a task to jump to its record.`
@@ -805,7 +910,7 @@ function flowHTML(f){
   <details class="bpmn-x"><summary>BPMN 2.0 XML for this flow — import into Camunda, bpmn.io, Visio, Signavio or Draw.io</summary><div class="xbar"><button type="button" data-copy-bpmn="${f.id}">Copy XML</button><span style="font-size:12px;color:var(--ink3)">Generated from the step table with diagram interchange (layout) included.</span></div><textarea readonly spellcheck="false" id="bpmn-xml-${f.id}" aria-label="BPMN XML for ${f.id}">${esc(bpmnXML(f))}</textarea></details>
   <h2 style="margin:0 0 10px">Step table</h2>
   <div style="overflow-x:auto"><table class="steps"><thead><tr><th>Step</th><th>Lane</th><th>Task / event</th><th>Catalog process</th></tr></thead><tbody>
-  ${f.steps.map(s=>`<tr><td class="n">${esc(s.n)}</td><td class="lane"><i style="background:${laneColor[s.lane]||'var(--ink3)'}"></i>${esc(s.lane)}</td><td class="${/gateway/i.test(s.type)?'gw':''}">${esc(s.task)}<span class="type">${esc(s.type)}</span>${s.note?`<div class="note">${crossref(s.note)}</div>`:''}</td><td><div class="l2s">${s.l2.map(id=>link(id)).join('')||'<span style="color:var(--ink3)">—</span>'}</div>${s.l2.length?`<div style="font-size:12px;color:var(--ink3);margin-top:4px">${s.l2.map(id=>esc(L2[id].name)).join(' · ')}</div>`:''}</td></tr>`).join('')}
+  ${f.steps.map(s=>`<tr${s.when&&!matches(s.when)?' class="off"':''}><td class="n">${esc(s.n)}</td><td class="lane"><i style="background:${laneColor[s.lane]||'var(--ink3)'}"></i>${esc(s.lane)}</td><td class="${/gateway/i.test(s.type)?'gw':''}">${esc(s.task)}<span class="type">${esc(s.type)}</span>${s.note?`<div class="note">${crossref(s.note)}</div>`:''}${s.decision&&DEC[s.decision]?`<div class="note">Decided by <a href="#/decisions/${s.decision}">${DEC[s.decision].id} ${esc(DEC[s.decision].name)}</a> — ${esc(DEC[s.decision].question)}</div>`:''}${s.when?`<div class="note"><span class="cond">Only when ${esc(condText(s.when))}</span></div>`:''}</td><td><div class="l2s">${s.l2.map(id=>link(id)).join('')||'<span style="color:var(--ink3)">—</span>'}</div>${s.l2.length?`<div style="font-size:12px;color:var(--ink3);margin-top:4px">${s.l2.map(id=>esc(L2[id].name)).join(' · ')}</div>`:''}</td></tr>`).join('')}
   </tbody></table></div>
   <div class="updown"><div class="panel"><h2>Upstream</h2>${f.upstream.length?f.upstream.map(u=>`<div><a href="#/flow/${u}">${u} · ${esc(FLOW[u].name)}</a></div>`).join(''):'<span style="color:var(--ink3)">None — this flow starts the chain.</span>'}</div><div class="panel"><h2>Downstream</h2>${f.downstream.length?f.downstream.map(u=>`<div><a href="#/flow/${u}">${u} · ${esc(FLOW[u].name)}</a></div>`).join(''):'<span style="color:var(--ink3)">None — this flow ends in reporting.</span>'}</div></div>
   <div class="prevnext">${prev?`<a href="#/flow/${prev.id}"><span>Previous flow</span>← ${prev.id} ${esc(prev.name)}</a>`:'<span></span>'}${next?`<a href="#/flow/${next.id}" style="text-align:right"><span>Next flow</span>${next.id} ${esc(next.name)} →</a>`:'<span></span>'}</div>`;
@@ -817,6 +922,29 @@ function diagramsHTML(){
   <h2 style="margin:0 0 10px">Cross-tool flows</h2><div class="diagrid">${FLOWS.map(f=>card(f,'#/flow/'+f.id,f.title+' · '+f.steps.length+' steps · '+f.lanes.length+' lanes')).join('')}</div>
   <h2 style="margin:24px 0 10px">Process areas</h2><div class="diagrid">${L0S.filter(l=>l.bpmn).map(l=>card(l.bpmn,'#/l0/'+l.id,l.l1s.length+' groups as sub-processes · lanes: '+l.bpmn.lanes.join(', '))).join('')}</div>
   <h2 style="margin:24px 0 10px">Process groups</h2><div class="diagrid">${L0S.flatMap(l=>l.l1s.filter(g=>g.bpmn).map(g=>card(g.bpmn,'#/l0/'+l.id+'/'+g.id,g.l2s.length+' processes · lanes: '+g.bpmn.lanes.join(', ')))).join('')}</div>`;
+}
+function decisionsHTML(){
+  const smeL = lens==='sme';
+  const n = profileSet().length;
+  const summary = DECISIONS.map(d=>{ const a=activeOpts(d.key); const set=profileSet().includes(d.key); return `<a class="${set?'set':''}" href="#/decisions/${d.key}" title="${esc(d.question)}">${d.id} ${esc(d.name)}: ${esc(a.map(o=>OPT(d.key,o).name).join(' + '))}${set?'':' (default)'}</a>`; }).join('');
+  const card = d => {
+    const chosen = activeOpts(d.key); const set = profileSet().includes(d.key);
+    const mark = id => { const l2=L2[id]; if(!l2) return esc(id); const cls = variantsOf(l2,d.key).length?'v':(l2.applies_when&&l2.applies_when[d.key]?'c':''); const t = cls==='v'?`${variantsOf(l2,d.key).length} variants on record`:cls==='c'?`only under ${condText({[d.key]:l2.applies_when[d.key]})}`:'listed as affected'; return `<a class="${cls}" href="#/l0/${l2.l0}/${id}" title="${esc(l2.name)} — ${esc(t)}">${id}</a>`; };
+    const opts = d.options.map(o=>`<label class="opt${chosen.includes(o.id)?' on':''}"><input type="${d.multi?'checkbox':'radio'}" name="prof-${d.key}" value="${o.id}" data-profile="${d.key}"${chosen.includes(o.id)?' checked':''} aria-label="${esc(o.name)}"><div><div class="on-name">${esc(o.name)}${o.id===d.default?'<span class="def">catalog default</span>':''}</div><div class="os">${crossref(o.summary)}</div><div class="of"><b>Fits:</b> ${crossref(o.fit)}</div>${smeL?`<div class="of"><b>Prerequisites:</b> ${crossref(o.prereqs)}</div><div class="of"><b>Trade-offs:</b> ${crossref(o.tradeoffs)}</div><div class="of"><b>Evidence:</b> ${esc(o.evidence)}</div>`:''}</div></label>`).join('');
+    return `<section class="deccard" id="${d.key}" aria-labelledby="dh-${d.key}">
+      <div class="dh"><span class="id">${d.id}</span><h2 id="dh-${d.key}">${esc(d.name)}</h2><span class="chip">${esc(d.domain)}</span>${d.multi?'<span class="chip" title="A customer can select more than one option, e.g. per team kind or decision unit">pick one or more</span>':'<span class="chip">pick one</span>'}${set?'<span class="status" data-s="confirmed">set in profile</span>':'<span class="status" data-s="draft">default</span>'}</div>
+      <p class="q">${esc(d.question)}</p>
+      <p class="why">${crossref(d.why)}</p>
+      <div class="opts">${opts}</div>
+      <div class="aff"><span>Shapes:</span>${d.affects.map(mark).join('')}${d.flows.length?`<span style="margin-left:8px">Flows:</span>${d.flows.map(f=>`<a class="chip flow" href="#/flow/${f}">${f}</a>`).join('')}`:''}${d.related.length?`<span style="margin-left:8px">Related:</span>${d.related.map(k=>`<a href="#/decisions/${k}" style="font-family:var(--sans)">${DEC[k]?DEC[k].id+' '+esc(DEC[k].name):k}</a>`).join('')}`:''}</div>
+      <p style="font-size:11.5px;color:var(--ink3);margin:8px 0 0">Solid outline = the process has a variant per option · dashed = the process only exists under some options · plain = listed as affected, no variant text yet.</p>
+    </section>`;
+  };
+  return `<div class="pagehead"><div><p class="eyebrow">Design decisions · v${DATA.version}</p><h1>Decisions &amp; customer profile</h1><p class="lede">A customer makes each of these choices once — usually in discovery — and the choice ripples through several processes and flows. Pick the options that match a customer and the whole catalog renders for that profile: records open on the matching approach, processes that do not apply under the chosen options are dimmed, and off-path steps fade on the diagrams. Decisions you have not set stay neutral — every process and step remains on the path — and nothing is ever filtered away, so the alternatives stay one click away.</p></div>
+  <div class="statlist"><div class="stat"><b>${DECISIONS.length}</b><span>decisions</span></div><div class="stat"><b>${DECISIONS.reduce((a,d)=>a+d.options.length,0)}</b><span>options</span></div><div class="stat"><b>${ALL_L2.reduce((a,x)=>a+(x.variants||[]).length,0)}</b><span>variants</span></div><div class="stat"><b>${ALL_L2.filter(x=>x.decisions).length}</b><span>processes shaped</span></div></div></div>
+  <div class="profbar"><b>Profile:</b> ${n?`${n} of ${DECISIONS.length} decisions set`:'catalog defaults'} <span style="flex:1"></span><button type="button" data-profile-copy>Copy profile as JSON</button><button type="button" data-profile-paste>Paste profile</button><button type="button" data-profile-reset${n?'':' disabled'}>Reset to defaults</button></div>
+  <nav class="decnav" aria-label="Decisions">${summary}</nav>
+  ${DECISIONS.map(card).join('')}`;
 }
 function glossaryHTML(){ return `<div class="pagehead"><div><p class="eyebrow">Glossary</p><h1>Terms &amp; acronyms</h1><p class="lede">Every acronym used in the catalog. Business reviewers should be able to read any record with this page open beside it.</p></div></div><dl class="gloss">${DATA.glossary.map(([t,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('')}</dl>`; }
 function changelogHTML(){ return `<div class="pagehead"><div><p class="eyebrow">Changelog</p><h1>What changed</h1><p class="lede">Versioned major.minor.release. Changes are keyed to hierarchy IDs and, where they matter, permanent element IDs.</p></div></div>${DATA.changelog.map(r=>`<section class="release"><h2>v${r.version} <span class="d">${r.date}</span></h2><ul>${r.items.map(i=>`<li>${crossref(i)}</li>`).join('')}</ul></section>`).join('')}`; }
@@ -830,6 +958,7 @@ function route(){
   if(parts[0]==='l0' && L0[parts[1]]) return {page:'l0', l0:L0[parts[1]], target:parts[2]||null};
   if(parts[0]==='register') return {page:'register'};
   if(parts[0]==='flow' && FLOW[parts[1]]) return {page:'flow', flow:FLOW[parts[1]]};
+  if(parts[0]==='decisions') return {page:'decisions', target:parts[1]||null};
   if(parts[0]==='glossary') return {page:'glossary'};
   if(parts[0]==='diagrams') return {page:'diagrams'};
   if(parts[0]==='changelog') return {page:'changelog'};
@@ -857,6 +986,11 @@ function render(){
   else if(r.page==='register'){ main.innerHTML = registerHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Register</span>`; title='Register'; }
   else if(r.page==='flow'){ main.innerHTML = flowHTML(r.flow); crumbs += ` <span class="sep">/</span> <span>Flows</span> <span class="sep">/</span> <span class="here"><span class="id">${r.flow.id}</span> ${esc(r.flow.name)}</span>`; title=r.flow.id+' '+r.flow.name; }
   else if(r.page==='diagrams'){ main.innerHTML = diagramsHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Diagrams</span>`; title='Diagrams'; }
+  else if(r.page==='decisions'){ main.innerHTML = decisionsHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Decisions</span>`; title='Decisions';
+    const key = r.page+'/'+(r.target||'');
+    if(r.target && DEC[r.target] && key!==lastKey && !suppressScroll){ const el=document.getElementById(r.target); if(el) requestAnimationFrame(()=>el.scrollIntoView({block:'start'})); }
+    else if(!r.target && key!==lastKey && !suppressScroll) window.scrollTo({top:0});
+    lastKey = key; $('#crumbs').innerHTML = crumbs; document.title = title+' · Apptio Process Catalog'; return; }
   else if(r.page==='glossary'){ main.innerHTML = glossaryHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Glossary</span>`; }
   else if(r.page==='changelog'){ main.innerHTML = changelogHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Changelog</span>`; }
   else if(r.page==='print'){ main.innerHTML = printHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Print view</span>`; }
@@ -879,14 +1013,17 @@ function setupSpy(){
 // ---------- search ----------
 const INDEX = ALL_L2.map(x=>({id:x.id,eid:x.eid,l0:x.l0,name:x.name,text:(x.id+' '+x.eid+' '+x.name+' '+x.description+' '+(x.config||'')+' '+(x.personas||'')+' '+x.tool+' '+(x.evidence||'')).toLowerCase()}))
   .concat(FLOWS.map(f=>({flow:f.id,name:f.id+' · '+f.name+' — '+f.title,text:(f.id+' '+f.name+' '+f.title+' '+f.summary).toLowerCase()})))
-  .concat(Object.values(L1).map(g=>({g:g.id,l0:g.l0,name:g.id+' '+g.name,text:(g.id+' '+g.eid+' '+g.name+' '+(g.original_name||'')).toLowerCase()})));
+  .concat(Object.values(L1).map(g=>({g:g.id,l0:g.l0,name:g.id+' '+g.name,text:(g.id+' '+g.eid+' '+g.name+' '+(g.original_name||'')).toLowerCase()})))
+  .concat(DECISIONS.map(d=>({dec:d.key,name:d.id+' · '+d.name+' — '+d.question,text:(d.id+' '+d.key+' '+d.name+' '+d.question+' '+d.domain+' '+d.options.map(o=>o.id+' '+o.name+' '+o.summary+' '+o.fit).join(' ')).toLowerCase()})));
+// variant text is searchable through its parent record
+INDEX.forEach(i=>{ if(i.id && L2[i.id] && L2[i.id].variants) i.text += ' ' + L2[i.id].variants.map(v=>(v.name||'')+' '+(v.description||'')+' '+(v.config||'')).join(' ').toLowerCase(); });
 let qActive=-1;
 function doSearch(){
   const q=$('#q').value.trim().toLowerCase(); const box=$('#qres');
   if(q.length<2){ box.hidden=true; box.innerHTML=''; return; }
   const terms=q.split(/\s+/);
   const hits=INDEX.filter(i=>terms.every(t=>i.text.includes(t))).slice(0,12);
-  box.innerHTML = hits.length? hits.map(h=>h.flow?`<a href="#/flow/${h.flow}"><span class="k">FLOW</span>${esc(h.name)}</a>`:h.g?`<a href="#/l0/${h.l0}/${h.g}"><span class="k">GROUP</span>${esc(h.name)}</a>`:`<a href="#/l0/${h.l0}/${h.id}"><span class="k">${h.id}</span>${esc(h.name)}</a>`).join('') : '<a href="#/register">No matches — open the register</a>';
+  box.innerHTML = hits.length? hits.map(h=>h.flow?`<a href="#/flow/${h.flow}"><span class="k">FLOW</span>${esc(h.name)}</a>`:h.dec?`<a href="#/decisions/${h.dec}"><span class="k">DECISION</span>${esc(h.name)}</a>`:h.g?`<a href="#/l0/${h.l0}/${h.g}"><span class="k">GROUP</span>${esc(h.name)}</a>`:`<a href="#/l0/${h.l0}/${h.id}"><span class="k">${h.id}</span>${esc(h.name)}</a>`).join('') : '<a href="#/register">No matches — open the register</a>';
   box.hidden=false; qActive=-1;
 }
 
@@ -912,6 +1049,10 @@ document.addEventListener('click', e=>{
   if(e.target.closest('[data-clearfacets]')){ Object.keys(facetState).forEach(k=>facetState[k]=''); render(); }
   if(e.target.id==='batch-apply'){ const s=$('#batch-status').value; [...selected].forEach(eid=>saveReview(eid,{status:s})); selected.clear(); render(); }
   if(e.target.id==='batch-clear'){ selected.clear(); render(); }
+  const vt=e.target.closest('[data-variant]'); if(vt){ const [id,k,o]=vt.dataset.variant.split('|'); variantView[id+'|'+k]=o; const l2=L2[id]; if(l2){ const holder=vt.closest('article.record'); if(holder){ const fresh=document.createElement('div'); fresh.innerHTML=recordHTML(l2,{target:holder.classList.contains('target')}); holder.replaceWith(fresh.firstElementChild); } } }
+  if(e.target.closest('[data-profile-reset]')){ profile={}; saveProfile(); rerenderKeep(); }
+  if(e.target.closest('[data-profile-copy]')){ const b=e.target.closest('[data-profile-copy]'); const txt=JSON.stringify(Object.fromEntries(DECISIONS.map(d=>[d.key,activeOpts(d.key)])),null,1); const done=()=>{ b.textContent='Copied'; setTimeout(()=>b.textContent='Copy profile as JSON',1500); }; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done,()=>prompt('Profile JSON:',txt)); else prompt('Profile JSON:',txt); }
+  if(e.target.closest('[data-profile-paste]')){ const s=prompt('Paste a profile JSON ({"decision-key":["option-id"], ...}):',''); if(s){ try{ const p=JSON.parse(s); const next={}; Object.entries(p).forEach(([k,v])=>{ if(DEC[k]){ const arr=(Array.isArray(v)?v:[v]).filter(o=>OPT(k,o)); if(arr.length) next[k]=DEC[k].multi?arr:[arr[0]]; } }); profile=next; saveProfile(); rerenderKeep(); }catch(_){ alert('That was not valid profile JSON.'); } } }
   const cb=e.target.closest('[data-copy-bpmn]'); if(cb){ const ta=document.getElementById('bpmn-xml-'+cb.dataset.copyBpmn); if(!ta.hidden) ta.select(); const done=()=>{ cb.textContent='Copied'; setTimeout(()=>cb.textContent='Copy XML',1500); }; if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(done,()=>{ try{document.execCommand('copy'); done();}catch(_){} }); else { const tmp=document.createElement('textarea'); tmp.value=ta.value; document.body.appendChild(tmp); tmp.select(); try{document.execCommand('copy'); done();}catch(_){} tmp.remove(); } }
 });
 document.addEventListener('toggle', e=>{ if(e.target.classList&&e.target.classList.contains('gdiag')) ls.set('diagClosed', !e.target.open); }, true);
@@ -921,6 +1062,11 @@ document.addEventListener('change', e=>{
   if(t.dataset.verdict){ saveReview(t.dataset.verdict,{verdict:t.value}); }
   if(t.dataset.owner!==undefined){ saveReview(t.dataset.owner,{owner:t.value}); }
   if(t.dataset.facet!==undefined){ facetState[t.dataset.facet]=t.value; render(); }
+  if(t.dataset.profile){ const k=t.dataset.profile, d=DEC[k]; if(d){
+      if(d.multi){ const cur=new Set(activeOpts(k)); t.checked?cur.add(t.value):cur.delete(t.value); profile[k]=[...cur].filter(o=>OPT(k,o)); if(!profile[k].length) delete profile[k]; }
+      else profile[k]=[t.value];
+      if(profile[k] && profile[k].length===1 && profile[k][0]===d.default && !d.multi) { /* keep explicit choice even if it equals the default */ }
+      saveProfile(); rerenderKeep(); } }
   if(t.id==='compact'){ compact=t.checked; render(); }
   if(t.dataset.sel){ t.checked?selected.add(t.dataset.sel):selected.delete(t.dataset.sel); render(); }
   if(t.id==='selall'){ filtered().forEach(x=>t.checked?selected.add(x.eid):selected.delete(x.eid)); render(); }
@@ -935,7 +1081,7 @@ window.addEventListener('hashchange', render);
 function setLens(){ $('#lens-business').setAttribute('aria-pressed', lens==='business'); $('#lens-sme').setAttribute('aria-pressed', lens==='sme'); }
 function setWho(){ $('#who').innerHTML='Reviewing as <b>'+esc(reviewer||'—')+'</b>'; }
 
-setLens(); setWho(); renderProgress(); render(); initDb();
+setLens(); setWho(); setProf(); renderProgress(); render(); initDb();
 })();
 </script>
 

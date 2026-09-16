@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G06_4" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G06_4" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G06_4">
     <bpmn:participant id="Participant_G06_4" name="06.4 Cost labor &amp; capitalize — Cost labor &amp; capitalize" processRef="Process_G06_4" />
   </bpmn:collaboration>
@@ -23,17 +23,17 @@
       <bpmn:outgoing>Flow_0</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:task id="n_06_4_1" name="Maintain protected rates &amp; compute blended rates">
-      <bpmn:documentation>Catalog: 06.4.1. Outcome: blended rates by team/ART</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.1. Outcome: blended rates by team/ART 3 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_0</bpmn:incoming>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:task>
     <bpmn:serviceTask id="n_06_4_2" name="Publish blended rates to Targetprocess">
-      <bpmn:documentation>Catalog: 06.4.2. Outcome: rates available in ATP</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.2. Outcome: rates available in ATP 3 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="n_06_4_3" name="Ingest workforce &amp; completed work data">
-      <bpmn:documentation>Catalog: 06.4.3. Outcome: labor model inputs</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.3. Outcome: labor model inputs 5 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -43,12 +43,12 @@
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="n_06_4_5" name="Allocate team costs to work or towers">
-      <bpmn:documentation>Catalog: 06.4.5. Outcome: work-attached &amp; tower-attached labor costs</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.5. Outcome: work-attached &amp; tower-attached labor costs 5 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="n_06_4_6" name="Generate audit-ready capitalization actuals">
-      <bpmn:documentation>Catalog: 06.4.6. Outcome: sAP-ready CapEx/OpEx actuals file</bpmn:documentation>
+      <bpmn:documentation>Catalog: 06.4.6. Outcome: sAP-ready CapEx/OpEx actuals file 4 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
     </bpmn:serviceTask>

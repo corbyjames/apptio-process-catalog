@@ -10,7 +10,7 @@ Source of truth
   data/l0-links.yaml     cross-area feeds drawn on the L0 landscape
 
 Outputs (all overwritten on every run - edit data/, not these)
-  docs/*.md                          overview, full catalog, tool-config reference, operating calendar, diagram index
+  docs/*.md                          overview, full catalog, decisions register, tool-config reference, operating calendar, diagram index
   diagrams/mermaid/*.md              L0 landscape + per-area Mermaid (GitHub renders inline)
   diagrams/bpmn/generated/*.bpmn     BPMN 2.0 XML with DI: L0-NN (9), NN.N (45), flow-XXX (7)
   assets/diagrams/*.svg              SVG snapshot of each of those diagrams
@@ -32,6 +32,10 @@ def rd(name):
         return json.load(f) if name.endswith(".json") else yaml.safe_load(f)
 CAT = rd("catalog.json"); CAL = rd("calendar.yaml"); CFG = rd("tool-config.yaml"); FW = rd("frameworks.yaml"); LINKS = rd("l0-links.yaml")
 L0S = CAT["l0s"]; FLOWS = CAT["flows"]; VERSION = CAT["version"]
+DECISIONS = CAT.get("decisions", []); DEC = {d["key"]: d for d in DECISIONS}
+bpmn.DECISIONS = DEC
+def opt_name(key, oid): return next((o["name"] for o in DEC.get(key, {}).get("options", []) if o["id"] == oid), oid)
+def cond_text(when): return "; ".join(f"{DEC[k]['name'] if k in DEC else k}: {' / '.join(opt_name(k, o) for o in opts)}" for k, opts in (when or {}).items())
 L1S = [l1 for l0 in L0S for l1 in l0["l1s"]]
 L2S = [l2 for l1 in L1S for l2 in l1["l2s"]]
 L2 = {l2["id"]: l2 for l2 in L2S}
@@ -44,7 +48,10 @@ def ensure(d): os.makedirs(os.path.join(ROOT, d), exist_ok=True)
 def W(p, s):
     with open(os.path.join(ROOT, p), "w", encoding="utf-8") as f: f.write(s)
 def clean(d, pattern):
-    for f in glob.glob(os.path.join(ROOT, d, pattern)): os.remove(f)
+    # best-effort: on a mount without delete rights the files are simply overwritten
+    for f in glob.glob(os.path.join(ROOT, d, pattern)):
+        try: os.remove(f)
+        except OSError: pass
 mmid = lambda s: "N" + re.sub(r"[^A-Za-z0-9]", "_", s)
 for d in ("docs", "diagrams/mermaid", "diagrams/bpmn/generated", "diagrams/bpmn/custom", "assets/diagrams", "site", "dist"): ensure(d)
 
@@ -133,7 +140,17 @@ def gen_docs():
         out.append(f"\n### {f['id']} — {f['name']}: {f['title']}\n\n{f['summary']}\n\nCadence: {f['cadence']}. Lanes: {'; '.join(f['lanes'])}. Upstream: {', '.join(f['upstream']) or '—'}. Downstream: {', '.join(f['downstream']) or '—'}.\n")
         out.append(f"![{f['id']}](../assets/diagrams/flow-{f['id']}.svg)\n")
         out.append("| Step | Type | Lane | Task / event | Catalog | Notes |\n|---|---|---|---|---|---|")
-        for s in f["steps"]: out.append(f"| {s['n']} | {s['type']} | {s['lane']} | {s['task']} | {', '.join(s['l2'])} | {s.get('note','') or ''} |")
+        for s in f["steps"]:
+            note = s.get("note", "") or ""
+            if s.get("decision") and s["decision"] in DEC: note += f" Decided by {DEC[s['decision']]['id']} {DEC[s['decision']]['name']}."
+            if s.get("when"): note += f" *Only when {cond_text(s['when'])}.*"
+            out.append(f"| {s['n']} | {s['type']} | {s['lane']} | {s['task']} | {', '.join(s['l2'])} | {note.strip()} |")
+    out.append("\n## Design decisions (customer profile)\n")
+    out.append(f"{len(DECISIONS)} choices a customer makes once that ripple through several processes. Each has options with fit, prerequisites and trade-offs; processes carry a *variant* per option where the work differs, or an *applies-when* condition where the process only exists under some options; flow steps carry the same conditions. Full register: `docs/decisions.md`; on the site, `#/decisions` doubles as the profile picker.\n")
+    out.append("| ID | Decision | Question | Options (default in bold) | Shapes |\n|---|---|---|---|---|")
+    for d in DECISIONS:
+        opts = ", ".join(("**"+o["name"]+"**" if o["id"] == d["default"] else o["name"]) for o in d["options"])
+        out.append(f"| {d['id']} | {d['name']} | {d['question']} | {opts} | {', '.join(d['affects'])}{(' · flows ' + ', '.join(d['flows'])) if d['flows'] else ''} |")
     out.append("\n## Hybrid planning vs agile-only\n")
     out.append("Every L2 carries a Delivery Model tag: Any (methodology-agnostic), Agile (PI planning, Portfolio Kanban, WSJF, story-point capitalization), Traditional (stage-gate/milestone governance), or Hybrid (both governed side by side: 02.3.4 hybrid portfolio view, 02.4.1/02.2.3 dual funding, 04.2.1/04.3.4 team- and role-based capacity, 06.4.5 multi-approach capitalization).\n")
     out.append("\n## Budgeting methods\n")
@@ -155,8 +172,28 @@ def gen_docs():
                 out.append(f"- BPMN: lane *{l2['lane']}*, {l2['bpmn_type']} | Delivery model: {l2['delivery_model']}" + (f" | Budgeting method: {l2['budgeting_method']}" if l2.get("budgeting_method") else "") + f" | Product: {l2['tool']} | Who: {', '.join(l2['persona_list'])} ({l2['personas']}) | When: {l2['cadence_bucket']} ({l2['cadence']})")
                 out.append(f"- Inputs: {l2['inputs']} → Outputs: {l2['outputs']}")
                 out.append(f"- Config: {l2['config']}")
-                out.append(f"- Framework: {l2['framework']} | Flows: {', '.join(l2['flows']) or '—'} | Evidence: {l2['evidence']}\n")
+                out.append(f"- Framework: {l2['framework']} | Flows: {', '.join(l2['flows']) or '—'} | Evidence: {l2['evidence']}")
+                if l2.get("decisions"): out.append(f"- Shaped by: {', '.join(DEC[k]['id']+' '+DEC[k]['name'] for k in l2['decisions'] if k in DEC)}" + (f" | Applies when: {cond_text(l2['applies_when'])}" if l2.get("applies_when") else ""))
+                for v in l2.get("variants", []):
+                    d = DEC.get(v["decision"], {}); fields = [k for k in ("description","inputs","outputs","config","personas","cadence","evidence","bpmn_type") if k in v]
+                    out.append(f"  - **{d.get('id','?')} · {opt_name(v['decision'], v['option'])}**" + (f" — *{v['name']}*" if v.get("name") else "") + (f": {v['description']}" if v.get("description") else "") + "".join(f" **{k.capitalize()}:** {v[k]}" for k in fields if k != "description"))
+                out.append("")
     W("docs/catalog-L0-L2.md", "\n".join(out))
+
+    out = [f"# Design decisions register · v{VERSION}\n", f"Generated from `data/catalog.json` (`decisions[]`, `variants[]`, `applies_when`, flow-step `when`) — **edit the JSON, not this file.** {len(DECISIONS)} decisions · {sum(len(d['options']) for d in DECISIONS)} options · {sum(len(l2.get('variants', [])) for l2 in L2S)} variants on {sum(1 for l2 in L2S if l2.get('variants'))} processes · {sum(1 for l2 in L2S if l2.get('applies_when'))} conditional processes.\n",
+           "A *decision* is a choice a customer makes once (usually in discovery) that ripples through several processes and flows — for example whether labor cost is derived from story points or from timesheets. Each decision lists its options with fit, prerequisites and trade-offs, and the processes it shapes. A process that is done differently under each option carries a **variant** per option (fields on the variant override the base record; everything else is common). A process that only exists under some options carries an **applies-when** condition, as do flow steps. On the site, `#/decisions` is also the customer-profile picker: choosing options renders the whole catalog for that customer.\n"]
+    for d in DECISIONS:
+        out.append(f"\n## {d['id']} {d['name']}\n\n**{d['question']}**\n\n{d['why']}\n\nDomain: {d['domain']} · {'pick one or more' if d.get('multi') else 'pick one'} · default: **{opt_name(d['key'], d['default'])}**" + (f" · flows: {', '.join(d['flows'])}" if d['flows'] else "") + (f" · related: {', '.join(DEC[r]['id']+' '+DEC[r]['name'] for r in d['related'] if r in DEC)}" if d['related'] else "") + "\n")
+        out.append("| Option | What it is | Fits | Prerequisites | Trade-offs | Evidence |\n|---|---|---|---|---|---|")
+        for o in d["options"]: out.append(f"| **{o['name']}**{' (default)' if o['id']==d['default'] else ''} `{o['id']}` | {o['summary']} | {o['fit']} | {o['prereqs']} | {o['tradeoffs']} | {o['evidence']} |")
+        out.append("\n**Processes shaped**\n\n| L2 | Process | How |\n|---|---|---|")
+        for a in d["affects"]:
+            l2 = L2[a]; vs = [v for v in l2.get("variants", []) if v["decision"] == d["key"]]
+            how = f"{len(vs)} variants: " + ", ".join(opt_name(d['key'], v['option']) for v in vs) if vs else (f"only when {cond_text({d['key']: l2['applies_when'][d['key']]})}" if l2.get("applies_when", {}).get(d["key"]) else "affected (no variant text yet)")
+            out.append(f"| {a} | {l2['name']} | {how} |")
+        cond_steps = [(f['id'], s) for f in FLOWS for s in f['steps'] if (s.get('when') and d['key'] in s['when']) or s.get('decision') == d['key']]
+        if cond_steps: out.append("\nFlow steps: " + "; ".join(f"{fid} step {s['n']} ({'gateway' if s.get('decision')==d['key'] else 'only when ' + ' / '.join(opt_name(d['key'], o) for o in s['when'][d['key']])})" for fid, s in cond_steps))
+    W("docs/decisions.md", "\n".join(out))
 
     out = ["# Tool configuration reference\n", "Generated from `data/tool-config.yaml` (per-product checklists) plus the per-L2 configuration objects in `data/catalog.json`.\n", "## Per-product checklists\n"]
     cur = None
@@ -201,8 +238,8 @@ def gen_site():
 # ---------------- xlsx ----------------
 def gen_xlsx():
     from xlsx_build import build
-    build(ROOT, CAT, L0S, L1S, L2S, FLOWS, FW, CFG, CAL, [(diagram_basename(f), f) for f in all_models()])
+    build(ROOT, CAT, L0S, L1S, L2S, FLOWS, FW, CFG, CAL, [(diagram_basename(f), f) for f in all_models()], DECISIONS, cond_text, opt_name)
 
 if __name__ == "__main__":
     gen_mermaid(); n = gen_bpmn(); gen_docs(); gen_site(); gen_xlsx()
-    print(f"generated: v{VERSION} · {len(L0S)} L0 · {len(L1S)} L1 · {len(L2S)} L2 · {len(FLOWS)} flows · {n} BPMN diagrams → docs/, diagrams/, assets/, site/, dist/")
+    print(f"generated: v{VERSION} · {len(L0S)} L0 · {len(L1S)} L1 · {len(L2S)} L2 · {len(FLOWS)} flows · {len(DECISIONS)} decisions · {n} BPMN diagrams → docs/, diagrams/, assets/, site/, dist/")

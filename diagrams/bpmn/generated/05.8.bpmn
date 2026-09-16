@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G05_8" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G05_8" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G05_8">
     <bpmn:participant id="Participant_G05_8" name="05.8 Build &amp; review a zero-based budget — Build &amp; review a zero-based budget" processRef="Process_G05_8" />
   </bpmn:collaboration>
@@ -27,32 +27,32 @@
       <bpmn:outgoing>Flow_0</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:userTask id="n_05_8_1" name="Scope the ZBB cycle &amp; select decision units">
-      <bpmn:documentation>Catalog: 05.8.1. Outcome: zBB scope list, decision-unit register, owner matrix (cost category x budget owner), cycle calendar</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.1. Outcome: zBB scope list, decision-unit register, owner matrix (cost category x budget owner), cycle calendar Only when Budget build method: Zero-based - rotational / Zero-based - all units annually / Zero-based mindset (continuous). 3 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_0</bpmn:incoming>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="n_05_8_2" name="Build the cost-driver fact base &amp; activity inventory">
-      <bpmn:documentation>Catalog: 05.8.2. Outcome: activity inventory with unit costs and drivers per decision unit; redundancy list; &#x27;zero-base&#x27; floor per unit</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.2. Outcome: activity inventory with unit costs and drivers per decision unit; redundancy list; &#x27;zero-base&#x27; floor per unit Only when Budget build method: Zero-based - rotational / Zero-based - all units annually / Zero-based mindset (continuous).</bpmn:documentation>
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="n_05_8_3" name="Build decision packages at tiered service levels">
-      <bpmn:documentation>Catalog: 05.8.3. Outcome: decision packages (3 tiers) per decision unit with costs, drivers, KPIs and justification</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.3. Outcome: decision packages (3 tiers) per decision unit with costs, drivers, KPIs and justification Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="n_05_8_4" name="Rank packages &amp; set the funding cut-line">
-      <bpmn:documentation>Catalog: 05.8.4. Outcome: ranked package list, cut-line scenario, freed-spend figure, unfunded-package register</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.4. Outcome: ranked package list, cut-line scenario, freed-spend figure, unfunded-package register Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="n_05_8_5" name="Approve zero-based budget &amp; release freed spend to the investment envelope">
-      <bpmn:documentation>Catalog: 05.8.5. Outcome: approved zero-based budget merged into budget of record; revised portfolio targets to ATP; savings baseline</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.5. Outcome: approved zero-based budget merged into budget of record; revised portfolio targets to ATP; savings baseline Only when Budget build method: Zero-based - rotational / Zero-based - all units annually.</bpmn:documentation>
       <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:task id="n_05_8_6" name="Monitor package commitments &amp; sustain the zero-based mindset">
-      <bpmn:documentation>Catalog: 05.8.6. Outcome: savings-realization tracker, leakage exceptions, incentives/scorecard inputs, next-cycle rotation candidates</bpmn:documentation>
+      <bpmn:documentation>Catalog: 05.8.6. Outcome: savings-realization tracker, leakage exceptions, incentives/scorecard inputs, next-cycle rotation candidates Only when Budget build method: Zero-based - rotational / Zero-based - all units annually / Zero-based mindset (continuous). 2 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
     </bpmn:task>

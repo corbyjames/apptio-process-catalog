@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G07_5" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.6.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G07_5" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
   <bpmn:collaboration id="Collaboration_G07_5">
     <bpmn:participant id="Participant_G07_5" name="07.5 Optimize usage &amp; rates — Optimize usage &amp; rates" processRef="Process_G07_5" />
   </bpmn:collaboration>
@@ -29,12 +29,12 @@
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="n_07_5_3" name="Manage commitments (assisted)">
-      <bpmn:documentation>Catalog: 07.5.3. Outcome: commitment purchases &amp; coverage</bpmn:documentation>
+      <bpmn:documentation>Catalog: 07.5.3. Outcome: commitment purchases &amp; coverage Only when Cloud commitment management mode: Assisted (recommendations + approval).</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
     </bpmn:task>
     <bpmn:task id="n_07_5_4" name="Automate commitments (Savings Automation)">
-      <bpmn:documentation>Catalog: 07.5.4. Outcome: automated RI/SP portfolio &amp; savings</bpmn:documentation>
+      <bpmn:documentation>Catalog: 07.5.4. Outcome: automated RI/SP portfolio &amp; savings Only when Cloud commitment management mode: Automated (Savings Automation).</bpmn:documentation>
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
     </bpmn:task>

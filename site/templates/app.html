@@ -54,6 +54,7 @@ h3{font:600 16px/1.3 var(--sans)}
 .skip{position:absolute;left:-999px;top:0;background:var(--accent);color:var(--accent-ink);padding:8px 12px;z-index:100}
 .skip:focus{left:8px;top:8px}
 .eyebrow{font:500 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.eyebrow a{text-transform:none;letter-spacing:0;color:inherit;font-family:var(--mono);font-size:11px}
 
 /* ---- top bar ---- */
 .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--rule);
@@ -622,7 +623,7 @@ function hubHTML(){
   const coreOrder = ['02','05','03','06','07','08'];
   const total = ALL_L2.length, c = counts(ALL_L2);
   const sourcesTop = `<div class="notice">Reading order, not execution order: <b>Steer</b> sets direction, the <b>Plan-to-Value</b> chain runs left to right, <b>Enable</b> underpins everything, and the seven <b>flows</b> cut across the chain. Every process keeps a permanent ID (P-0001…) so comments survive re-parenting.</div>`;
-  return `<div class="pagehead"><div><p class="eyebrow">IBM Apptio · Targetprocess · Costing · Planning · Cloudability</p><h1>Apptio Process Catalog</h1><p class="lede">Business processes supported by the four Apptio products, framed by TBM, SPM and FinOps. Nine process areas, ${Object.keys(L1).length} groups, ${total} processes and seven cross-tool flows, each drawn as a BPMN 2.0 swimlane diagram, presented through a Business or SME lens for review.</p></div>
+  return `<div class="pagehead"><div><p class="eyebrow">IBM Apptio · Targetprocess · Costing · Planning · Cloudability · <a href="#/changelog" title="What changed in this release">v${DATA.version}</a></p><h1>Apptio Process Catalog</h1><p class="lede">Business processes supported by the four Apptio products, framed by TBM, SPM and FinOps. Nine process areas, ${Object.keys(L1).length} groups, ${total} processes and seven cross-tool flows, each drawn as a BPMN 2.0 swimlane diagram, presented through a Business or SME lens for review.</p></div>
   <div class="statlist"><div class="stat"><b>${total}</b><span>L2 processes</span></div><div class="stat"><b>${c.confirmed}</b><span>confirmed</span></div><div class="stat"><b>${FLOWS.length}</b><span>E2E flows</span></div><div class="stat"><b>${DECISIONS.length}</b><span>design decisions</span></div></div></div>
   ${sourcesTop}
   <div class="landscape">

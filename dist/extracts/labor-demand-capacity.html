@@ -363,6 +363,12 @@ table.steps td .l2s a{font-family:var(--mono);font-size:12px;padding:2px 6px;bor
 .q .qt{font-size:13.5px;line-height:1.45} .q .qe{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px} .q .qe .chip{font-family:var(--mono);font-size:11px} .gatenote{font-size:11.5px;color:var(--s-review);margin-top:4px}
 .q .qa{display:flex;gap:10px;align-items:center;white-space:nowrap;font-size:13px} .q .qa label{display:inline-flex;gap:4px;align-items:center}
 table.heat td .mat{min-width:38px;text-align:center}
+table.blueprint th{vertical-align:top;white-space:nowrap} table.blueprint td:nth-child(2){min-width:300px} table.blueprint td:nth-child(5){min-width:220px}
+#cal-persona{max-width:320px;font:inherit;font-size:13px} table.blueprint td{vertical-align:top;font-size:12.5px} .pl{margin:0 0 4px} .pl .id{font-family:var(--mono);color:var(--ink3);font-size:11px}
+table.cal th,table.cal td{vertical-align:top;font-size:11.5px;min-width:88px} table.cal th a{color:var(--ink)} table.cal td.sel,table.cal th.sel{background:var(--accent-soft)}
+.cal-chip{display:block;font-size:11px;line-height:1.25;padding:3px 5px;margin:0 0 3px;border-radius:4px;background:var(--surface2);color:var(--ink);border-left:3px solid var(--rule)} .cal-chip.tobe{border-left-color:var(--accent);background:var(--accent-soft)}
+.frames{display:grid;gap:14px;margin-top:14px} .frame{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:14px 16px;box-shadow:var(--shadow)} .frame .fhead{display:flex;gap:12px;align-items:flex-start;margin-bottom:8px} .frame .fn{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:600 13px/30px var(--mono);text-align:center} .frame h3{font:600 15px/1.3 var(--sans);margin:0 0 6px} .frame .prompt dd{font-weight:500;color:var(--accent)}
+.band.lenses .tiles{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 @media (max-width:700px){.q{grid-template-columns:1fr} .q .qa{justify-content:flex-start}}
 .record.off .rhead::after{content:"Not on this profile's path";font-size:11px;color:var(--s-review);flex:1 0 100%}
 tr.off td{opacity:.5}
@@ -431,6 +437,13 @@ const DECISIONS = DATA.decisions||[];
 const CUST = DATA.customer||null;                     // {id,name,title,short,scope:{name,groups:[G ids],eids:[P ids]},profile,fy_start}
 const ASSESS = DATA.assessment||null;                 // {round,target_profile,levels:[{n,name,desc}],scores:{eid:{level,target,evidence,gap,method,confidence}}}
 const SCOPE = new Set(CUST&&CUST.scope?CUST.scope.eids:[]);
+const PERSONAS = DATA.personas||[], MOMENTS = DATA.moments||[], CALX = DATA.calendar||null, SCEN = DATA.scenarios||[];
+const PBY = Object.fromEntries(PERSONAS.map(p=>[p.key,p]));
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function calMonth(fm){ const fy=CALX?CALX.fy_start||1:1; return MONTHS[(fy-1+fm-1)%12]; }
+function personaOf(l2){ return PERSONAS.filter(p=>(l2.persona_list||[]).some(x=>p.maps.includes(x))); }
+function personaL2s(p){ return ALL_L2.filter(l2=>(l2.persona_list||[]).some(x=>p.maps.includes(x))); }
+function momentOf(l2){ const m=MOMENTS.find(m=>m.buckets.includes(l2.cadence_bucket)); return m?m.key:'event'; }
 const inScope = l2 => SCOPE.has(l2.eid);
 const DEC = Object.fromEntries(DECISIONS.map(d=>[d.key,d]));
 const OPT = (key,id)=>{ const d=DEC[key]; return d && d.options.find(o=>o.id===id); };
@@ -838,7 +851,7 @@ function bpmnIcon(kind,x,y){
   if(kind==='send') return `<g transform="translate(${x},${y})"><rect width="13" height="9" rx="1" fill="currentColor"/><path d="M0.5 1l6 4.5 6-4.5" stroke="var(--surface)" stroke-width="1.2" fill="none"/></g>`;
   return '';
 }
-function bpmnSVG(f, laneColor){
+function bpmnSVG(f, laneColor, opts={}){
   const L=bpmnLayout(f);
   const laneEls = L.lanes.map((name,i)=>{
     const y=L.laneY[i], h=L.laneH[i], lines=wrapText(name,18,3);
@@ -875,7 +888,8 @@ function bpmnSVG(f, laneColor){
       body+=`<text x="${n.cx}" y="${ty}" text-anchor="middle" font-size="10.5" fill="currentColor">${lines.map((t,k)=>`<tspan x="${n.cx}" dy="${k?13:0}">${esc(t)}</tspan>`).join('')}</text>`;
     }
     const dmark = n.decision ? `<text x="${n.cx}" y="${n.cy+BP.gwR+14}" text-anchor="middle" font-size="9.5" font-weight="600" fill="var(--accent)" font-family="var(--mono)">${esc(n.decision.id)}</text>` : '';
-    const g=`<g class="bn" data-n="${esc(n.n)}"${n.off?' opacity=".32" stroke-dasharray="4 3"':''}>${title}${body}${dmark}</g>`;
+    const dimMine = opts.mine && !(n.l2||[]).some(id=>opts.mine.has(id)) && n.kind!=='start' && n.kind!=='end' && !/gateway/i.test(n.type||'');
+    const g=`<g class="bn" data-n="${esc(n.n)}"${n.off?' opacity=".32" stroke-dasharray="4 3"':(dimMine?' opacity=".22"':'')}>${title}${body}${dmark}</g>`;
     return href?`<a href="${href}" aria-label="${esc(n.label)} — open ${n.n||n.l2[0]}${n.off?' (not on this profile\'s path)':''}">${g}</a>`:g;
   }).join('');
   const edgeEls = L.edges.map(e=>{
@@ -999,6 +1013,75 @@ function decisionsHTML(){
   ${DECISIONS.map(card).join('')}`;
 }
 function glossaryHTML(){ return `<div class="pagehead"><div><p class="eyebrow">Glossary</p><h1>Terms &amp; acronyms</h1><p class="lede">Every acronym used in the catalog. Business reviewers should be able to read any record with this page open beside it.</p></div></div><dl class="gloss">${DATA.glossary.map(([t,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('')}</dl>`; }
+// ---------- review lenses: day in the life, operating rhythm, scenarios ----------
+function personaHTML(key){
+  if(!PERSONAS.length) return '<p class="notice">No personas in this build.</p>';
+  const p = PBY[key] || PERSONAS[0];
+  const nav = `<div class="qnav">${PERSONAS.map(x=>`<a href="#/persona/${x.key}" class="${x.key===p.key?'on':''}">${esc(x.name)}</a>`).join('')}</div>`;
+  const mine = personaL2s(p); const mineIds = new Set(mine.map(x=>x.id)); const mineE = new Set(mine.map(x=>x.eid));
+  const inS = mine.filter(inScope);
+  // blueprint: rows = moments
+  const rows = MOMENTS.map(m=>{
+    const l2s = mine.filter(x=>momentOf(x)===m.key); if(!l2s.length) return '';
+    const hand = []; FLOWS.forEach(f=>f.steps.forEach((st,i)=>{ if(st.l2.some(id=>mineIds.has(id)) && l2s.some(x=>st.l2.includes(x.id))){ const prev=f.steps[i-1], next=f.steps[i+1]; if(prev && prev.lane!==st.lane) hand.push(`<span class="chip" title="${esc(f.id+' step '+prev.n+': '+prev.task)}">← ${esc(prev.lane)}</span>`); if(next && next.lane!==st.lane) hand.push(`<span class="chip" title="${esc(f.id+' step '+next.n+': '+next.task)}">→ ${esc(next.lane)}</span>`); } }));
+    const tools = [...new Set(l2s.flatMap(x=>x.products))];
+    const changes = l2s.filter(x=>(x.customer_overrides&&x.customer_overrides.length)||x.customer_addition||(x.decisions&&x.decisions.some(k=>profileSet().includes(k)))||(ASSESS&&scoreRec(x)&&scoreRec(x).gap));
+    return `<tr><th><b>${esc(m.name)}</b><br><span class="raw">${l2s.length} process${l2s.length===1?'':'es'}</span></th>
+      <td>${l2s.map(x=>`<div class="pl"><a href="#/l0/${x.l0}/${x.id}"><span class="id">${x.id}</span> ${esc(x.name)}</a>${inScope(x)?' <span class="scope-chip">In scope</span>':''}${ASSESS&&scoreOf(x)!=null?` <span class="mat" data-m="${scoreOf(x)}">${scoreOf(x)}</span>`:''}</div>`).join('')}</td>
+      <td><div class="chips">${[...new Set(hand)].join('')||'<span class="raw">none crossing a lane</span>'}</div></td>
+      <td><div class="chips">${tools.map(t=>`<span class="chip prod" data-p="${t}">${t}</span>`).join('')}</div></td>
+      <td>${changes.length?changes.map(x=>{ const r=ASSESS?scoreRec(x):null; const why=[x.customer_addition?'new for this customer':'', (x.customer_overrides||[]).length?'tailored: '+x.customer_overrides.join(', '):'', (x.decisions||[]).filter(k=>profileSet().includes(k)).map(k=>'approach set by '+DEC[k].id).join(', '), r&&r.gap?'gap: '+r.gap:''].filter(Boolean).join(' · '); return `<div class="pl"><a href="#/l0/${x.l0}/${x.id}">${x.id}</a> <span class="raw">${esc(why)}</span></div>`; }).join(''):'<span class="raw">—</span>'}</td></tr>`;
+  }).join('');
+  const flows = FLOWS.filter(f=>f.steps.some(st=>st.l2.some(id=>mineIds.has(id))));
+  const flowBlocks = flows.map(f=>{ const laneColor={}; const lanePal=['var(--pl)','var(--tp)','var(--co)','var(--cl)','var(--all)']; f.lanes.forEach((l,i)=>laneColor[l]=lanePal[i%lanePal.length]);
+    const my = f.steps.filter(st=>st.l2.some(id=>mineIds.has(id)));
+    return `<details class="gdiag" open><summary>${esc(f.id)} ${esc(f.name)} — ${my.length} of ${f.steps.length} steps are yours</summary>${bpmnSVG(f, laneColor, {mine:mineIds})}
+      <table class="steps"><tbody>${my.map(st=>`<tr><td class="n">${esc(st.n)}</td><td class="lane"><i style="background:${laneColor[st.lane]||'var(--ink3)'}"></i>${esc(st.lane)}</td><td>${esc(st.task)}<span class="type">${esc(st.type)}</span>${st.note?`<div class="note">${crossref(st.note)}</div>`:''}</td><td><div class="l2s">${st.l2.map(id=>link(id)).join('')}</div></td></tr>`).join('')}</tbody></table><p style="margin:6px 0 0"><a href="#/flow/${f.id}">Open the full flow →</a></p></details>`; }).join('');
+  const scen = SCEN.filter(sc=>sc.frames.some(fr=>fr.persona===p.key));
+  const gaps = ASSESS ? mine.filter(x=>scoreOf(x)!=null&&targetOf(x)!=null&&scoreOf(x)<targetOf(x)) : [];
+  return `<div class="pagehead"><div><p class="eyebrow">Day in the life${CUST?' · '+esc(CUST.name):''}${unit?' · '+esc(unit):''}</p><h1>${esc(p.name)}</h1><p class="lede">${esc(p.goals)}</p><p class="lede" style="margin-top:8px"><em>${esc(p.narrative)}</em></p>
+    <div class="meta"><span>${mine.length} processes${CUST&&CUST.scope?` · ${inS.length} in scope`:''}</span><span>${flows.length} flows</span>${ASSESS?maturityChip(mine,{n:true}):''}${QN?`<a class="expand" href="#/questionnaire/all/${p.key}">Questionnaire for this role</a>`:''}</div></div></div>
+    ${nav}
+    <h2 style="margin:0 0 10px">Your week, month and year</h2>
+    <div style="overflow-x:auto"><table class="steps blueprint"><thead><tr><th>When</th><th>What you do</th><th>Hand-offs</th><th>Where</th><th>What changes</th></tr></thead><tbody>${rows}</tbody></table></div>
+    ${scen.length?`<h2 style="margin:24px 0 10px">Scenarios you appear in</h2><div class="flows-band">${scen.map(sc=>`<a class="flowcard" href="#/scenario/${sc.key}"><span class="fid">${esc(sc.flow||'')}</span><span><span class="ft">${esc(sc.title)}</span><span class="fs">${sc.frames.filter(fr=>fr.persona===p.key).length} of ${sc.frames.length} frames are yours</span></span></a>`).join('')}</div>`:''}
+    <h2 style="margin:24px 0 10px">Your steps in the cross-tool flows</h2>${flowBlocks||'<p class="raw">No flow steps for this role.</p>'}
+    ${ASSESS?`<h2 style="margin:24px 0 10px">Gaps to target for this role (${gaps.length})</h2>${gaps.length?`<table class="steps"><tbody>${gaps.map(x=>`<tr><td><a href="#/l0/${x.l0}/${x.id}">${x.id}</a> ${esc(x.name)}</td><td><span class="mat" data-m="${scoreOf(x)}">${scoreOf(x)}</span> → ${targetOf(x)}</td><td>${esc((scoreRec(x)||{}).gap||'')}</td></tr>`).join('')}</tbody></table>`:'<p class="raw">None scored below target yet.</p>'}`:''}`;
+}
+function calendarHTML(fmSel){
+  if(!CALX) return '<p class="notice">No operating calendar in this build.</p>';
+  const pKey = ls.get('cal_persona',''); const tobeOnly = ls.get('cal_tobe', false);
+  const P = pKey?PBY[pKey]:null;
+  const entryL2s = e => (e.refs||[]).map(id=>L2[id]).filter(Boolean);
+  const entryPersonas = e => [...new Set(entryL2s(e).flatMap(personaOf).map(p=>p.key))];
+  const visible = e => (!P || entryPersonas(e).includes(P.key)) && (!tobeOnly || e.tobe);
+  const months = [...Array(12)].map((_,i)=>i+1);
+  const head = `<tr><th>Stream</th>${months.map(m=>`<th class="${String(m)===fmSel?'sel':''}"><a href="#/calendar/${m}">${calMonth(m).slice(0,3)}</a><br><span class="raw">FM${m}</span></th>`).join('')}</tr>`;
+  const body = CALX.streams.map(st=>`<tr><th>${esc(st.name)}<br><span class="raw">${esc(st.family||'')}</span></th>${months.map(m=>{ const es=st.entries.filter(e=>(e.fm||[]).includes(m)&&visible(e)); return `<td class="${String(m)===fmSel?'sel':''}">${es.map(e=>`<a class="cal-chip${e.tobe?' tobe':''}" href="#/calendar/${m}" title="${esc(e.desc||'')}">${esc(e.name)}</a>`).join('')}</td>`; }).join('')}</tr>`).join('');
+  let detail='';
+  if(fmSel){ const m=Number(fmSel); const es=CALX.streams.flatMap(st=>st.entries.filter(e=>(e.fm||[]).includes(m)&&visible(e)).map(e=>({...e,stream:st.name})));
+    detail = `<h2 style="margin:24px 0 10px">${esc(calMonth(m))} (FM${m})${P?' · '+esc(P.name):''}</h2>${es.length?es.map(e=>`<section class="panel" style="margin:0 0 10px"><h2>${esc(e.name)}${e.tobe?' <span class="scope-chip">to-be</span>':''} <span class="raw">${esc(e.stream)} · ${esc(e.cadence||'')}</span></h2><p style="font-size:13px;color:var(--ink2);margin:0 0 8px">${crossref(e.desc||'')}</p><div class="chips">${entryL2s(e).map(x=>`<a class="chip" href="#/l0/${x.l0}/${x.id}">${x.id} ${esc(x.name)}</a>`).join('')}</div><div class="chips" style="margin-top:6px">${entryPersonas(e).map(k=>`<a class="chip flow" href="#/persona/${k}">${esc(PBY[k].short||PBY[k].name)}</a>`).join('')}</div></section>`).join(''):'<p class="raw">Nothing in this month for the current filters.</p>'}`; }
+  return `<div class="pagehead"><div><p class="eyebrow">Operating rhythm${CUST?' · '+esc(CUST.name):''} · fiscal year starts ${esc(calMonth(1))}</p><h1>The year, month by month</h1><p class="lede">When each recurring process fires, who is in it, and which events the target design adds. Click a month for the detail; filter by role to see one person's year.</p>
+    <div class="meta"><label>Role <select id="cal-persona"><option value="">Everyone</option>${PERSONAS.map(p=>`<option value="${p.key}"${p.key===pKey?' selected':''}>${esc(p.name)}</option>`).join('')}</select></label><label><input type="checkbox" id="cal-tobe"${tobeOnly?' checked':''}> To-be events only</label></div></div></div>
+    <div style="overflow-x:auto"><table class="steps cal"><thead>${head}</thead><tbody>${body}</tbody></table></div>${detail}`;
+}
+function scenarioHTML(key){
+  if(!SCEN.length) return '<p class="notice">No scenarios in this build.</p>';
+  if(!key){ return `<div class="pagehead"><div><p class="eyebrow">Scenarios${CUST?' · '+esc(CUST.name):''}</p><h1>Walkthroughs</h1><p class="lede">A worked case traced frame by frame through the flows, with sample data, for review in the room. Each frame names the role, the step, what the system does and the question to answer.</p></div></div><div class="flows-band">${SCEN.map(sc=>`<a class="flowcard" href="#/scenario/${sc.key}"><span class="fid">${esc(sc.flow||'')}</span><span><span class="ft">${esc(sc.title)}</span><span class="fs">${esc(sc.summary||'')} · ${sc.frames.length} frames${sc.unit?' · '+esc(sc.unit):''}</span></span></a>`).join('')}</div>`; }
+  const sc = SCEN.find(x=>x.key===key); if(!sc) return '<p class="notice">Unknown scenario.</p>';
+  const flows = (sc.flow||'').split(/[+,\s]+/).map(x=>FLOW[x]).filter(Boolean);
+  const stepIds = new Set(sc.frames.flatMap(fr=>fr.l2||[]));
+  const diagrams = flows.map(f=>{ const laneColor={}; const lanePal=['var(--pl)','var(--tp)','var(--co)','var(--cl)','var(--all)']; f.lanes.forEach((l,i)=>laneColor[l]=lanePal[i%lanePal.length]); return `<details class="gdiag"><summary>${esc(f.id)} ${esc(f.name)} — steps touched by this scenario highlighted</summary>${bpmnSVG(f, laneColor, {mine:stepIds})}</details>`; }).join('');
+  const frames = sc.frames.map((fr,i)=>{ const p=PBY[fr.persona]; const l2s=(fr.l2||[]).map(id=>L2[id]).filter(Boolean); const first=l2s[0];
+    return `<article class="frame" id="frame-${i+1}"><div class="fhead"><span class="fn">${i+1}</span><div><h3>${esc(fr.title)}</h3><div class="chips">${p?`<a class="chip flow" href="#/persona/${p.key}">${esc(p.short||p.name)}</a>`:''}${l2s.map(x=>`<a class="chip" href="#/l0/${x.l0}/${x.id}">${x.id} ${esc(x.name)}</a>`).join('')}${fr.tool?`<span class="chip prod" data-p="${esc(fr.tool)}">${esc(fr.tool)}</span>`:''}</div></div></div>
+      <dl class="sl"><div><dt>They do</dt><dd>${esc(fr.does||'')}</dd></div>${fr.system?`<div><dt>System does</dt><dd>${esc(fr.system)}</dd></div>`:''}${fr.data?`<div><dt>Data</dt><dd><div class="io"><div><span class="lbl">Before</span>${esc(fr.data.before||'—')}</div><span class="arr">→</span><div><span class="lbl">After</span>${esc(fr.data.after||'—')}</div></div></dd></div>`:''}
+      <div class="prompt"><dt>Ask the room</dt><dd>${esc(fr.prompt||'Is this who does it today, and where does it differ?')}${first?` <a href="#/l0/${first.l0}/${first.id}" class="raw">· comment or score on ${first.id}</a>`:''}</dd></div></dl></article>`; }).join('');
+  const idx = SCEN.indexOf(sc), prev=SCEN[idx-1], next=SCEN[idx+1];
+  return `<div class="pagehead"><div><p class="eyebrow">Scenario${CUST?' · '+esc(CUST.name):''}${sc.unit?' · '+esc(sc.unit):''}</p><h1>${esc(sc.title)}</h1><p class="lede">${esc(sc.summary||'')}</p><div class="meta"><span>${sc.frames.length} frames</span><span>Flows: ${flows.map(f=>`<a href="#/flow/${f.id}">${f.id}</a>`).join(', ')}</span><a class="expand" href="#/scenario">All scenarios</a></div></div></div>
+    ${diagrams}<div class="frames">${frames}</div>
+    <div class="prevnext">${prev?`<a href="#/scenario/${prev.key}"><span>Previous</span>← ${esc(prev.title)}</a>`:'<span></span>'}${next?`<a href="#/scenario/${next.key}" style="text-align:right"><span>Next</span>${esc(next.title)} →</a>`:'<span></span>'}</div>`;
+}
+
 // ---------- assessment: questionnaire (yes/no self-assessment) and heat map ----------
 const QN = ASSESS && ASSESS.questionnaire ? ASSESS.questionnaire : null;
 const QA_KEY = 'qa_'+(ASSESS?ASSESS.round||'r':'r');
@@ -1010,15 +1093,18 @@ function capScore(cap){ const qs=QN.yesno.questions.filter(q=>q.cap===cap.n); co
 function overallScore(){ const caps=QN.yesno.capabilities.filter(c=>c.n<=10); let yes=0, done=0; caps.forEach(c=>{ const r=capScore(c); yes+=r.yes; done+=r.done; }); const raw=QN.yesno.overall.find(b=>yes>=b[0]&&yes<=b[1]); let cap=null, failed=[]; Object.entries(QN.yesno.gates).forEach(([L,ids])=>{ ids.forEach(id=>{ if(qaGet(id)===0){ failed.push(id); if(cap==null||Number(L)<cap) cap=Number(L); } }); }); const rawIx=raw?QN.yesno.overall.indexOf(raw)+1:null; const lvIx = rawIx==null?null:(cap!=null?Math.min(rawIx,cap):rawIx); return {yes, done, total:caps.length*20, raw:rawIx, level:lvIx, levelName: lvIx?QN.yesno.overall[lvIx-1][2]:null, failed}; }
 function provisional(l2){ const qs=QN.yesno.questions.filter(q=>q.eids.includes(l2.eid)); const ans=qs.map(q=>qaGet(q.id)).filter(v=>v!=null); if(!ans.length) return null; const f=ans.filter(v=>v===1).length/ans.length; return {level: Math.max(1, Math.min(5, Math.round(1+4*f))), n:ans.length, of:qs.length}; }
 function applyProvisional(){ let n=0; ALL_L2.forEach(l2=>{ const p=provisional(l2); if(p && scoreOf(l2)==null){ saveAssess(l2.eid,{level:p.level, method:'questionnaire', confidence:'low'}); n++; } }); return n; }
-function questionnaireHTML(capSel){
+function questionnaireHTML(capSel, pKey){
   const caps=QN.yesno.capabilities; const sel = capSel? caps.find(c=>String(c.n)===capSel) : null;
+  const P = pKey?PBY[pKey]:null; const pIds = P ? new Set(personaL2s(P).map(x=>x.eid)) : null;
+  const qOK = q => !pIds || q.eids.some(e=>pIds.has(e));
+  const pnav = PERSONAS.length?`<div class="qnav" style="margin-bottom:8px"><a href="#/questionnaire/${capSel||'all'}" class="${!P?'on':''}">All roles</a>${PERSONAS.map(x=>`<a href="#/questionnaire/${capSel||'all'}/${x.key}" class="${P&&P.key===x.key?'on':''}">${esc(x.short||x.name)}</a>`).join('')}</div>`:'';
   const ov=overallScore();
-  const nav = `<div class="qnav">${caps.map(c=>{ const r=capScore(c); return `<a href="#/questionnaire/${c.n}" class="${sel&&sel.n===c.n?'on':''}"><span class="n">${c.n}</span>${esc(c.name)}<span class="s">${r.done?`${r.yes}/${r.n}`:'—'}</span></a>`; }).join('')}</div>`;
-  const list = (sel?[sel]:caps).map(c=>{ const qs=QN.yesno.questions.filter(q=>q.cap===c.n); const r=capScore(c); return `<section class="qcap"><h2><span class="id">${c.n}</span>${esc(c.name)} <span class="mat" data-m="${r.level?Math.min(5,QN.yesno.levels.indexOf(r.level)+1):''}">${r.done?`${r.yes} / ${r.n} · ${r.level?esc(r.level[2]):''}`:'not started'}</span>${c.n>10?'<span class="raw">added for this engagement</span>':''}</h2>
+  const nav = `<div class="qnav">${caps.map(c=>{ const r=capScore(c); return `<a href="#/questionnaire/${c.n}${P?'/'+P.key:''}" class="${sel&&sel.n===c.n?'on':''}"><span class="n">${c.n}</span>${esc(c.name)}<span class="s">${r.done?`${r.yes}/${r.n}`:'—'}</span></a>`; }).join('')}</div>`;
+  const list = (sel?[sel]:caps).map(c=>{ const qs=QN.yesno.questions.filter(q=>q.cap===c.n&&qOK(q)); if(!qs.length) return ''; const r=capScore(c); return `<section class="qcap"><h2><span class="id">${c.n}</span>${esc(c.name)} <span class="mat" data-m="${r.level?Math.min(5,QN.yesno.levels.indexOf(r.level)+1):''}">${r.done?`${r.yes} / ${r.n} · ${r.level?esc(r.level[2]):''}`:'not started'}</span>${c.n>10?'<span class="raw">added for this engagement</span>':''}</h2>
     ${qs.map(q=>{ const v=qaGet(q.id); return `<div class="q${q.gate?' gate':''}"><div class="qid">${q.id}<span class="dim">${esc(q.dim)}</span>${q.tag?`<span class="dim">${esc(q.tag)}</span>`:''}</div><div class="qt">${esc(q.text)}${q.gate?`<div class="gatenote">Gate — a No caps the overall level at ${q.gate}</div>`:''}<div class="qe">${q.eids.map(e=>{ const l2=L2BYEID[e]; return l2?`<a class="chip" href="#/l0/${l2.l0}/${l2.id}" title="${esc(l2.name)}">${l2.id}</a>`:`<span class="chip">${e}</span>`; }).join('')}</div></div><div class="qa"><label><input type="radio" name="qa-${q.id}" data-qa="${q.id}" value="1"${v===1?' checked':''}> Yes</label><label><input type="radio" name="qa-${q.id}" data-qa="${q.id}" value="0"${v===0?' checked':''}> No</label><button type="button" class="expand" data-qa-clear="${q.id}" title="Clear">×</button></div></div>`; }).join('')}</section>`; }).join('');
   return `<div class="pagehead"><div><p class="eyebrow">Self-assessment · ${esc(ASSESS.round)}${unit?' · '+esc(unit):''}</p><h1>Maturity questionnaire</h1><p class="lede">${esc(QN.yesno.name)}. Answer as the organisation operates today, not as intended. Each capability scores out of 20; the overall level is capped by the gate questions. Answers stay in this browser until exported; <em>Apply to processes</em> turns them into provisional process scores (never overwriting a score already entered).</p>
     <div class="meta"><span>Overall: <b>${ov.done?`${ov.yes} / ${ov.total}`:'—'}</b>${ov.level?` · Level ${ov.level} ${esc(ov.levelName)}${ov.raw&&ov.raw>ov.level?` <span class="cond">(raw level ${ov.raw}, capped by ${ov.failed.join(', ')})</span>`:''}`:''}</span><button type="button" class="expand" id="qa-apply">Apply to processes</button><a class="expand" href="#/assessment">Heat map →</a></div></div></div>
-    ${nav}${list}`;
+    ${pnav}${nav}${list}`;
 }
 function assessmentHTML(){
   const inS = ALL_L2.filter(inScope); const pool = inS.length?inS:ALL_L2;
@@ -1061,7 +1147,10 @@ function route(){
   if(parts[0]==='diagrams') return {page:'diagrams'};
   if(parts[0]==='changelog') return {page:'changelog'};
   if(parts[0]==='assessment') return {page:'assessment'};
-  if(parts[0]==='questionnaire') return {page:'questionnaire', cap:parts[1]||''};
+  if(parts[0]==='persona') return {page:'persona', key:parts[1]||''};
+  if(parts[0]==='calendar') return {page:'calendar', fm:parts[1]||''};
+  if(parts[0]==='scenario') return {page:'scenario', key:parts[1]||''};
+  if(parts[0]==='questionnaire') return {page:'questionnaire', cap:(parts[1]==='all'?'':parts[1])||'', persona:parts[2]||''};
   if(parts[0]==='print') return {page:'print'};
   return {page:'hub'};
 }
@@ -1093,8 +1182,11 @@ function render(){
     lastKey = key; $('#crumbs').innerHTML = crumbs; document.title = title+' · '+(CUST?CUST.title:DATA.extract.title); return; }
   else if(r.page==='glossary'){ main.innerHTML = glossaryHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Glossary</span>`; }
   else if(r.page==='changelog'){ main.innerHTML = changelogHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Changelog</span>`; }
+  else if(r.page==='persona'){ main.innerHTML = personaHTML(r.key); crumbs += ` <span class="sep">/</span> <span class="here">Day in the life</span>`; title='Day in the life'; }
+  else if(r.page==='calendar'){ main.innerHTML = calendarHTML(r.fm); crumbs += ` <span class="sep">/</span> <span class="here">Operating rhythm</span>`; title='Operating rhythm'; }
+  else if(r.page==='scenario'){ main.innerHTML = scenarioHTML(r.key); crumbs += ` <span class="sep">/</span> <span class="here">Scenario</span>`; title='Scenario'; }
   else if(r.page==='assessment'){ main.innerHTML = ASSESS?assessmentHTML():'<p class="notice">No assessment round in this build.</p>'; crumbs += ` <span class="sep">/</span> <span class="here">Assessment</span>`; title='Assessment'; }
-  else if(r.page==='questionnaire'){ main.innerHTML = ASSESS&&ASSESS.questionnaire?questionnaireHTML(r.cap):'<p class="notice">No questionnaire in this build.</p>'; crumbs += ` <span class="sep">/</span> <a href="#/assessment">Assessment</a> <span class="sep">/</span> <span class="here">Questionnaire</span>`; title='Questionnaire'; }
+  else if(r.page==='questionnaire'){ main.innerHTML = ASSESS&&ASSESS.questionnaire?questionnaireHTML(r.cap, r.persona):'<p class="notice">No questionnaire in this build.</p>'; crumbs += ` <span class="sep">/</span> <a href="#/assessment">Assessment</a> <span class="sep">/</span> <span class="here">Questionnaire</span>`; title='Questionnaire'; }
   else if(r.page==='print'){ main.innerHTML = printHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Print view</span>`; }
   $('#crumbs').innerHTML = crumbs;
   document.title = title + ' · '+(CUST?CUST.title:DATA.extract.title);
@@ -1174,6 +1266,8 @@ document.addEventListener('change', e=>{
       else profile[k]=[t.value];
       if(profile[k] && profile[k].length===1 && profile[k][0]===d.default && !d.multi) { /* keep explicit choice even if it equals the default */ }
       saveProfile(); rerenderKeep(); } }
+  if(t.id==='cal-persona'){ ls.set('cal_persona', t.value); render(); }
+  if(t.id==='cal-tobe'){ ls.set('cal_tobe', t.checked); render(); }
   if(t.id==='unit'){ unit=t.value; ls.set('assess_unit',unit); render(); }
   if(t.dataset.qa){ qaSet(t.dataset.qa, Number(t.value)); softRender(); }
   if(t.id==='compact'){ compact=t.checked; render(); }

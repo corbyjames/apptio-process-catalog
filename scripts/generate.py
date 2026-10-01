@@ -229,7 +229,10 @@ def gen_docs():
 
 # ---------------- site ----------------
 def gen_site():
+    from personas import DEFAULT_PERSONAS, MOMENTS
     tpl = open(os.path.join(ROOT, "site/templates/app.html"), encoding="utf-8").read()
+    CAT["calendar"] = {"fy_start": 1, "streams": CAL["streams"]}
+    CAT["personas"] = DEFAULT_PERSONAS; CAT["moments"] = [{"key": k, "name": n, "buckets": b} for k, n, b in MOMENTS]
     payload = json.dumps(CAT, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     W("site/index.html", tpl.replace("__DATA__", payload))
     # data copy for anyone who wants to consume the catalog from the Pages site

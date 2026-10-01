@@ -80,6 +80,7 @@ def build(cdir):
 
     # ---- labels (vocabulary) ----
     labels = C.get("labels", {})
+    lab = lambda x: x
     if labels:
         pat = re.compile(r"\b(" + "|".join(re.escape(k) for k in sorted(labels, key=len, reverse=True)) + r")\b")
         def lab(s): return pat.sub(lambda m: m.group(1) if labels[m.group(1)] in s else labels[m.group(1)], s)
@@ -142,6 +143,27 @@ def build(cdir):
             for s in g["bpmn"]["steps"]:
                 if s["n"] in byid: byid[s["n"]]["lane"] = s["lane"]; byid[s["n"]]["bpmn_type"] = s["type"]
     for f in CAT["flows"]: f["kind"] = None
+
+    # ---- calendar, personas, scenarios ----
+    import yaml
+    from personas import DEFAULT_PERSONAS, MOMENTS
+    CAL = yaml.safe_load(open(os.path.join(ROOT, "data/calendar.yaml"), encoding="utf-8"))
+    ccal = C.get("calendar", {})
+    for st in CAL["streams"]:
+        for e in st["entries"]:
+            if labels: e["name"] = lab(e["name"]); e["desc"] = lab(e.get("desc", ""))
+            if e["name"] in set(ccal.get("tobe", [])) or any(lab(t) == e["name"] for t in ccal.get("tobe", [])): e["tobe"] = True
+    for st in ccal.get("add", []): CAL["streams"].append(st)
+    CAT["calendar"] = {"fy_start": int(C.get("fy_start", 1)), "streams": CAL["streams"]}
+    personas = copy.deepcopy(DEFAULT_PERSONAS)
+    for cp in C.get("personas", []):
+        base = next((x for x in personas if x["key"] == cp.get("key")), None)
+        if base: base.update(cp)
+        else: personas.append(cp)
+    CAT["personas"] = personas; CAT["moments"] = [{"key": k, "name": n, "buckets": b} for k, n, b in MOMENTS]
+    scen = []
+    for sp in sorted(glob.glob(os.path.join(cdir, "scenarios", "*.json"))): scen.append(load(sp))
+    if scen: CAT["scenarios"] = scen
 
     # ---- payload ----
     cust = {k: C[k] for k in ["id","name","title","short","fy_start","currency","profile","scope","base"] if k in C}

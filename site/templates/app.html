@@ -346,6 +346,15 @@ table.steps td .l2s a{font-family:var(--mono);font-size:12px;padding:2px 6px;bor
 .vname b{color:var(--ink);font-weight:500}
 .cond{font-size:12px;color:var(--ink2);background:var(--s-review-bg);border-radius:4px;padding:2px 8px;display:inline-block}
 .record.off{opacity:.55}
+.scope-chip{display:inline-block;font:500 10px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:3px 6px;border-radius:3px;vertical-align:middle}
+.mat{display:inline-block;font:500 11px/1.2 var(--mono);padding:2px 6px;border-radius:3px;background:var(--surface2);color:var(--ink2);vertical-align:middle}
+.mat[data-m="0"],.mat[data-m="1"]{background:#F3DDD6;color:#7A2E1E} .mat[data-m="2"]{background:#F6E7C6;color:#6E4A08} .mat[data-m="3"]{background:#E6EEC9;color:#3F5410} .mat[data-m="4"],.mat[data-m="5"]{background:var(--accent-soft);color:var(--accent)}
+.band.scope{border-color:var(--accent)} .band.scope .tiles{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.record .assess dd{display:flex;flex-direction:column;gap:8px}
+.assess-ctl{display:flex;flex-wrap:wrap;gap:8px 14px} .assess-ctl label{font-size:12px;color:var(--ink2);display:inline-flex;align-items:center;gap:6px}
+.assess-ctl select,.assess-txt textarea{font:inherit;font-size:12.5px;border:1px solid var(--rule);border-radius:4px;background:var(--surface);color:var(--ink);padding:4px 6px}
+.assess-txt{display:grid;grid-template-columns:1fr 1fr;gap:10px} .assess-txt label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink2)} .assess-txt textarea{width:100%;min-width:0;resize:vertical}
+@media (max-width:700px){.assess-txt{grid-template-columns:1fr}}
 .record.off .rhead::after{content:"Not on this profile's path";font-size:11px;color:var(--s-review);flex:1 0 100%}
 tr.off td{opacity:.5}
 .deccard{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:16px 18px;box-shadow:var(--shadow);margin:0 0 16px;scroll-margin-top:80px}
@@ -391,6 +400,7 @@ tr.off td{opacity:.5}
   <div class="progress" id="progress" title="Review progress across all L2 records"></div>
   <a class="prof" id="prof" href="#/decisions" title="Customer profile: the option chosen for each design decision. Records, diagrams and flows render for this profile."><i></i>Profile: <b>default</b></a>
   <button class="who" id="who" title="Set the name attached to your statuses, verdicts and comments">Reviewing as <b>—</b></button>
+  <button class="who" id="export-assess" hidden title="Copy and download this round's scores, evidence and gap notes as JSON for the customer repository">Export assessment</button>
 </header>
 <main id="main" class="page"></main>
 
@@ -407,6 +417,11 @@ L0S.forEach(l0=>l0.l1s.forEach(l1=>{L1[l1.id]=l1; l1.l0=l0.id; l1.l2s.forEach(l2
 const ALL_L2 = Object.values(L2);
 const FLOW = Object.fromEntries(FLOWS.map(f=>[f.id,f]));
 const DECISIONS = DATA.decisions||[];
+// ---------- customer instance (overlay build) ----------
+const CUST = DATA.customer||null;                     // {id,name,title,short,scope:{name,groups:[G ids],eids:[P ids]},profile,fy_start}
+const ASSESS = DATA.assessment||null;                 // {round,target_profile,levels:[{n,name,desc}],scores:{eid:{level,target,evidence,gap,method,confidence}}}
+const SCOPE = new Set(CUST&&CUST.scope?CUST.scope.eids:[]);
+const inScope = l2 => SCOPE.has(l2.eid);
 const DEC = Object.fromEntries(DECISIONS.map(d=>[d.key,d]));
 const OPT = (key,id)=>{ const d=DEC[key]; return d && d.options.find(o=>o.id===id); };
 const STATUS ={draft:'Draft',review:'In review',changes:'Changes requested',confirmed:'Confirmed'};
@@ -467,6 +482,15 @@ function renderProgress(){
   $('#progress').innerHTML = `<span>${c.confirmed}/${n} confirmed</span><span class="track">${['confirmed','changes','review','draft'].map(k=>`<i style="width:${(c[k]/n*100).toFixed(1)}%;background:var(--s-${k})"></i>`).join('')}</span>${shared?'<span title="Statuses, verdicts and comments are shared with everyone who opens this page">shared</span>':'<span title="Not connected to shared review state — saved in this browser only">local</span>'}`;
 }
 
+// ---------- assessment state (baked scores + browser-local edits; exported as JSON for the customer repo) ----------
+const assess = ASSESS ? Object.assign({}, ASSESS.scores||{}, ls.get('assess_'+(ASSESS.round||'r'), {})) : {};
+function scoreOf(l2){ const a=assess[l2.eid]; return a && a.level!=null && a.level!=='' ? Number(a.level) : null; }
+function targetOf(l2){ const a=assess[l2.eid]; return a && a.target!=null && a.target!=='' ? Number(a.target) : (ASSESS&&ASSESS.default_target!=null?ASSESS.default_target:null); }
+function saveAssess(eid, patch){ assess[eid]=Object.assign({}, assess[eid]||{}, patch, {at:new Date().toISOString(), by:reviewer||'anonymous'}); const local=ls.get('assess_'+(ASSESS.round||'r'),{}); local[eid]=assess[eid]; ls.set('assess_'+(ASSESS.round||'r'), local); refreshInline(eid); }
+function maturity(l2s){ const s=l2s.map(scoreOf).filter(x=>x!=null); if(!s.length) return null; return s.reduce((a,b)=>a+b,0)/s.length; }
+function maturityChip(l2s, opts={}){ if(!ASSESS) return ''; const m=maturity(l2s), n=l2s.filter(x=>scoreOf(x)!=null).length; const t=l2s.map(targetOf).filter(x=>x!=null); const tm=t.length?t.reduce((a,b)=>a+b,0)/t.length:null; return `<span class="mat" data-m="${m==null?'':Math.round(m)}" title="Maturity: mean level of ${n} scored of ${l2s.length} processes${tm!=null?`; target ${tm.toFixed(1)}`:''}">${m==null?'not scored':`maturity ${m.toFixed(1)}${tm!=null?` / ${tm.toFixed(1)}`:''}`}${opts.n?` · ${n}/${l2s.length}`:''}</span>`; }
+function exportAssessment(){ const out={round:ASSESS.round, target_profile:ASSESS.target_profile, base:DATA.version, exported:new Date().toISOString(), scores:assess}; const txt=JSON.stringify(out,null,1); try{ navigator.clipboard.writeText(txt).catch(()=>{}); }catch(e){} try{ const a=document.createElement('a'); a.href='data:application/json;charset=utf-8,'+encodeURIComponent(txt); a.download=`assessment-${ASSESS.round}.json`; document.body.appendChild(a); a.click(); a.remove(); }catch(e){} }
+
 // ---------- db wiring ----------
 async function initDb(){
   try{
@@ -495,7 +519,7 @@ function softRender(){
 
 // ---------- customer profile (one choice per design decision) ----------
 // profile = {decisionKey: [optionId,...]}; unset decisions fall back to the register default.
-let profile = ls.get('profile', {});
+let profile = ls.get('profile', (CUST&&CUST.profile)?JSON.parse(JSON.stringify(CUST.profile)):{});
 const variantView = {};   // `${l2.id}|${decisionKey}` -> optionId the reader is looking at
 function activeOpts(key){ const d=DEC[key]; if(!d) return []; const p=profile[key]; return (p && p.length)? p.filter(o=>OPT(key,o)) : [d.default]; }
 function profileSet(){ return Object.keys(profile).filter(k=>DEC[k] && profile[k] && profile[k].length); }
@@ -560,6 +584,18 @@ function recordHTML(l2, opts={}){
   rows.push(`<div><dt>Where</dt><dd><div class="chips">${prodChips(l2)}</div>${smeL?`<span class="raw">${esc(e.tool)}</span>`:''}</dd></div>`);
   if(smeL) rows.push(`<div><dt${V('config')}>Configuration objects</dt><dd${V('config')}>${np(e.config)}</dd></div>`);
   rows.push(`<div><dt${V('cadence')}>When</dt><dd${V('cadence')}><span class="chip">${esc(l2.cadence_bucket)}</span> <span style="color:var(--ink2);font-size:13px;margin-left:6px">${esc(e.cadence)}</span></dd></div>`);
+  if(ASSESS){ const a=assess[l2.eid]||{}; const lv=scoreOf(l2), tg=targetOf(l2);
+    rows.push(`<div class="assess"><dt>Assessment<br><span class="raw">${esc(ASSESS.round)}</span></dt><dd>
+      <div class="assess-ctl">
+        <label>Level <select data-assess="${l2.eid}" data-field="level" aria-label="Maturity level for ${l2.id}"><option value="">—</option>${ASSESS.levels.map(L=>`<option value="${L.n}"${lv===L.n?' selected':''}>${L.n} · ${esc(L.name)}</option>`).join('')}</select></label>
+        <label>Target <select data-assess="${l2.eid}" data-field="target" aria-label="Target level for ${l2.id}"><option value="">—</option>${ASSESS.levels.map(L=>`<option value="${L.n}"${tg===L.n?' selected':''}>${L.n}</option>`).join('')}</select></label>
+        <label>Method <select data-assess="${l2.eid}" data-field="method"><option value="">—</option>${['interview','questionnaire','tool evidence'].map(m=>`<option${a.method===m?' selected':''}>${m}</option>`).join('')}</select></label>
+        <label>Confidence <select data-assess="${l2.eid}" data-field="confidence"><option value="">—</option>${['low','medium','high'].map(m=>`<option${a.confidence===m?' selected':''}>${m}</option>`).join('')}</select></label>
+      </div>
+      <div class="assess-txt"><label>Evidence<textarea data-assess="${l2.eid}" data-field="evidence" rows="2" placeholder="What was observed, where (report, config object, interview)">${esc(a.evidence||'')}</textarea></label>
+      <label>Gap to target<textarea data-assess="${l2.eid}" data-field="gap" rows="2" placeholder="What is missing to reach the target level">${esc(a.gap||'')}</textarea></label></div>
+      ${lv!=null?`<div class="raw" style="margin-top:6px">${esc((ASSESS.levels.find(L=>L.n===lv)||{}).desc||'')}</div>`:''}
+    </dd></div>`); }
   if(l2.flows.length) rows.push(`<div><dt>Part of flows</dt><dd><div class="chips">${flowChips(l2)}</div></dd></div>`);
   if(smeL){
     rows.push(`<div><dt>Frameworks</dt><dd><div class="chips">${l2.frameworks.map(f=>`<span class="chip">${esc(f)}</span>`).join('')}</div></dd></div>`);
@@ -572,7 +608,7 @@ function recordHTML(l2, opts={}){
     <div class="rhead">
       <div class="ttl">
         <h3 id="h-${l2.id}"><span class="id">${l2.id}</span><span>${esc(l2.name)}</span><a class="perma" href="#/l0/${l2.l0}/${l2.id}" aria-label="Permalink to ${l2.id}">#</a></h3>
-        <div class="eid">${l2.eid}${l2.legacy_id?` · was ${esc(l2.legacy_id)}`:''}${smeL?` · ${esc(L1[l2.l1].name)}`:''}${(l2.variants||[]).length?` · ${l2.variants.length} approaches`:''}</div>
+        <div class="eid">${l2.eid}${l2.legacy_id?` · was ${esc(l2.legacy_id)}`:''}${smeL?` · ${esc(L1[l2.l1].name)}`:''}${(l2.variants||[]).length?` · ${l2.variants.length} approaches`:''}${inScope(l2)?` · <span class="scope-chip">In scope</span>`:''}${ASSESS&&scoreOf(l2)!=null?` · <span class="mat" data-m="${scoreOf(l2)}">level ${scoreOf(l2)}${targetOf(l2)!=null?' / target '+targetOf(l2):''}</span>`:''}</div>
       </div>
       <div class="ctl">
         <span class="status" data-s="${st}">${STATUS[st]}</span>
@@ -607,7 +643,7 @@ function gheadHTML(l1){
   return `<div class="ghead" data-eid="${l1.eid}">
     <h2 id="g-${l1.id}"><span class="id">${l1.id}</span>${esc(l1.name)}</h2>
     <div class="gmeta">
-      <span>${l1.l2s.length} processes · ${c.confirmed} confirmed</span>
+      <span>${l1.l2s.length} processes · ${c.confirmed} confirmed${ASSESS?' · '+maturityChip(l1.l2s,{n:true}):''}</span>
       <label class="verdict">Owner <input type="text" value="${esc(owner)}" placeholder="SME owner" data-owner="${l1.eid}" aria-label="SME owner for ${l1.id}"></label>
       <label class="verdict">Verdict <select data-verdict="${l1.eid}" aria-label="Verdict for ${l1.id}">${Object.entries(VERDICT).map(([k,n])=>`<option value="${k}"${k===v.verdict?' selected':''}>${n}</option>`).join('')}</select></label>
       ${v.verdict?`<span style="color:var(--ink3)">by ${esc(v.by||'?')} ${esc((v.at||'').slice(0,10))}</span>`:''}
@@ -619,14 +655,16 @@ function gheadHTML(l1){
 function hubHTML(){
   const bands = {steer:[], core:[], enable:[]};
   L0S.forEach(l=>bands[l.band].push(l));
-  const tile = (l0, cls='') => { const l2s=l0.l1s.flatMap(g=>g.l2s), c=counts(l2s); return `<a class="tile ${cls}" data-p="${l0.product}" data-l0="${l0.id}" href="#/l0/${l0.id}"><span class="n">L0-${l0.id}</span><span class="t">${esc(l0.name)}</span><span class="sub">${l0.l1s.length} groups · ${l2s.length} processes · ${c.confirmed} confirmed</span><span class="bar2">${barHTML(l0)}</span></a>`; };
+  const tile = (l0, cls='') => { const l2s=l0.l1s.flatMap(g=>g.l2s), c=counts(l2s); return `<a class="tile ${cls}" data-p="${l0.product}" data-l0="${l0.id}" href="#/l0/${l0.id}"><span class="n">L0-${l0.id}</span><span class="t">${esc(l0.name)}</span><span class="sub">${l0.l1s.length} groups · ${l2s.length} processes · ${c.confirmed} confirmed${ASSESS?' · '+maturityChip(l2s):''}</span><span class="bar2">${barHTML(l0)}</span></a>`; };
   const coreOrder = ['02','05','03','06','07','08'];
   const total = ALL_L2.length, c = counts(ALL_L2);
   const sourcesTop = `<div class="notice">Reading order, not execution order: <b>Steer</b> sets direction, the <b>Plan-to-Value</b> chain runs left to right, <b>Enable</b> underpins everything, and the seven <b>flows</b> cut across the chain. Every process keeps a permanent ID (P-0001…) so comments survive re-parenting.</div>`;
-  return `<div class="pagehead"><div><p class="eyebrow">IBM Apptio · Targetprocess · Costing · Planning · Cloudability · <a href="#/changelog" title="What changed in this release">v${DATA.version}</a></p><h1>Apptio Process Catalog</h1><p class="lede">Business processes supported by the four Apptio products, framed by TBM, SPM and FinOps. Nine process areas, ${Object.keys(L1).length} groups, ${total} processes and seven cross-tool flows, each drawn as a BPMN 2.0 swimlane diagram, presented through a Business or SME lens for review.</p></div>
+  const scopeBand = CUST&&CUST.scope ? `<section class="band scope"><div class="bhead"><h2>Engagement scope · ${esc(CUST.scope.name)}</h2><span>${esc(CUST.scope.summary||'')}</span></div><div class="tiles">${CUST.scope.groups.map(gid=>{ const g=Object.values(L1).find(x=>x.eid===gid||x.id===gid); if(!g) return ''; const l2s=g.l2s.filter(inScope); return `<a class="tile small" data-p="${L0[g.l0].product}" href="#/l0/${g.l0}/${g.id}"><span class="n">${g.id}</span><span class="t">${esc(g.name)}</span><span class="sub">${l2s.length} processes · ${maturityChip(l2s,{n:true})}</span></a>`; }).join('')}</div></section>` : '';
+  return `<div class="pagehead"><div><p class="eyebrow">${CUST?esc(CUST.name)+' · ':''}IBM Apptio · Targetprocess · Costing · Planning · Cloudability · <a href="#/changelog" title="What changed in this release">v${DATA.version}</a></p><h1>${CUST?esc(CUST.title):'Apptio Process Catalog'}</h1><p class="lede">Business processes supported by the four Apptio products, framed by TBM, SPM and FinOps. Nine process areas, ${Object.keys(L1).length} groups, ${total} processes and seven cross-tool flows, each drawn as a BPMN 2.0 swimlane diagram, presented through a Business or SME lens for review.</p></div>
   <div class="statlist"><div class="stat"><b>${total}</b><span>L2 processes</span></div><div class="stat"><b>${c.confirmed}</b><span>confirmed</span></div><div class="stat"><b>${FLOWS.length}</b><span>E2E flows</span></div><div class="stat"><b>${DECISIONS.length}</b><span>design decisions</span></div></div></div>
   ${sourcesTop}
   <div class="landscape">
+    ${scopeBand}
     <section class="band steer"><div class="bhead"><h2>Steer</h2><span>Direction, objectives and the executive rhythm</span></div><div class="tiles">${bands.steer.map(l=>tile(l)).join('')}<a class="tile" data-p="Costing" href="#/l0/08/08.2.3"><span class="n">08.2.3</span><span class="t">Run the CIO monthly operations review</span><span class="sub">Executive value operating rhythm · in L0-08</span></a><a class="tile" data-p="All four" href="#/l0/10/10.6.1"><span class="n">10.6</span><span class="t">Run the practices &amp; grow maturity</span><span class="sub">TBM office · FinOps practice · SPM governance · in L0-10</span></a></div></section>
     <section class="band core"><div class="bhead"><h2>Plan-to-Value</h2><span>Shape &amp; fund demand → plan &amp; budget → deliver → account for cost ‖ manage cloud cost → charge back &amp; prove value</span></div><div class="tiles">${coreOrder.map(id=>tile(L0[id])).join('')}</div></section>
     <section class="band enable"><div class="bhead"><h2>Enable</h2><span>People, platforms and data that every other area depends on</span></div><div class="tiles">${bands.enable.map(l=>tile(l)).join('')}</div></section>
@@ -971,7 +1009,7 @@ function render(){
   const r = route();
   const main = $('#main');
   main.className = 'page' + (r.page==='register'?' wide':'');
-  let crumbs = `<a href="#/">Catalog</a>`;
+  let crumbs = `<a href="#/">${CUST?esc(CUST.short||CUST.name):'Catalog'}</a>`;
   let title = 'Apptio Process Catalog';
   if(r.page==='hub'){ main.innerHTML = hubHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Landscape</span>`; }
   else if(r.page==='l0'){
@@ -991,12 +1029,12 @@ function render(){
     const key = r.page+'/'+(r.target||'');
     if(r.target && DEC[r.target] && key!==lastKey && !suppressScroll){ const el=document.getElementById(r.target); if(el) requestAnimationFrame(()=>el.scrollIntoView({block:'start'})); }
     else if(!r.target && key!==lastKey && !suppressScroll) window.scrollTo({top:0});
-    lastKey = key; $('#crumbs').innerHTML = crumbs; document.title = title+' · Apptio Process Catalog'; return; }
+    lastKey = key; $('#crumbs').innerHTML = crumbs; document.title = title+' · '+(CUST?CUST.title:'Apptio Process Catalog'); return; }
   else if(r.page==='glossary'){ main.innerHTML = glossaryHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Glossary</span>`; }
   else if(r.page==='changelog'){ main.innerHTML = changelogHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Changelog</span>`; }
   else if(r.page==='print'){ main.innerHTML = printHTML(); crumbs += ` <span class="sep">/</span> <span class="here">Print view</span>`; }
   $('#crumbs').innerHTML = crumbs;
-  document.title = title + ' · Apptio Process Catalog';
+  document.title = title + ' · '+(CUST?CUST.title:'Apptio Process Catalog');
   if(r.page!=='l0') { lastKey=''; if(!suppressScroll) window.scrollTo({top:0}); }
 }
 let spyObs=null;
@@ -1043,6 +1081,7 @@ document.addEventListener('click', e=>{
   if(!e.target.closest('.search')) $('#qres').hidden=true;
   const a=e.target.closest('#qres a'); if(a){ $('#qres').hidden=true; $('#q').value=''; }
   if(e.target.id==='lens-business'||e.target.id==='lens-sme'){ lens=e.target.id==='lens-sme'?'sme':'business'; ls.set('lens',lens); setLens(); render(); }
+  if(e.target.closest('#export-assess')){ exportAssessment(); e.target.closest('#export-assess').innerHTML='Export assessment <b>copied</b>'; setTimeout(()=>{$('#export-assess').innerHTML='Export assessment';},1500); }
   if(e.target.closest('#who')){ const n=prompt('Your name, as it should appear on statuses, verdicts and comments:', reviewer||''); if(n!=null){ reviewer=n.trim(); ls.set('reviewer',reviewer); setWho(); } }
   const ex=e.target.closest('[data-expand]'); if(ex){ const id=ex.dataset.expand; expanded.has(id)?expanded.delete(id):expanded.add(id); render(); }
   const th=e.target.closest('th[data-sort]'); if(th){ const k=th.dataset.sort; if(sortKey===k) sortDir*=-1; else {sortKey=k; sortDir=1;} render(); }
@@ -1062,6 +1101,7 @@ document.addEventListener('change', e=>{
   if(t.dataset.setStatus){ saveReview(t.dataset.setStatus,{status:t.value}); }
   if(t.dataset.verdict){ saveReview(t.dataset.verdict,{verdict:t.value}); }
   if(t.dataset.owner!==undefined){ saveReview(t.dataset.owner,{owner:t.value}); }
+  if(t.dataset.assess){ const f=t.dataset.field; saveAssess(t.dataset.assess, {[f]: (f==='level'||f==='target') ? (t.value===''?null:Number(t.value)) : t.value}); }
   if(t.dataset.facet!==undefined){ facetState[t.dataset.facet]=t.value; render(); }
   if(t.dataset.profile){ const k=t.dataset.profile, d=DEC[k]; if(d){
       if(d.multi){ const cur=new Set(activeOpts(k)); t.checked?cur.add(t.value):cur.delete(t.value); profile[k]=[...cur].filter(o=>OPT(k,o)); if(!profile[k].length) delete profile[k]; }
@@ -1082,7 +1122,7 @@ window.addEventListener('hashchange', render);
 function setLens(){ $('#lens-business').setAttribute('aria-pressed', lens==='business'); $('#lens-sme').setAttribute('aria-pressed', lens==='sme'); }
 function setWho(){ $('#who').innerHTML='Reviewing as <b>'+esc(reviewer||'—')+'</b>'; }
 
-setLens(); setWho(); setProf(); renderProgress(); render(); initDb();
+setLens(); setWho(); setProf(); renderProgress(); if(ASSESS) $('#export-assess').hidden=false; render(); initDb();
 })();
 </script>
 

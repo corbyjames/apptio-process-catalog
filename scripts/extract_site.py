@@ -119,9 +119,9 @@ def build(key):
         tpl = re.sub(old, lambda m: new, tpl, flags=flags)
 
     sub1(r"<title>Apptio Process Catalog</title>", f"<title>{spec['title']}</title>")
-    sub1(r"' · Apptio Process Catalog'; return; \}", "' · '+DATA.extract.title; return; }")
-    sub1(r"document.title = title \+ ' · Apptio Process Catalog';", "document.title = title + ' · '+DATA.extract.title;")
-    sub1(r'let crumbs = `<a href="#/">Catalog</a>`;', 'let crumbs = `<a href="#/">Extract</a>`;')
+    sub1(r"\(CUST\?CUST\.title:'Apptio Process Catalog'\); return; \}", "(CUST?CUST.title:DATA.extract.title); return; }")
+    sub1(r"document\.title = title \+ ' · '\+\(CUST\?CUST\.title:'Apptio Process Catalog'\);", "document.title = title + ' · '+(CUST?CUST.title:DATA.extract.title);")
+    sub1(r"let crumbs = `<a href=\"#/\">\$\{CUST\?esc\(CUST\.short\|\|CUST\.name\):'Catalog'\}</a>`;", "let crumbs = `<a href=\"#/\">${CUST?esc(CUST.short||CUST.name):'Extract'}</a>`;")
     # downloads and the bpmn-js editor are not available inside an artifact: keep Copy XML only
     sub1(r'<div class="dl"><span style="color:var\(--ink3\)">Download:</span><a href="\$\{files.bpmn\}" download>\$\{files.base\}.bpmn</a><a href="\$\{files.svg\}" download>\$\{files.base\}.svg</a><a href="viewer.html#\$\{encodeURIComponent\(files.bpmn\)\}">open in editor</a>',
          '<div class="dl"><span style="color:var(--ink3)">${files.base}</span>')

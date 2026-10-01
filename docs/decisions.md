@@ -1,6 +1,6 @@
-# Design decisions register · v0.7.0
+# Design decisions register · v0.8.0
 
-Generated from `data/catalog.json` (`decisions[]`, `variants[]`, `applies_when`, flow-step `when`) — **edit the JSON, not this file.** 11 decisions · 36 options · 69 variants on 21 processes · 14 conditional processes.
+Generated from `data/catalog.json` (`decisions[]`, `variants[]`, `applies_when`, flow-step `when`) — **edit the JSON, not this file.** 11 decisions · 36 options · 77 variants on 23 processes · 14 conditional processes.
 
 A *decision* is a choice a customer makes once (usually in discovery) that ripples through several processes and flows — for example whether labor cost is derived from story points or from timesheets. Each decision lists its options with fit, prerequisites and trade-offs, and the processes it shapes. A process that is done differently under each option carries a **variant** per option (fields on the variant override the base record; everything else is common). A process that only exists under some options carries an **applies-when** condition, as do flow steps. On the site, `#/decisions` is also the customer-profile picker: choosing options renders the whole catalog for that customer.
 
@@ -15,8 +15,8 @@ Domain: Labor costing & capitalization · pick one or more · default: **Cost pe
 
 | Option | What it is | Fits | Prerequisites | Trade-offs | Evidence |
 |---|---|---|---|---|---|
-| **Cost per story point** (default) `story-points` | Monthly team cost divided by story points completed gives a cost per point; cost lands on epics, features and applications in proportion to the points delivered against them. Effort is never typed in - it comes from the backlog. | Agile teams with a visible, well-groomed backlog in Targetprocess or a synced Jira/ADO. The Apptio reference pattern ('deprecates time writing'). | Involvements % (04.1.2), job profiles with CapEx/OpEx split (04.1.3), protected rates (06.4.1), completed-work feed to Costing (UC1), a capitalization policy signed off with Finance/audit. | Points are only comparable within a team - always normalize per team, never enterprise-wide. Un-estimated or carried-over work distorts the month. Needs backlog hygiene and a documented policy for auditors. | E2E BPMN g_vis/t_work; e2e script UC1 |
-| **Cost per completed work item** `story-count` | Same mechanism as story points but every completed story/work item weighs the same. Team cost divided by items done. | Kanban / no-estimates teams, support and enhancement teams whose items are of similar size. | As story points, minus estimation discipline. | A one-line fix and a two-week story cost the same; acceptable only where item sizes are homogeneous. | Costing labor allocation options (06.4.5 config) |
+| **Cost per story point** (default) `story-points` | Monthly team cost divided by story points completed gives a cost per point; cost lands on epics, features and applications in proportion to the points delivered against them. Effort is never typed in - it comes from the backlog. | Agile teams with a visible, well-groomed backlog in Targetprocess or a synced Jira/ADO. The Apptio reference pattern ('deprecates time writing'). | Involvements % (04.1.2), job profiles with CapEx/OpEx split (04.1.3), protected rates (06.4.4), completed-work feed to Costing (UC1), a capitalization policy signed off with Finance/audit. | Points are only comparable within a team - always normalize per team, never enterprise-wide. Un-estimated or carried-over work distorts the month. Needs backlog hygiene and a documented policy for auditors. | E2E BPMN g_vis/t_work; e2e script UC1 |
+| **Cost per completed work item** `story-count` | Same mechanism as story points but every completed story/work item weighs the same. Team cost divided by items done. | Kanban / no-estimates teams, support and enhancement teams whose items are of similar size. | As story points, minus estimation discipline. | A one-line fix and a two-week story cost the same; acceptable only where item sizes are homogeneous. | Costing labor allocation options (06.4.8 config) |
 | **Timesheets (hours x rate)** `timesheet` | People log hours against work items or projects in the Time entity; managers approve weekly; approved hours x rate is the labor cost attached to work and the basis for CapEx. | Traditional and hybrid delivery, professional-services and contractor billing, regulated environments that require hours as the capitalization evidence, or where Finance already runs a timesheet regime. | Time Tracking solution + Timesheet approval workflow (04.5.1-04.5.2), rate source (job-profile or blended rate), timesheet compliance reporting. | Highest burden and the classic accuracy decay (end-of-week estimates, 'other' buckets). Needs chasing and compliance metrics. Strongest audit trail. | TP Time Tracking; 2026.03 Timesheet with Approval Workflow solution sheet |
 | **Planned work-effort units (allocation-based)** `work-effort-unit` | Work Allocations (% or man-days per person/team per period) are treated as the effort signal; no hours are recorded. Cost = allocation x rate, trued up periodically against actual completion. | Hybrid organizations that plan resourcing carefully but will not run timesheets; project-based funding where the plan is the contract. | Demand & Capacity solution with Work Allocations (04.3.1 / 04.3.4), a true-up rule (quarterly or at project close), blended rates (UC2). | Planned is not actual - variance hides until true-up. Weaker capitalization evidence than hours; usually paired with a sign-off step. | LFM demo (requested man-days); WFM deck |
 | **Fixed capacity (team to tower/app)** `fixed-capacity` | No work-level attribution at all: the team's monthly cost is allocated to applications or IT towers by a standing rule (team->tower mapping, % splits). | Run/operations teams without a visible backlog (ServiceNow queues, infrastructure ops, service desk), platform teams charged as shared services. | Team->IT tower / application mapping (04.1.3), allocation strategy in Model Studio (06.1.2). | No run-vs-change split from data; capitalization only via a fixed % if policy allows. Simplest to operate. | E2E BPMN t_tower; e2e script (ServiceNow example) |
@@ -25,13 +25,14 @@ Domain: Labor costing & capitalization · pick one or more · default: **Cost pe
 
 | L2 | Process | How |
 |---|---|---|
+| 06.4.2 | Compute fully loaded labor rates | 5 variants: Timesheets (hours x rate), Cost per story point, Cost per completed work item, Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
 | 04.1.3 | Maintain job profiles & financial mappings | affected (no variant text yet) |
 | 04.5.1 | Capture effort against work | 5 variants: Cost per story point, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
 | 04.5.2 | Approve timesheets | 1 variants: Timesheets (hours x rate) |
 | 04.5.3 | Feed time/effort to finance processes | 5 variants: Cost per story point, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
-| 06.4.3 | Ingest workforce & completed work data | 5 variants: Cost per story point, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
-| 06.4.5 | Allocate team costs to work or towers | 5 variants: Cost per story point, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
-| 06.4.6 | Generate audit-ready capitalization actuals | 4 variants: Cost per story point, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
+| 06.4.6 | Ingest workforce & completed work data | 5 variants: Cost per story point, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
+| 06.4.8 | Allocate team costs to work or towers | 5 variants: Cost per story point, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
+| 06.4.9 | Generate audit-ready capitalization actuals | 4 variants: Cost per story point, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) |
 
 Flow steps: UC1 step 17 (gateway); UC1 step 17a (only when Cost per story point / Cost per completed work item / Timesheets (hours x rate) / Planned work-effort units (allocation-based)); UC1 step 17b (only when Fixed capacity (team to tower/app))
 
@@ -45,19 +46,22 @@ Domain: Labor costing & capitalization · pick one · default: **Blended team / 
 
 | Option | What it is | Fits | Prerequisites | Trade-offs | Evidence |
 |---|---|---|---|---|---|
-| **Blended team / ART rate** (default) `blended-team` | Costing computes one blended rate per team, ART or solution train from protected individual rates and publishes only that. Portfolio costs work at the team rate. | Most enterprises; the Apptio reference pattern. | Team structure with involvements (04.1.2), ATP CM Rate Transform (06.4.1), ADM rate feed (06.4.2). | Costed allocations drift from actuals when team mix changes - define a true-up (monthly or quarterly). | E2E BPMN t_rates/t_send4; e2e script UC2 |
+| **Blended team / ART rate** (default) `blended-team` | Costing computes one blended rate per team, ART or solution train from protected individual rates and publishes only that. Portfolio costs work at the team rate. | Most enterprises; the Apptio reference pattern. | Team structure with involvements (04.1.2), ATP CM Rate Transform (06.4.4), ADM rate feed (06.4.5). | Costed allocations drift from actuals when team mix changes - define a true-up (monthly or quarterly). | E2E BPMN t_rates/t_send4; e2e script UC2 |
 | **Job-profile rate (role x location)** `role-location` | Standard rate card per job profile (role x location, optionally employment type) published to Targetprocess; individuals inherit their profile's rate. | Organizations with a mature rate card, project-based estimating, PS/contractor mixes, or where teams are too fluid to blend. | Job Profile entities with rate linkage (04.1.3), rate card governance (annual refresh). | More granular than a team rate and still non-identifying, but a rate card needs owning and refreshing. | E2E BPMN t_data; Planning labor rate cards (05.7.2) |
-| **Individual (actual) rates** `individual` | Actual loaded cost per person leaves Costing and is used to cost allocations and time. | Small IT organizations, PS firms, or where Finance already exposes comp to project accounting. | Restricted-access roles in Targetprocess, HR/works-council approval, field-level permissions. | Most accurate, but exposes compensation in a delivery tool; usually blocked by HR/privacy. Not the default. | 06.4.1 rate-exposure design decision |
+| **Individual (actual) rates** `individual` | Actual loaded cost per person leaves Costing and is used to cost allocations and time. | Small IT organizations, PS firms, or where Finance already exposes comp to project accounting. | Restricted-access roles in Targetprocess, HR/works-council approval, field-level permissions. | Most accurate, but exposes compensation in a delivery tool; usually blocked by HR/privacy. Not the default. | 06.4.4 rate-exposure design decision |
 
 **Processes shaped**
 
 | L2 | Process | How |
 |---|---|---|
+| 06.4.1 | Define the labor rate structure | 3 variants: Blended team / ART rate, Job-profile rate (role x location), Individual (actual) rates |
+| 06.4.3 | Approve, effective-date & publish the rate card | affected (no variant text yet) |
 | 04.1.3 | Maintain job profiles & financial mappings | 2 variants: Blended team / ART rate, Job-profile rate (role x location) |
-| 06.4.1 | Maintain protected rates & compute blended rates | 3 variants: Blended team / ART rate, Job-profile rate (role x location), Individual (actual) rates |
-| 06.4.2 | Publish blended rates to Targetprocess | 3 variants: Blended team / ART rate, Job-profile rate (role x location), Individual (actual) rates |
+| 06.4.4 | Maintain protected rates & compute blended rates | 3 variants: Blended team / ART rate, Job-profile rate (role x location), Individual (actual) rates |
+| 06.4.5 | Publish blended rates to Targetprocess | 3 variants: Blended team / ART rate, Job-profile rate (role x location), Individual (actual) rates |
 | 04.3.1 | Allocate people & teams to work | affected (no variant text yet) |
 | 02.4.3 | Track portfolio budget vs actuals | affected (no variant text yet) |
+| 06.4.10 | Reconcile standard vs actual labor cost & trigger rate revisions | affected (no variant text yet) |
 
 ## D-03 Budget build method
 

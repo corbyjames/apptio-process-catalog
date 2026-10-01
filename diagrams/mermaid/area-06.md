@@ -73,19 +73,27 @@ flowchart LR
 ```mermaid
 flowchart LR
   S((start))
-  N06_4_1["06.4.1 Maintain protected rates & compute blended rates<br/><i>TBM Office/IT Finance · Any</i>"]
+  N06_4_1["06.4.1 Define the labor rate structure<br/><i>TBM Office/IT Finance · Any</i>"]
   S --> N06_4_1
-  N06_4_2["06.4.2 Publish blended rates to Targetprocess<br/><i>Costing Admin · Any</i>"]
+  N06_4_2["06.4.2 Compute fully loaded labor rates<br/><i>TBM Office/IT Finance · Any</i>"]
   N06_4_1 --> N06_4_2
-  N06_4_3["06.4.3 Ingest workforce & completed work data<br/><i>Costing Admin · Any</i>"]
+  N06_4_3["06.4.3 Approve, effective-date & publish the rate card<br/><i>TBM Office/IT Finance · Any</i>"]
   N06_4_2 --> N06_4_3
-  N06_4_4["06.4.4 Compute monthly team cost & blended CapEx %<br/><i>TBM Office/IT Finance · Any</i>"]
+  N06_4_4["06.4.4 Maintain protected rates & compute blended rates<br/><i>TBM Office/IT Finance · Any</i>"]
   N06_4_3 --> N06_4_4
-  N06_4_5["06.4.5 Allocate team costs to work or towers<br/><i>TBM Office/IT Finance · Hybrid</i>"]
+  N06_4_5["06.4.5 Publish blended rates to Targetprocess<br/><i>Costing Admin · Any</i>"]
   N06_4_4 --> N06_4_5
-  N06_4_6["06.4.6 Generate audit-ready capitalization actuals<br/><i>TBM Office/IT Finance · Any</i>"]
+  N06_4_6["06.4.6 Ingest workforce & completed work data<br/><i>Costing Admin · Any</i>"]
   N06_4_5 --> N06_4_6
-  N06_4_6 --> E(((end)))
+  N06_4_7["06.4.7 Compute monthly team cost & blended CapEx %<br/><i>TBM Office/IT Finance · Any</i>"]
+  N06_4_6 --> N06_4_7
+  N06_4_8["06.4.8 Allocate team costs to work or towers<br/><i>TBM Office/IT Finance · Hybrid</i>"]
+  N06_4_7 --> N06_4_8
+  N06_4_9["06.4.9 Generate audit-ready capitalization actuals<br/><i>TBM Office/IT Finance · Any</i>"]
+  N06_4_8 --> N06_4_9
+  N06_4_10["06.4.10 Reconcile standard vs actual labor cost & trigger rate revisions<br/><i>TBM Office/IT Finance · Any</i>"]
+  N06_4_9 --> N06_4_10
+  N06_4_10 --> E(((end)))
 ```
 
 ## 06.5 Manage vendor & asset cost (L2)

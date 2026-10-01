@@ -1,6 +1,6 @@
-# IBM Apptio Process Catalog — Overview (L0 map) · v0.7.0
+# IBM Apptio Process Catalog — Overview (L0 map) · v0.8.0
 
-Generated from `data/catalog.json` — **edit the JSON, not this file.** Structure: 9 L0 · 45 L1 · 149 L2 · 7 cross-tool flows. Live site: `site/index.html` (GitHub Pages).
+Generated from `data/catalog.json` — **edit the JSON, not this file.** Structure: 9 L0 · 45 L1 · 153 L2 · 7 cross-tool flows. Live site: `site/index.html` (GitHub Pages).
 
 | L0 | Area | Primary product | Band | L1 / L2 | Default BPMN lanes |
 |---|---|---|---|---|---|
@@ -9,7 +9,7 @@ Generated from `data/catalog.json` — **edit the JSON, not this file.** Structu
 | 03 | **Agile Program & Delivery Management** | Targetprocess | core | 4 / 15 | RTE/Program; Agile Teams; Product Management; Dev tools (Jira/ADO) |
 | 04 | **Workforce & Resource Management** | Targetprocess | enable | 5 / 16 | Resource Management; Portfolio Management; HR/Approvers; Finance (IT Planning) |
 | 05 | **IT Financial Planning & Budgeting** | Planning | core | 8 / 29 | IT Finance; Budget Owners; FP&A; CIO |
-| 06 | **Cost Transparency & TBM Operations** | Costing | core | 6 / 21 | TBM Office/IT Finance; Costing Admin; App/Service Owners; ERP-GL |
+| 06 | **Cost Transparency & TBM Operations** | Costing | core | 6 / 25 | TBM Office/IT Finance; Costing Admin; App/Service Owners; ERP-GL |
 | 07 | **Cloud Financial Management (FinOps)** | Cloudability | core | 6 / 21 | FinOps Practitioner; Engineering; Finance; Cloud vendors |
 | 08 | **Consumption, Chargeback & Value Management** | Costing (Billing) | core | 2 / 6 | TBM Office; BU Owners; CIO/CFO; Service Owners |
 | 10 | **Platform Configuration, Data & Administration** | All four | enable | 7 / 20 | Platform Admins; TBM Office; FinOps Team; SPM Governance; Integration Team |
@@ -97,7 +97,7 @@ Cadence: Planning cycle + daily/weekly sync. Lanes: IT Planning (Finance); Targe
 
 ### UC2 — Rates back: Work allocation rates
 
-Costing maintains protected individual rates, computes blended team/ART rates and publishes them to Targetprocess so work allocations can be costed without exposing compensation.
+Finance builds the standard rate card from the Costing roster (06.4.1-06.4.3); Costing keeps individual rates protected, computes blended team/ART rates and publishes them to Targetprocess so work allocations can be cost without exposing compensation. Monthly variance against actuals (06.4.10) is the true-up that triggers mid-year re-publication.
 
 Cadence: Regular cadence. Lanes: Costing / TBM Studio; Targetprocess / ATP. Upstream: UC3. Downstream: UC1.
 
@@ -105,13 +105,14 @@ Cadence: Regular cadence. Lanes: Costing / TBM Studio; Targetprocess / ATP. Upst
 
 | Step | Type | Lane | Task / event | Catalog | Notes |
 |---|---|---|---|---|---|
-| 11 | Service task | Costing / TBM Studio | Maintain protected rates; compute blended team / ART-level rates | 06.4.1 | Individual rates never leave Costing |
-| 12 | Send task (ADM) | Costing / TBM Studio | Send blended rates back to Targetprocess (Costing is source of truth) | 06.4.2 | Design decision: rate exposure level; true-up pattern |
+| 10 | User task | Costing / TBM Studio | Build, approve and load the fully loaded rate card (band x role x location x employment type) | 06.4.1, 06.4.2, 06.4.3 | Annual, from the Costing labor roster: salary + benefits or contract rate, overhead uplift, productive hours |
+| 11 | Service task | Costing / TBM Studio | Maintain protected rates; compute blended team / ART-level rates | 06.4.4 | Individual rates never leave Costing |
+| 12 | Send task (ADM) | Costing / TBM Studio | Send blended rates back to Targetprocess (Costing is source of truth) | 06.4.5 | Design decision: rate exposure level; true-up pattern |
 | 13 | Task | Targetprocess / ATP | Cost work allocations with blended rates; feed budget cycle | 04.3.1, 02.4.3 |  |
 
 ### UC1 — Actuals in: Labor capitalization
 
-Targetprocess sends involvements, job profiles, mappings and completed work to Costing; TBM Studio computes monthly team cost and blended CapEx %, allocates to work (story points) or towers (fixed capacity), and generates the SAP-ready CapEx/OpEx actuals file that deprecates time writing.
+Targetprocess sends involvements, job profiles, mappings and completed work to Costing; TBM Studio computes monthly team cost and blended CapEx %, allocates to work (story points) or towers (fixed capacity), and generates the SAP-ready CapEx/OpEx actuals file that deprecates time writing. A monthly tie-out and variance report keeps the standard-rate portfolio view reconciled with the actual-cost accounting view.
 
 Cadence: Monthly. Lanes: Targetprocess / ATP; Costing / TBM Studio; ERP (SAP). Upstream: UC2. Downstream: UC4.
 
@@ -120,12 +121,13 @@ Cadence: Monthly. Lanes: Targetprocess / ATP; Costing / TBM Studio; ERP (SAP). U
 | Step | Type | Lane | Task / event | Catalog | Notes |
 |---|---|---|---|---|---|
 | 14 | Task | Targetprocess / ATP | Maintain involvements %, job profiles, CapEx/OpEx & IT-tower mappings | 04.1.2, 04.1.3 | Three ingredients: job profiles, involvements, protected rates |
-| 15 | Send task (ADM) | Targetprocess / ATP | Send workforce & completed work data to Costing (TBM Studio) | 04.5.3, 06.4.3 |  |
-| 16 | Service task | Costing / TBM Studio | Calculate monthly team cost & blended CapEx % (protected rates) | 06.4.4 |  |
-| 17 | XOR gateway | Costing / TBM Studio | Team work visible? | 06.4.5 | Yes: story-point allocation; No: fixed-capacity Decided by D-01 Labor effort signal. |
-| 17a | Task | Costing / TBM Studio | Allocate team costs to completed work (story points, weightage) | 06.4.5 | Same allocation principles as TBM *Only when Labor effort signal: Cost per story point / Cost per completed work item / Timesheets (hours x rate) / Planned work-effort units (allocation-based).* |
-| 17b | Task | Costing / TBM Studio | Allocate team costs to IT towers / apps (fixed capacity) | 06.4.5 | Ops teams without visible backlog (e.g. ServiceNow) *Only when Labor effort signal: Fixed capacity (team to tower/app).* |
-| 18 | Service task | Costing / TBM Studio | Generate SAP-ready monthly actuals - CapEx / OpEx by user | 06.4.6 | Deprecates time writing; join gateway before this step |
+| 15 | Send task (ADM) | Targetprocess / ATP | Send workforce & completed work data to Costing (TBM Studio) | 04.5.3, 06.4.6 |  |
+| 16 | Service task | Costing / TBM Studio | Calculate monthly team cost & blended CapEx % (protected rates) | 06.4.7 |  |
+| 17 | XOR gateway | Costing / TBM Studio | Team work visible? | 06.4.8 | Yes: story-point allocation; No: fixed-capacity Decided by D-01 Labor effort signal. |
+| 17a | Task | Costing / TBM Studio | Allocate team costs to completed work (story points, weightage) | 06.4.8 | Same allocation principles as TBM *Only when Labor effort signal: Cost per story point / Cost per completed work item / Timesheets (hours x rate) / Planned work-effort units (allocation-based).* |
+| 17b | Task | Costing / TBM Studio | Allocate team costs to IT towers / apps (fixed capacity) | 06.4.8 | Ops teams without visible backlog (e.g. ServiceNow) *Only when Labor effort signal: Fixed capacity (team to tower/app).* |
+| 18 | Service task | Costing / TBM Studio | Generate SAP-ready monthly actuals - CapEx / OpEx by user | 06.4.9 | Deprecates time writing; join gateway before this step |
+| 19 | Task | Costing / TBM Studio | Tie out team x month; report rate & volume variance (standard vs actual); raise mid-year rate revisions | 06.4.10 | Portfolio view at standard, books at actual - reconciled, never forced to agree |
 
 ### UC4 — TCO up: Cost actuals to application TCO
 
@@ -198,8 +200,8 @@ Cadence: Per ZBB cycle (annual, rotational) + monthly monitoring. Lanes: IT Plan
 
 | ID | Decision | Question | Options (default in bold) | Shapes |
 |---|---|---|---|---|
-| D-01 | Labor effort signal | How is labor effort captured and attached to work so it can be costed, capitalized and rolled into App TCO? | **Cost per story point**, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) | 04.1.3, 04.5.1, 04.5.2, 04.5.3, 06.4.3, 06.4.5, 06.4.6 · flows UC1 |
-| D-02 | Labor rate exposure | Which labor rate is allowed to leave Costing and be used in Targetprocess to cost work? | **Blended team / ART rate**, Job-profile rate (role x location), Individual (actual) rates | 04.1.3, 06.4.1, 06.4.2, 04.3.1, 02.4.3 · flows UC2 |
+| D-01 | Labor effort signal | How is labor effort captured and attached to work so it can be costed, capitalized and rolled into App TCO? | **Cost per story point**, Cost per completed work item, Timesheets (hours x rate), Planned work-effort units (allocation-based), Fixed capacity (team to tower/app) | 06.4.2, 04.1.3, 04.5.1, 04.5.2, 04.5.3, 06.4.6, 06.4.8, 06.4.9 · flows UC1 |
+| D-02 | Labor rate exposure | Which labor rate is allowed to leave Costing and be used in Targetprocess to cost work? | **Blended team / ART rate**, Job-profile rate (role x location), Individual (actual) rates | 06.4.1, 06.4.3, 04.1.3, 06.4.4, 06.4.5, 04.3.1, 02.4.3, 06.4.10 · flows UC2 |
 | D-03 | Budget build method | How is the IT budget built for a given decision unit and cycle? | Incremental, **Driver-based**, Zero-based - rotational, Zero-based - all units annually, Zero-based mindset (continuous) | 05.1.1, 05.1.3, 05.1.4, 05.1.5, 05.8.1, 05.8.2, 05.8.3, 05.8.4, 05.8.5, 05.8.6, 07.6.1 · flows ZBB |
 | D-04 | Portfolio funding model | Is change work funded per project, per value stream/product, or both during a transition? | Project-based funding, Value-stream / product funding (Lean Budgets), **Hybrid (both, side by side)** | 02.4.1, 02.4.2, 02.2.3, 05.7.1, 05.7.2, 05.7.3 · flows INV, UC3 |
 | D-05 | Investment approval governance | How does an investment get approved - phase gates, lean portfolio flow, or both? | Stage-gate, Lean portfolio flow (Portfolio Kanban), **Hybrid** | 02.1.3, 02.2.3, 03.3.3 · flows INV |

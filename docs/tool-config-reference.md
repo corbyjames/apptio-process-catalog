@@ -139,12 +139,16 @@ Generated from `data/tool-config.yaml` (per-product checklists) plus the per-L2 
 | 06.3.2 | Allocate costs to applications & services | Tower->application allocation strategies, drivers (server counts, tickets, time/story points) |
 | 06.3.3 | Report & act on App TCO | Applications Overview / App TCO reports, run vs change attribution from work data (UC4), addressable vs committed spend, AppRat analysis |
 | 06.3.4 | Compute service unit costs | Service costing model, consumption metrics, Services NX Reports |
-| 06.4.1 | Maintain protected rates & compute blended rates | ATP CM Rate Transform, protected rate tables, blending logic; rate-level exposure design decision (blended vs individual) |
-| 06.4.2 | Publish blended rates to Targetprocess | ADM rate feed, rate cadence config; true-up pattern for blended-vs-actual reconciliation (design decision) |
-| 06.4.3 | Ingest workforce & completed work data | ADM feed ATP->TBM Studio, involvement/profile/mapping datasets |
-| 06.4.4 | Compute monthly team cost & blended CapEx % | TBM Studio computation, job profile CapEx/OpEx splits, involvement math |
-| 06.4.5 | Allocate team costs to work or towers | One normalized labor model in TBM Studio with an allocation strategy per team kind (see variants) |
-| 06.4.6 | Generate audit-ready capitalization actuals | SAP-ready extract format, audit documentation, contractor/PS normalization |
+| 06.4.1 | Define the labor rate structure | Costing: Job Profile dimensions (band/level, role family, location, employment type), rate table design, productive-hours reference table; ATP CM Rate Transform design |
+| 06.4.2 | Compute fully loaded labor rates | Costing: labor roster dataset, Job Profile attributes, productive-hours table (country x employment type), overhead allocation %, rate computation in TBM Studio / ATP CM Rate Transform, draft rate table |
+| 06.4.3 | Approve, effective-date & publish the rate card | Costing: protected rate tables (versioned, effective-dated), approval record, rate change log; downstream: ATP CM Rate Transform picks up the new version |
+| 06.4.4 | Maintain protected rates & compute blended rates | ATP CM Rate Transform, protected rate tables, blending logic; rate-level exposure design decision (blended vs individual) |
+| 06.4.5 | Publish blended rates to Targetprocess | ADM rate feed, rate cadence config; true-up pattern for blended-vs-actual reconciliation (design decision) |
+| 06.4.6 | Ingest workforce & completed work data | ADM feed ATP->TBM Studio, involvement/profile/mapping datasets |
+| 06.4.7 | Compute monthly team cost & blended CapEx % | TBM Studio computation, job profile CapEx/OpEx splits, involvement math |
+| 06.4.8 | Allocate team costs to work or towers | One normalized labor model in TBM Studio with an allocation strategy per team kind (see variants) |
+| 06.4.9 | Generate audit-ready capitalization actuals | SAP-ready extract format, audit documentation, contractor/PS normalization |
+| 06.4.10 | Reconcile standard vs actual labor cost & trigger rate revisions | Costing / TBM Studio: variance report (standard vs actual by team and cell), tie-out check, exception list; Targetprocess: rate card version on costed allocations |
 | 06.5.1 | Consolidate & analyze vendor spend | Vendors master data, vendor insights reports, contract/PO feeds |
 | 06.5.2 | Track assets & depreciation | Fixed Asset Ledger, Is Depr flag, depreciation flows |
 | 06.6.1 | Prepare taxonomy-aligned benchmark data | ATUM mappings, benchmarking data prep |

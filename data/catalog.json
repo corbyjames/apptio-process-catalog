@@ -1,6 +1,6 @@
 {
- "version": "0.7.0",
- "built": "2026-09-15",
+ "version": "0.8.0",
+ "built": "2026-10-01",
  "l0s": [
   {
    "id": "01",
@@ -2352,7 +2352,7 @@
          "decision": "labor-effort-signal",
          "option": "fixed-capacity",
          "name": "No effort capture (fixed capacity)",
-         "description": "Nothing is recorded at work level; the team's cost is attributed by a standing team->tower/app rule downstream (06.4.5).",
+         "description": "Nothing is recorded at work level; the team's cost is attributed by a standing team->tower/app rule downstream (06.4.8).",
          "config": "None in Targetprocess beyond team membership",
          "inputs": "Team roster",
          "outputs": "—",
@@ -4351,6 +4351,184 @@
       {
        "id": "06.4.1",
        "legacy_id": null,
+       "name": "Define the labor rate structure",
+       "description": "Decide how the company expresses labor rates before any number is computed: the rate dimensions (band/level or job grade, role family, location or cost-of-labor region, employment type - employee, contractor, MSP/offshore), the rate types (standard rate used for planning and costing vs actual loaded rate used for true-up), the productive-hours policy (available hours net of PTO, holidays, training and admin, by country and employment type), the overhead/indirect uplift policy, and the governance - rate-card owner, refresh cadence, approval path and which rate is allowed to leave Costing. Three rates coexist and the structure says which is which: the actual loaded rate per person (monthly, never leaves Costing), the standard rate per cell that finance issues (derived from the cell's roster average or the band midpoint, fixed for the year), and the blended team rate (FTE-weighted standard rates of the team's members, or the actual team average inside Costing). The structure also fixes the thin-cell rule (cells under about five people roll up to the parent band or region), whether overhead is carried in the rate or left in tower allocation (never both), the productive-hours divisor (contracted hours net of PTO, holidays, training and admin - typically 1,650-1,800 of 2,080), and the mid-year revision triggers (actual drifts beyond tolerance, e.g. 5%, for two or three consecutive months, or cell headcount moves more than 10-15%). See docs/labor-rates.md.",
+       "delivery_model": "Any",
+       "tool": "Costing",
+       "personas": "IT Finance, HR Compensation, TBM Office",
+       "cadence": "Annually at budget; on job-architecture or org change",
+       "inputs": "HRIS job architecture (bands/levels, role families) and location model; employment categories; HR policy on standard hours, PTO and holidays by country; finance policy on overhead pools, capitalization and variance tolerance; privacy constraints on rate exposure",
+       "outputs": "Rate structure definition (dimensions x rate types: actual, standard, blended), thin-cell roll-up rule, productive-hours policy, overhead uplift policy, variance tolerance and mid-year revision triggers, rate governance (owner, cadence, approval, versioning)",
+       "config": "Costing: Job Profile dimensions (band/level, role family, location, employment type), rate table design, productive-hours reference table; ATP CM Rate Transform design",
+       "framework": "TBM: labor | ITFM | privacy",
+       "evidence": "Added v0.8 (labor rate card build); TBM Council labor cost guidance; ITFM standard-rate practice",
+       "eid": "P-0150",
+       "persona_list": [
+        "IT Finance & FP&A",
+        "HR & approvers",
+        "TBM Office & analysts"
+       ],
+       "cadence_bucket": "Annual / per cycle",
+       "products": [
+        "Costing"
+       ],
+       "primary_product": "Costing",
+       "budgeting_method": null,
+       "outcome": "an agreed rate structure and policies that every later rate follows",
+       "frameworks": [
+        "TBM: labor",
+        "ITFM",
+        "privacy"
+       ],
+       "framework_tags": [
+        "TBM"
+       ],
+       "completeness": 9,
+       "completeness_of": 9,
+       "flows": [
+        "UC2"
+       ],
+       "decisions": [
+        "rate-exposure"
+       ],
+       "variants": [
+        {
+         "decision": "rate-exposure",
+         "option": "blended-team",
+         "description": "Decide how the company expresses labor rates before any number is computed: the rate dimensions (band/level or job grade, role family, location or cost-of-labor region, employment type - employee, contractor, MSP/offshore), the rate types (standard rate used for planning and costing vs actual loaded rate used for true-up), the productive-hours policy (available hours net of PTO, holidays, training and admin, by country and employment type), the overhead/indirect uplift policy, and the governance - rate-card owner, refresh cadence, approval path and which rate is allowed to leave Costing. Three rates coexist and the structure says which is which: the actual loaded rate per person (monthly, never leaves Costing), the standard rate per cell that finance issues (derived from the cell's roster average or the band midpoint, fixed for the year), and the blended team rate (FTE-weighted standard rates of the team's members, or the actual team average inside Costing). The structure also fixes the thin-cell rule (cells under about five people roll up to the parent band or region), whether overhead is carried in the rate or left in tower allocation (never both), the productive-hours divisor (contracted hours net of PTO, holidays, training and admin - typically 1,650-1,800 of 2,080), and the mid-year revision triggers (actual drifts beyond tolerance, e.g. 5%, for two or three consecutive months, or cell headcount moves more than 10-15%). See docs/labor-rates.md. Under this approach: structure centres on team membership: rate cells are kept inside Costing and exist only to roll up to one blended rate per team/ART; band and location remain internal attributes."
+        },
+        {
+         "decision": "rate-exposure",
+         "option": "role-location",
+         "name": "Define the job-profile rate-card structure",
+         "description": "Decide how the company expresses labor rates before any number is computed: the rate dimensions (band/level or job grade, role family, location or cost-of-labor region, employment type - employee, contractor, MSP/offshore), the rate types (standard rate used for planning and costing vs actual loaded rate used for true-up), the productive-hours policy (available hours net of PTO, holidays, training and admin, by country and employment type), the overhead/indirect uplift policy, and the governance - rate-card owner, refresh cadence, approval path and which rate is allowed to leave Costing. Three rates coexist and the structure says which is which: the actual loaded rate per person (monthly, never leaves Costing), the standard rate per cell that finance issues (derived from the cell's roster average or the band midpoint, fixed for the year), and the blended team rate (FTE-weighted standard rates of the team's members, or the actual team average inside Costing). The structure also fixes the thin-cell rule (cells under about five people roll up to the parent band or region), whether overhead is carried in the rate or left in tower allocation (never both), the productive-hours divisor (contracted hours net of PTO, holidays, training and admin - typically 1,650-1,800 of 2,080), and the mid-year revision triggers (actual drifts beyond tolerance, e.g. 5%, for two or three consecutive months, or cell headcount moves more than 10-15%). See docs/labor-rates.md. Under this approach: structure is the published grid itself: band/level x role family x location (x employment type) is the rate card everyone plans and costs with, so cell granularity is set with thin-cell roll-up rules.",
+         "outputs": "Rate-card grid definition with roll-up rules"
+        },
+        {
+         "decision": "rate-exposure",
+         "option": "individual",
+         "description": "Decide how the company expresses labor rates before any number is computed: the rate dimensions (band/level or job grade, role family, location or cost-of-labor region, employment type - employee, contractor, MSP/offshore), the rate types (standard rate used for planning and costing vs actual loaded rate used for true-up), the productive-hours policy (available hours net of PTO, holidays, training and admin, by country and employment type), the overhead/indirect uplift policy, and the governance - rate-card owner, refresh cadence, approval path and which rate is allowed to leave Costing. Three rates coexist and the structure says which is which: the actual loaded rate per person (monthly, never leaves Costing), the standard rate per cell that finance issues (derived from the cell's roster average or the band midpoint, fixed for the year), and the blended team rate (FTE-weighted standard rates of the team's members, or the actual team average inside Costing). The structure also fixes the thin-cell rule (cells under about five people roll up to the parent band or region), whether overhead is carried in the rate or left in tower allocation (never both), the productive-hours divisor (contracted hours net of PTO, holidays, training and admin - typically 1,650-1,800 of 2,080), and the mid-year revision triggers (actual drifts beyond tolerance, e.g. 5%, for two or three consecutive months, or cell headcount moves more than 10-15%). See docs/labor-rates.md. Under this approach: structure is person-level loaded cost; bands and locations are reporting attributes, and the governance work is the access model and HR/privacy approval."
+        }
+       ]
+      },
+      {
+       "id": "06.4.2",
+       "legacy_id": null,
+       "name": "Compute fully loaded labor rates",
+       "description": "Starting from the labor roster already loaded in Costing - salary plus benefits for employees, contract rates for contractors - attach each person's band/level, role family, location and employment type; aggregate loaded cost to each cell of the rate structure; apply the overhead/indirect uplift; and divide by the cell's productive hours to produce a standard loaded rate per hour (or per point or per FTE-month, depending on the effort signal). Produce the actual rate per cell alongside, compare both to the prior rate card and external benchmarks, and raise exceptions for outliers and thin cells (small n rolls up to the parent band or region). The arithmetic per cell: loaded annual cost = base pay + variable pay + employer taxes + benefits (or contract rate x contracted hours); cell loaded cost = roster mean (or band midpoint x (1 + burden %)); fully loaded = x (1 + overhead uplift %); standard rate = fully loaded / productive hours. Burden is normally a % by country and employment type from the GL, not per person. Team blended rate = sum(FTE x cell standard rate) / sum(FTE). Example: base 120,000 + 10% variable = 132,000; burden 28% = 168,960; overhead 12% = 189,235; 1,720 productive hours = 110/hour. Sources: HRIS (person, band, role, location, employment type, FTE, cost center, dates), payroll/GL (pay and burden), VMS/procurement (contractor rates), finance (overhead pools), HR policy (hours, PTO, holidays), timekeeping (divisor validation), salary surveys and TBM Council benchmarks.",
+       "delivery_model": "Any",
+       "tool": "Costing",
+       "personas": "TBM Analyst, IT Finance",
+       "cadence": "Annually at budget; refreshed quarterly or on reorganization",
+       "inputs": "Costing labor roster with loaded cost per person (salary + benefits from payroll/GL) or contract rate (VMS/SOW), HRIS attributes (band/level, role family, location, employment type, FTE, cost center, hire/term dates), burden % by country and employment type, productive-hours table, overhead uplift policy, prior rate card, salary-survey and TBM Council benchmarks",
+       "outputs": "Draft rate card (standard and actual rate per cell, headcount n, variance vs prior card), exception list",
+       "config": "Costing: labor roster dataset, Job Profile attributes, productive-hours table (country x employment type), overhead allocation %, rate computation in TBM Studio / ATP CM Rate Transform, draft rate table",
+       "framework": "TBM: labor | ITFM",
+       "evidence": "Added v0.8 (labor rate card build); TBM Council labor cost guidance; ITFM standard-rate practice",
+       "eid": "P-0151",
+       "persona_list": [
+        "TBM Office & analysts",
+        "IT Finance & FP&A"
+       ],
+       "cadence_bucket": "Annual / per cycle",
+       "products": [
+        "Costing"
+       ],
+       "primary_product": "Costing",
+       "budgeting_method": null,
+       "outcome": "a defensible loaded rate for every band, role, location and employment type",
+       "frameworks": [
+        "TBM: labor",
+        "ITFM"
+       ],
+       "framework_tags": [
+        "TBM"
+       ],
+       "completeness": 9,
+       "completeness_of": 9,
+       "flows": [
+        "UC2"
+       ],
+       "decisions": [
+        "labor-effort-signal"
+       ],
+       "variants": [
+        {
+         "decision": "labor-effort-signal",
+         "option": "timesheet",
+         "description": "Starting from the labor roster already loaded in Costing - salary plus benefits for employees, contract rates for contractors - attach each person's band/level, role family, location and employment type; aggregate loaded cost to each cell of the rate structure; apply the overhead/indirect uplift; and divide by the cell's productive hours to produce a standard loaded rate per hour (or per point or per FTE-month, depending on the effort signal). Produce the actual rate per cell alongside, compare both to the prior rate card and external benchmarks, and raise exceptions for outliers and thin cells (small n rolls up to the parent band or region). The arithmetic per cell: loaded annual cost = base pay + variable pay + employer taxes + benefits (or contract rate x contracted hours); cell loaded cost = roster mean (or band midpoint x (1 + burden %)); fully loaded = x (1 + overhead uplift %); standard rate = fully loaded / productive hours. Burden is normally a % by country and employment type from the GL, not per person. Team blended rate = sum(FTE x cell standard rate) / sum(FTE). Example: base 120,000 + 10% variable = 132,000; burden 28% = 168,960; overhead 12% = 189,235; 1,720 productive hours = 110/hour. Sources: HRIS (person, band, role, location, employment type, FTE, cost center, dates), payroll/GL (pay and burden), VMS/procurement (contractor rates), finance (overhead pools), HR policy (hours, PTO, holidays), timekeeping (divisor validation), salary surveys and TBM Council benchmarks. Under this approach: divisor is productive hours: loaded annual cost / available hours net of PTO, holidays, training and admin gives an hourly standard rate per cell.",
+         "outputs": "Hourly standard and actual rate per cell"
+        },
+        {
+         "decision": "labor-effort-signal",
+         "option": "story-points",
+         "description": "Starting from the labor roster already loaded in Costing - salary plus benefits for employees, contract rates for contractors - attach each person's band/level, role family, location and employment type; aggregate loaded cost to each cell of the rate structure; apply the overhead/indirect uplift; and divide by the cell's productive hours to produce a standard loaded rate per hour (or per point or per FTE-month, depending on the effort signal). Produce the actual rate per cell alongside, compare both to the prior rate card and external benchmarks, and raise exceptions for outliers and thin cells (small n rolls up to the parent band or region). The arithmetic per cell: loaded annual cost = base pay + variable pay + employer taxes + benefits (or contract rate x contracted hours); cell loaded cost = roster mean (or band midpoint x (1 + burden %)); fully loaded = x (1 + overhead uplift %); standard rate = fully loaded / productive hours. Burden is normally a % by country and employment type from the GL, not per person. Team blended rate = sum(FTE x cell standard rate) / sum(FTE). Example: base 120,000 + 10% variable = 132,000; burden 28% = 168,960; overhead 12% = 189,235; 1,720 productive hours = 110/hour. Sources: HRIS (person, band, role, location, employment type, FTE, cost center, dates), payroll/GL (pay and burden), VMS/procurement (contractor rates), finance (overhead pools), HR policy (hours, PTO, holidays), timekeeping (divisor validation), salary surveys and TBM Council benchmarks. Under this approach: cell rates feed team cost; the unit rate that matters is cost per point, derived monthly in 06.4.7 from team cost and points completed, so this step validates the loaded cost per FTE-month per cell rather than an hourly rate.",
+         "outputs": "Loaded cost per FTE-month per cell"
+        },
+        {
+         "decision": "labor-effort-signal",
+         "option": "story-count",
+         "description": "Starting from the labor roster already loaded in Costing - salary plus benefits for employees, contract rates for contractors - attach each person's band/level, role family, location and employment type; aggregate loaded cost to each cell of the rate structure; apply the overhead/indirect uplift; and divide by the cell's productive hours to produce a standard loaded rate per hour (or per point or per FTE-month, depending on the effort signal). Produce the actual rate per cell alongside, compare both to the prior rate card and external benchmarks, and raise exceptions for outliers and thin cells (small n rolls up to the parent band or region). The arithmetic per cell: loaded annual cost = base pay + variable pay + employer taxes + benefits (or contract rate x contracted hours); cell loaded cost = roster mean (or band midpoint x (1 + burden %)); fully loaded = x (1 + overhead uplift %); standard rate = fully loaded / productive hours. Burden is normally a % by country and employment type from the GL, not per person. Team blended rate = sum(FTE x cell standard rate) / sum(FTE). Example: base 120,000 + 10% variable = 132,000; burden 28% = 168,960; overhead 12% = 189,235; 1,720 productive hours = 110/hour. Sources: HRIS (person, band, role, location, employment type, FTE, cost center, dates), payroll/GL (pay and burden), VMS/procurement (contractor rates), finance (overhead pools), HR policy (hours, PTO, holidays), timekeeping (divisor validation), salary surveys and TBM Council benchmarks. Under this approach: as for story points: validate loaded cost per FTE-month per cell; the per-item rate is derived monthly from team cost.",
+         "outputs": "Loaded cost per FTE-month per cell"
+        },
+        {
+         "decision": "labor-effort-signal",
+         "option": "work-effort-unit",
+         "description": "Starting from the labor roster already loaded in Costing - salary plus benefits for employees, contract rates for contractors - attach each person's band/level, role family, location and employment type; aggregate loaded cost to each cell of the rate structure; apply the overhead/indirect uplift; and divide by the cell's productive hours to produce a standard loaded rate per hour (or per point or per FTE-month, depending on the effort signal). Produce the actual rate per cell alongside, compare both to the prior rate card and external benchmarks, and raise exceptions for outliers and thin cells (small n rolls up to the parent band or region). The arithmetic per cell: loaded annual cost = base pay + variable pay + employer taxes + benefits (or contract rate x contracted hours); cell loaded cost = roster mean (or band midpoint x (1 + burden %)); fully loaded = x (1 + overhead uplift %); standard rate = fully loaded / productive hours. Burden is normally a % by country and employment type from the GL, not per person. Team blended rate = sum(FTE x cell standard rate) / sum(FTE). Example: base 120,000 + 10% variable = 132,000; burden 28% = 168,960; overhead 12% = 189,235; 1,720 productive hours = 110/hour. Sources: HRIS (person, band, role, location, employment type, FTE, cost center, dates), payroll/GL (pay and burden), VMS/procurement (contractor rates), finance (overhead pools), HR policy (hours, PTO, holidays), timekeeping (divisor validation), salary surveys and TBM Council benchmarks. Under this approach: divisor is planned allocation capacity: loaded cost / planned effort units gives a rate per allocation unit per cell.",
+         "outputs": "Rate per work-effort unit per cell"
+        },
+        {
+         "decision": "labor-effort-signal",
+         "option": "fixed-capacity",
+         "description": "Starting from the labor roster already loaded in Costing - salary plus benefits for employees, contract rates for contractors - attach each person's band/level, role family, location and employment type; aggregate loaded cost to each cell of the rate structure; apply the overhead/indirect uplift; and divide by the cell's productive hours to produce a standard loaded rate per hour (or per point or per FTE-month, depending on the effort signal). Produce the actual rate per cell alongside, compare both to the prior rate card and external benchmarks, and raise exceptions for outliers and thin cells (small n rolls up to the parent band or region). The arithmetic per cell: loaded annual cost = base pay + variable pay + employer taxes + benefits (or contract rate x contracted hours); cell loaded cost = roster mean (or band midpoint x (1 + burden %)); fully loaded = x (1 + overhead uplift %); standard rate = fully loaded / productive hours. Burden is normally a % by country and employment type from the GL, not per person. Team blended rate = sum(FTE x cell standard rate) / sum(FTE). Example: base 120,000 + 10% variable = 132,000; burden 28% = 168,960; overhead 12% = 189,235; 1,720 productive hours = 110/hour. Sources: HRIS (person, band, role, location, employment type, FTE, cost center, dates), payroll/GL (pay and burden), VMS/procurement (contractor rates), finance (overhead pools), HR policy (hours, PTO, holidays), timekeeping (divisor validation), salary surveys and TBM Council benchmarks. Under this approach: no divisor: the cell's loaded cost per FTE-month is the rate, since teams are assigned whole to towers or applications.",
+         "outputs": "Loaded cost per FTE-month per cell"
+        }
+       ]
+      },
+      {
+       "id": "06.4.3",
+       "legacy_id": null,
+       "name": "Approve, effective-date & publish the rate card",
+       "description": "Review the draft rate card and its exceptions with Finance and HR, resolve or document exceptions, obtain approval, set the effective date and version, and load the approved rates into Costing's protected rate tables - the source that 06.4.4 blends from and 06.4.5 publishes to Targetprocess. Archive the prior version for audit, record the change log by cell, and notify planning and portfolio owners of material rate movements and their budget impact. Both Targetprocess and Costing reference the card by version, so plans built on one version can be compared with actuals without dispute about which rate applied. Standard rates are issued annually, just after the merit cycle takes effect and before budget entry; mid-year, only the cells that hit a revision trigger in 06.4.10 are re-issued, effective-dated, never the whole card.",
+       "delivery_model": "Any",
+       "tool": "Costing",
+       "personas": "IT Finance, HR Compensation, TBM Office",
+       "cadence": "Annually, plus mid-year change control",
+       "inputs": "Draft rate card, exception list, Finance/HR approvals, effective-dating rules",
+       "outputs": "Approved, versioned, effective-dated rate card in Costing protected rate tables; rate change log; notification to planning and portfolio owners",
+       "config": "Costing: protected rate tables (versioned, effective-dated), approval record, rate change log; downstream: ATP CM Rate Transform picks up the new version",
+       "framework": "TBM: labor | ITFM | privacy",
+       "evidence": "Added v0.8 (labor rate card build); TBM Council labor cost guidance; ITFM standard-rate practice",
+       "eid": "P-0152",
+       "persona_list": [
+        "IT Finance & FP&A",
+        "HR & approvers",
+        "TBM Office & analysts"
+       ],
+       "cadence_bucket": "Annual / per cycle",
+       "products": [
+        "Costing"
+       ],
+       "primary_product": "Costing",
+       "budgeting_method": null,
+       "outcome": "one approved rate card of record that every costing and plan uses",
+       "frameworks": [
+        "TBM: labor",
+        "ITFM",
+        "privacy"
+       ],
+       "framework_tags": [
+        "TBM"
+       ],
+       "completeness": 9,
+       "completeness_of": 9,
+       "flows": [
+        "UC2"
+       ]
+      },
+      {
+       "id": "06.4.4",
+       "legacy_id": "06.4.1",
        "name": "Maintain protected rates & compute blended rates",
        "description": "Keep individual rates protected inside Costing; compute blended team/ART/solution-train rates.",
        "delivery_model": "Any",
@@ -4414,8 +4592,8 @@
        ]
       },
       {
-       "id": "06.4.2",
-       "legacy_id": null,
+       "id": "06.4.5",
+       "legacy_id": "06.4.2",
        "name": "Publish blended rates to Targetprocess",
        "description": "Send blended rates to ATP on cadence so portfolio can cost work without exposing compensation.",
        "delivery_model": "Any",
@@ -4474,8 +4652,8 @@
        ]
       },
       {
-       "id": "06.4.3",
-       "legacy_id": null,
+       "id": "06.4.6",
+       "legacy_id": "06.4.3",
        "name": "Ingest workforce & completed work data",
        "description": "Receive involvements, job profiles, CapEx/OpEx mappings, tower mappings and completed work from ATP.",
        "delivery_model": "Any",
@@ -4544,8 +4722,8 @@
        ]
       },
       {
-       "id": "06.4.4",
-       "legacy_id": null,
+       "id": "06.4.7",
+       "legacy_id": "06.4.4",
        "name": "Compute monthly team cost & blended CapEx %",
        "description": "Combine involvements, profiles and protected rates into monthly cost and a blended CapEx percentage per team.",
        "delivery_model": "Any",
@@ -4581,8 +4759,8 @@
        ]
       },
       {
-       "id": "06.4.5",
-       "legacy_id": null,
+       "id": "06.4.8",
+       "legacy_id": "06.4.5",
        "name": "Allocate team costs to work or towers",
        "description": "Attach each team's monthly cost to work (epics/features/applications) or to towers/apps, using the labor effort signal chosen for that team kind (D-01): story points, item counts, approved hours, confirmed allocations, or fixed capacity.",
        "delivery_model": "Hybrid",
@@ -4671,8 +4849,8 @@
        ]
       },
       {
-       "id": "06.4.6",
-       "legacy_id": null,
+       "id": "06.4.9",
+       "legacy_id": "06.4.6",
        "name": "Generate audit-ready capitalization actuals",
        "description": "Produce the monthly SAP-ready file of actuals split CapEx/OpEx by user - accurate enough to deprecate time writing; validate fixed-bid/PS work against invoices.",
        "delivery_model": "Any",
@@ -4729,6 +4907,47 @@
        ],
        "decisions": [
         "labor-effort-signal"
+       ]
+      },
+      {
+       "id": "06.4.10",
+       "legacy_id": null,
+       "name": "Reconcile standard vs actual labor cost & trigger rate revisions",
+       "description": "Keep the portfolio view (work valued at standard or blended rates in Targetprocess) and the accounting view (actual loaded cost in Costing and the GL) deliberately different and reconciled, never forced to agree. Each month after the true-up, check the reconciliation key team x month - the cost spread across a team's completed work must equal the team's actual cost; anything that does not tie is an unmapped person, missing involvement or stale team mapping, fixed in 04.1.x before close. Then report, per team and per rate cell, standard cost of work vs actual team cost for the month and year to date, split into rate variance (standard vs actual rate) and volume variance (planned vs delivered effort). Standard-cost figures never post to the GL. When a cell's actual drifts beyond tolerance for two or three consecutive months, or its headcount moves more than 10-15%, raise a mid-year revision request for that cell to 06.4.3. The variance report is also the documentation auditors see when standard rates are used for planning while capitalization is at actual.",
+       "delivery_model": "Any",
+       "tool": "Costing",
+       "personas": "TBM Analyst, IT Finance, Accounting",
+       "cadence": "Monthly after close; year-to-date at quarter end",
+       "inputs": "Monthly team cost and allocations (06.4.7-06.4.8), standard cost of completed work from Targetprocess (rate card version x effort), rate card of record, variance tolerance and revision triggers (06.4.1)",
+       "outputs": "Team x month tie-out, rate and volume variance report by team and cell, mid-year revision requests, audit trail of standard-vs-actual treatment",
+       "config": "Costing / TBM Studio: variance report (standard vs actual by team and cell), tie-out check, exception list; Targetprocess: rate card version on costed allocations",
+       "framework": "TBM: labor | ITFM | FinOps: variance",
+       "evidence": "Added v0.8 (labor rate card build); TBM Council labor cost guidance; ITFM standard-rate practice",
+       "eid": "P-0153",
+       "persona_list": [
+        "TBM Office & analysts",
+        "IT Finance & FP&A"
+       ],
+       "cadence_bucket": "Monthly",
+       "products": [
+        "Costing"
+       ],
+       "primary_product": "Costing",
+       "budgeting_method": null,
+       "outcome": "a monthly proof that the portfolio numbers and the books describe the same labor cost",
+       "frameworks": [
+        "TBM: labor",
+        "ITFM",
+        "FinOps: variance"
+       ],
+       "framework_tags": [
+        "TBM"
+       ],
+       "completeness": 9,
+       "completeness_of": 9,
+       "flows": [
+        "UC1",
+        "UC2"
        ]
       }
      ],
@@ -7026,7 +7245,7 @@
     "Costing",
     "Targetprocess"
    ],
-   "summary": "Costing maintains protected individual rates, computes blended team/ART rates and publishes them to Targetprocess so work allocations can be costed without exposing compensation.",
+   "summary": "Finance builds the standard rate card from the Costing roster (06.4.1-06.4.3); Costing keeps individual rates protected, computes blended team/ART rates and publishes them to Targetprocess so work allocations can be cost without exposing compensation. Monthly variance against actuals (06.4.10) is the true-up that triggers mid-year re-publication.",
    "cadence": "Regular cadence",
    "lanes": [
     "Costing / TBM Studio",
@@ -7034,13 +7253,25 @@
    ],
    "steps": [
     {
+     "n": "10",
+     "type": "User task",
+     "lane": "Costing / TBM Studio",
+     "task": "Build, approve and load the fully loaded rate card (band x role x location x employment type)",
+     "note": "Annual, from the Costing labor roster: salary + benefits or contract rate, overhead uplift, productive hours",
+     "l2": [
+      "06.4.1",
+      "06.4.2",
+      "06.4.3"
+     ]
+    },
+    {
      "n": "11",
      "type": "Service task",
      "lane": "Costing / TBM Studio",
      "task": "Maintain protected rates; compute blended team / ART-level rates",
      "note": "Individual rates never leave Costing",
      "l2": [
-      "06.4.1"
+      "06.4.4"
      ]
     },
     {
@@ -7050,7 +7281,7 @@
      "task": "Send blended rates back to Targetprocess (Costing is source of truth)",
      "note": "Design decision: rate exposure level; true-up pattern",
      "l2": [
-      "06.4.2"
+      "06.4.5"
      ]
     },
     {
@@ -7080,7 +7311,7 @@
     "Targetprocess",
     "Costing"
    ],
-   "summary": "Targetprocess sends involvements, job profiles, mappings and completed work to Costing; TBM Studio computes monthly team cost and blended CapEx %, allocates to work (story points) or towers (fixed capacity), and generates the SAP-ready CapEx/OpEx actuals file that deprecates time writing.",
+   "summary": "Targetprocess sends involvements, job profiles, mappings and completed work to Costing; TBM Studio computes monthly team cost and blended CapEx %, allocates to work (story points) or towers (fixed capacity), and generates the SAP-ready CapEx/OpEx actuals file that deprecates time writing. A monthly tie-out and variance report keeps the standard-rate portfolio view reconciled with the actual-cost accounting view.",
    "cadence": "Monthly",
    "lanes": [
     "Targetprocess / ATP",
@@ -7106,7 +7337,7 @@
      "task": "Send workforce & completed work data to Costing (TBM Studio)",
      "l2": [
       "04.5.3",
-      "06.4.3"
+      "06.4.6"
      ]
     },
     {
@@ -7115,7 +7346,7 @@
      "lane": "Costing / TBM Studio",
      "task": "Calculate monthly team cost & blended CapEx % (protected rates)",
      "l2": [
-      "06.4.4"
+      "06.4.7"
      ]
     },
     {
@@ -7125,7 +7356,7 @@
      "task": "Team work visible?",
      "note": "Yes: story-point allocation; No: fixed-capacity",
      "l2": [
-      "06.4.5"
+      "06.4.8"
      ],
      "decision": "labor-effort-signal"
     },
@@ -7136,7 +7367,7 @@
      "task": "Allocate team costs to completed work (story points, weightage)",
      "note": "Same allocation principles as TBM",
      "l2": [
-      "06.4.5"
+      "06.4.8"
      ],
      "when": {
       "labor-effort-signal": [
@@ -7154,7 +7385,7 @@
      "task": "Allocate team costs to IT towers / apps (fixed capacity)",
      "note": "Ops teams without visible backlog (e.g. ServiceNow)",
      "l2": [
-      "06.4.5"
+      "06.4.8"
      ],
      "when": {
       "labor-effort-signal": [
@@ -7169,7 +7400,17 @@
      "task": "Generate SAP-ready monthly actuals - CapEx / OpEx by user",
      "note": "Deprecates time writing; join gateway before this step",
      "l2": [
-      "06.4.6"
+      "06.4.9"
+     ]
+    },
+    {
+     "n": "19",
+     "type": "Task",
+     "lane": "Costing / TBM Studio",
+     "task": "Tie out team x month; report rate & volume variance (standard vs actual); raise mid-year rate revisions",
+     "note": "Portfolio view at standard, books at actual - reconciled, never forced to agree",
+     "l2": [
+      "06.4.10"
      ]
     }
    ],
@@ -7686,15 +7927,27 @@
  ],
  "changelog": [
   {
+   "version": "0.8.0",
+   "date": "2026-10-01",
+   "items": [
+    "Labor rate card build: three new processes at the head of 06.4 - 06.4.1 Define the labor rate structure (P-0150), 06.4.2 Compute fully loaded labor rates (P-0151), 06.4.3 Approve, effective-date & publish the rate card (P-0152). They start from the labor roster already loaded in Costing (salary + benefits, or contract rates) and produce the protected rate tables that blending starts from. Rate dimensions: band/level, role family, location, employment type; components: base pay, benefits/burden, overhead uplift, productive hours.",
+    "06.4.1-06.4.6 renumbered to 06.4.4-06.4.9 (P-0091-P-0096 unchanged; each record shows its former id). All cross-references, D-01/D-02 scope, UC1/UC2 steps and the operating calendar updated.",
+    "UC2 Rates back gains step 10, the annual rate-card build, ahead of blending.",
+    "D-02 Rate exposure now also shapes 06.4.1, 06.4.3 and 06.4.10; D-01 Labor effort signal shapes 06.4.2 (the rate divisor).",
+    "06.4.10 Reconcile standard vs actual labor cost & trigger rate revisions (P-0153): the monthly team x month tie-out and rate/volume variance report that keeps the standard-rate portfolio view and the actual-cost accounting view in sync and triggers mid-year cell revisions. UC1 gains step 19.",
+    "docs/labor-rates.md: method note on the three kinds of rate, the calculation with a worked example, data sources, refresh cadence vs turnover, and the four reconciliation mechanisms."
+   ]
+  },
+  {
    "version": "0.7.0",
    "date": "2026-09-15",
    "items": [
     "Design-decision register added (decisions[]): 11 choices a customer makes once - labor effort signal (story points / item count / timesheets / work-effort units / fixed capacity), labor rate exposure, budget build method, portfolio funding model, investment governance, prioritization method, capacity basis, demand intake channel, cloud commitment mode, IT cost recovery model and team tool of record - each with options, fit, prerequisites, trade-offs and the L2s and flows it affects.",
-    "L2 variants: the same process done a different way under an option of a decision (variants[] on 21 L2s, e.g. 06.4.5 has one variant per labor effort signal). Variant fields override the base record; the base stays method-neutral.",
+    "L2 variants: the same process done a different way under an option of a decision (variants[] on 21 L2s, e.g. 06.4.8 has one variant per labor effort signal). Variant fields override the base record; the base stays method-neutral.",
     "L2 applicability (applies_when) marks processes that only exist under certain options, e.g. 04.5.2 Approve timesheets, 05.8.x under ZBB, 07.5.4 under Savings Automation.",
     "Flow-step conditions (when / decision) on UC1 steps 17-17b and ZBB z0-z9 so gateways are labeled from the register and the profile view dims steps that are off-path.",
     "Site: Decisions page (#/decisions) doubles as a customer-profile picker; records show approach tabs; register gains a Decision facet and an 'Approaches' column; flow pages show step conditions. Docs and the Excel master gain Decisions and Variants outputs.",
-    "Base text of 04.5.1, 04.5.3, 06.4.5 and 02.2.2 rewritten method-neutral; the 'alternative' prose moved into variants. budgeting_method tags are retained and now documented by decision D-03."
+    "Base text of 04.5.1, 04.5.3, 06.4.8 and 02.2.2 rewritten method-neutral; the 'alternative' prose moved into variants. budgeting_method tags are retained and now documented by decision D-03."
    ]
   },
   {
@@ -7768,7 +8021,7 @@
      "name": "Cost per story point",
      "summary": "Monthly team cost divided by story points completed gives a cost per point; cost lands on epics, features and applications in proportion to the points delivered against them. Effort is never typed in - it comes from the backlog.",
      "fit": "Agile teams with a visible, well-groomed backlog in Targetprocess or a synced Jira/ADO. The Apptio reference pattern ('deprecates time writing').",
-     "prereqs": "Involvements % (04.1.2), job profiles with CapEx/OpEx split (04.1.3), protected rates (06.4.1), completed-work feed to Costing (UC1), a capitalization policy signed off with Finance/audit.",
+     "prereqs": "Involvements % (04.1.2), job profiles with CapEx/OpEx split (04.1.3), protected rates (06.4.4), completed-work feed to Costing (UC1), a capitalization policy signed off with Finance/audit.",
      "tradeoffs": "Points are only comparable within a team - always normalize per team, never enterprise-wide. Un-estimated or carried-over work distorts the month. Needs backlog hygiene and a documented policy for auditors.",
      "evidence": "E2E BPMN g_vis/t_work; e2e script UC1"
     },
@@ -7779,7 +8032,7 @@
      "fit": "Kanban / no-estimates teams, support and enhancement teams whose items are of similar size.",
      "prereqs": "As story points, minus estimation discipline.",
      "tradeoffs": "A one-line fix and a two-week story cost the same; acceptable only where item sizes are homogeneous.",
-     "evidence": "Costing labor allocation options (06.4.5 config)"
+     "evidence": "Costing labor allocation options (06.4.8 config)"
     },
     {
      "id": "timesheet",
@@ -7810,13 +8063,14 @@
     }
    ],
    "affects": [
+    "06.4.2",
     "04.1.3",
     "04.5.1",
     "04.5.2",
     "04.5.3",
-    "06.4.3",
-    "06.4.5",
-    "06.4.6"
+    "06.4.6",
+    "06.4.8",
+    "06.4.9"
    ],
    "flows": [
     "UC1"
@@ -7841,7 +8095,7 @@
      "name": "Blended team / ART rate",
      "summary": "Costing computes one blended rate per team, ART or solution train from protected individual rates and publishes only that. Portfolio costs work at the team rate.",
      "fit": "Most enterprises; the Apptio reference pattern.",
-     "prereqs": "Team structure with involvements (04.1.2), ATP CM Rate Transform (06.4.1), ADM rate feed (06.4.2).",
+     "prereqs": "Team structure with involvements (04.1.2), ATP CM Rate Transform (06.4.4), ADM rate feed (06.4.5).",
      "tradeoffs": "Costed allocations drift from actuals when team mix changes - define a true-up (monthly or quarterly).",
      "evidence": "E2E BPMN t_rates/t_send4; e2e script UC2"
     },
@@ -7861,15 +8115,18 @@
      "fit": "Small IT organizations, PS firms, or where Finance already exposes comp to project accounting.",
      "prereqs": "Restricted-access roles in Targetprocess, HR/works-council approval, field-level permissions.",
      "tradeoffs": "Most accurate, but exposes compensation in a delivery tool; usually blocked by HR/privacy. Not the default.",
-     "evidence": "06.4.1 rate-exposure design decision"
+     "evidence": "06.4.4 rate-exposure design decision"
     }
    ],
    "affects": [
-    "04.1.3",
     "06.4.1",
-    "06.4.2",
+    "06.4.3",
+    "04.1.3",
+    "06.4.4",
+    "06.4.5",
     "04.3.1",
-    "02.4.3"
+    "02.4.3",
+    "06.4.10"
    ],
    "flows": [
     "UC2"

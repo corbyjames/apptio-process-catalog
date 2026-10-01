@@ -1,4 +1,4 @@
-# BPMN diagram index · v0.7.0
+# BPMN diagram index · v0.8.0
 
 Generated. One BPMN 2.0 model (with diagram interchange) and one SVG snapshot per process area, process group and cross-tool flow. Open any `.bpmn` in the Pages [viewer/editor](../site/viewer.html), bpmn.io, Camunda Modeler, Signavio, Visio or Draw.io. Hand-refined models belong in `diagrams/bpmn/custom/`.
 
@@ -11,8 +11,8 @@ Generated. One BPMN 2.0 model (with diagram interchange) and one SVG snapshot pe
 | Diagram | Kind | Lanes | Steps | BPMN | SVG |
 |---|---|---|---|---|---|
 | UC3 Targets down | flow | IT Planning (Finance); Targetprocess / ATP | 11 | [flow-UC3.bpmn](../diagrams/bpmn/generated/flow-UC3.bpmn) | [flow-UC3.svg](../assets/diagrams/flow-UC3.svg) |
-| UC2 Rates back | flow | Costing / TBM Studio; Targetprocess / ATP | 3 | [flow-UC2.bpmn](../diagrams/bpmn/generated/flow-UC2.bpmn) | [flow-UC2.svg](../assets/diagrams/flow-UC2.svg) |
-| UC1 Actuals in | flow | Targetprocess / ATP; Costing / TBM Studio; ERP (SAP) | 7 | [flow-UC1.bpmn](../diagrams/bpmn/generated/flow-UC1.bpmn) | [flow-UC1.svg](../assets/diagrams/flow-UC1.svg) |
+| UC2 Rates back | flow | Costing / TBM Studio; Targetprocess / ATP | 4 | [flow-UC2.bpmn](../diagrams/bpmn/generated/flow-UC2.bpmn) | [flow-UC2.svg](../assets/diagrams/flow-UC2.svg) |
+| UC1 Actuals in | flow | Targetprocess / ATP; Costing / TBM Studio; ERP (SAP) | 8 | [flow-UC1.bpmn](../diagrams/bpmn/generated/flow-UC1.bpmn) | [flow-UC1.svg](../assets/diagrams/flow-UC1.svg) |
 | UC4 TCO up | flow | Costing / TBM Studio | 3 | [flow-UC4.bpmn](../diagrams/bpmn/generated/flow-UC4.bpmn) | [flow-UC4.svg](../assets/diagrams/flow-UC4.svg) |
 | CLD Cloud to TBM | flow | Cloudability; Costing / TBM Studio | 3 | [flow-CLD.bpmn](../diagrams/bpmn/generated/flow-CLD.bpmn) | [flow-CLD.svg](../assets/diagrams/flow-CLD.svg) |
 | INV Investment loop | flow | Targetprocess / ATP; Costing / TBM Studio; IT Planning (Finance) | 3 | [flow-INV.bpmn](../diagrams/bpmn/generated/flow-INV.bpmn) | [flow-INV.svg](../assets/diagrams/flow-INV.svg) |
@@ -50,7 +50,7 @@ Generated. One BPMN 2.0 model (with diagram interchange) and one SVG snapshot pe
 | 06.1 Run the monthly allocation & close | group | TBM Office/IT Finance; Costing Admin | 4 | [06.1.bpmn](../diagrams/bpmn/generated/06.1.bpmn) | [06.1.svg](../assets/diagrams/06.1.svg) |
 | 06.2 Analyze cost, variance & investment mix | group | TBM Office/IT Finance | 3 | [06.2.bpmn](../diagrams/bpmn/generated/06.2.bpmn) | [06.2.svg](../assets/diagrams/06.2.svg) |
 | 06.3 Compute application & service TCO | group | TBM Office/IT Finance; App/Service Owners | 4 | [06.3.bpmn](../diagrams/bpmn/generated/06.3.bpmn) | [06.3.svg](../assets/diagrams/06.3.svg) |
-| 06.4 Cost labor & capitalize | group | TBM Office/IT Finance; Costing Admin | 6 | [06.4.bpmn](../diagrams/bpmn/generated/06.4.bpmn) | [06.4.svg](../assets/diagrams/06.4.svg) |
+| 06.4 Cost labor & capitalize | group | TBM Office/IT Finance; Costing Admin | 10 | [06.4.bpmn](../diagrams/bpmn/generated/06.4.bpmn) | [06.4.svg](../assets/diagrams/06.4.svg) |
 | 06.5 Manage vendor & asset cost | group | TBM Office/IT Finance | 2 | [06.5.bpmn](../diagrams/bpmn/generated/06.5.bpmn) | [06.5.svg](../assets/diagrams/06.5.svg) |
 | 06.6 Benchmark against peers | group | TBM Office/IT Finance | 2 | [06.6.bpmn](../diagrams/bpmn/generated/06.6.bpmn) | [06.6.svg](../assets/diagrams/06.6.svg) |
 | L0-07 Cloud Financial Management (FinOps) | area | FinOps Practitioner | 6 | [L0-07.bpmn](../diagrams/bpmn/generated/L0-07.bpmn) | [L0-07.svg](../assets/diagrams/L0-07.svg) |

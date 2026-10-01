@@ -74,11 +74,21 @@ streams:
     fm: [1,2,3,4,5,6,7,8,9,10,11,12]
     desc: Reconcile actuals to plan, flag material variances, capture commentary, reforecast.
     refs: ["05.3.1", "05.3.2", "05.3.3"]
+  - name: Annual labor rate card refresh
+    cadence: Annual
+    fm: [8, 9]
+    desc: Define the rate structure, compute fully loaded rates by band, role, location and employment type from the Costing roster, approve and load the protected rate tables ahead of budget.
+    refs: ["06.4.1", "06.4.2", "06.4.3"]
   - name: Labor capitalization actuals to ERP
     cadence: Monthly
     fm: [1,2,3,4,5,6,7,8,9,10,11,12]
     desc: Compute team cost & blended CapEx %, allocate to work or towers, generate the SAP-ready CapEx/OpEx file.
-    refs: ["06.4.4", "06.4.5", "06.4.6"]
+    refs: ["06.4.7", "06.4.8", "06.4.9"]
+  - name: Labor rate variance & tie-out
+    cadence: Monthly
+    fm: [1,2,3,4,5,6,7,8,9,10,11,12]
+    desc: Tie out team x month after the true-up; report standard-vs-actual rate and volume variance; raise mid-year rate revisions by cell.
+    refs: ["06.4.10"]
   - name: Showback / Bill of IT publication
     cadence: Monthly
     fm: [1,2,3,4,5,6,7,8,9,10,11,12]

@@ -49,7 +49,9 @@ Generated from `data/calendar.yaml` (fiscal months, FM1 = fiscal year start).
 |---|---|---|---|
 | Month-end close & cost allocation | Monthly | All year | 06.1.1, 06.1.2, 06.1.3, 06.1.4 |
 | Variance analysis & reforecast | Monthly | All year | 05.3.1, 05.3.2, 05.3.3 |
-| Labor capitalization actuals to ERP | Monthly | All year | 06.4.4, 06.4.5, 06.4.6 |
+| Annual labor rate card refresh | Annual | FM8, FM9 | 06.4.1, 06.4.2, 06.4.3 |
+| Labor capitalization actuals to ERP | Monthly | All year | 06.4.7, 06.4.8, 06.4.9 |
+| Labor rate variance & tie-out | Monthly | All year | 06.4.10 |
 | Showback / Bill of IT publication | Monthly | All year | 08.1.1, 08.1.2 |
 | CIO monthly operations review | Monthly | All year | 08.2.3 |
 | Cloud budget & forecast review | Monthly | All year | 07.6.1, 07.6.2, 07.3.3 |
@@ -58,7 +60,11 @@ Generated from `data/calendar.yaml` (fiscal months, FM1 = fiscal year start).
 
 **Variance analysis & reforecast** — Reconcile actuals to plan, flag material variances, capture commentary, reforecast.
 
+**Annual labor rate card refresh** — Define the rate structure, compute fully loaded rates by band, role, location and employment type from the Costing roster, approve and load the protected rate tables ahead of budget.
+
 **Labor capitalization actuals to ERP** — Compute team cost & blended CapEx %, allocate to work or towers, generate the SAP-ready CapEx/OpEx file.
+
+**Labor rate variance & tie-out** — Tie out team x month after the true-up; report standard-vs-actual rate and volume variance; raise mid-year rate revisions by cell.
 
 **Showback / Bill of IT publication** — Allocate consumption to business units and publish Bill of IT statements.
 

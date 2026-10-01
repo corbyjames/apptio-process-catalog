@@ -1,59 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G06_4" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.7.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_G06_4" targetNamespace="urn:apptio:process-catalog" exporter="Apptio Process Catalog" exporterVersion="0.8.0">
   <bpmn:collaboration id="Collaboration_G06_4">
     <bpmn:participant id="Participant_G06_4" name="06.4 Cost labor &amp; capitalize — Cost labor &amp; capitalize" processRef="Process_G06_4" />
   </bpmn:collaboration>
   <bpmn:process id="Process_G06_4" name="Cost labor &amp; capitalize" isExecutable="false">
-    <bpmn:documentation>Process group 06.4 in L0-06 Cost Transparency &amp; TBM Operations: 6 L2 processes laid out in the order of the catalog, in the BPMN lane of the persona that performs each one.</bpmn:documentation>
+    <bpmn:documentation>Process group 06.4 in L0-06 Cost Transparency &amp; TBM Operations: 10 L2 processes laid out in the order of the catalog, in the BPMN lane of the persona that performs each one.</bpmn:documentation>
     <bpmn:laneSet id="LaneSet_G06_4">
       <bpmn:lane id="Lane_G06_4_0" name="TBM Office/IT Finance">
         <bpmn:flowNodeRef>n_start_implicit</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>n_06_4_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_3</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>n_06_4_4</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>n_06_4_5</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>n_06_4_6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_7</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_9</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_10</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>n_end_implicit</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_G06_4_1" name="Costing Admin">
-        <bpmn:flowNodeRef>n_06_4_2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>n_06_4_3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>n_06_4_6</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="n_start_implicit" name="">
       <bpmn:outgoing>Flow_0</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:task id="n_06_4_1" name="Maintain protected rates &amp; compute blended rates">
-      <bpmn:documentation>Catalog: 06.4.1. Outcome: blended rates by team/ART 3 approaches on record (see catalog variants).</bpmn:documentation>
+    <bpmn:userTask id="n_06_4_1" name="Define the labor rate structure">
+      <bpmn:documentation>Catalog: 06.4.1. Outcome: an agreed rate structure and policies that every later rate follows 3 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_0</bpmn:incoming>
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:serviceTask id="n_06_4_2" name="Publish blended rates to Targetprocess">
-      <bpmn:documentation>Catalog: 06.4.2. Outcome: rates available in ATP 3 approaches on record (see catalog variants).</bpmn:documentation>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="n_06_4_2" name="Compute fully loaded labor rates">
+      <bpmn:documentation>Catalog: 06.4.2. Outcome: a defensible loaded rate for every band, role, location and employment type 5 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="n_06_4_3" name="Ingest workforce &amp; completed work data">
-      <bpmn:documentation>Catalog: 06.4.3. Outcome: labor model inputs 5 approaches on record (see catalog variants).</bpmn:documentation>
+    <bpmn:userTask id="n_06_4_3" name="Approve, effective-date &amp; publish the rate card">
+      <bpmn:documentation>Catalog: 06.4.3. Outcome: one approved rate card of record that every costing and plan uses</bpmn:documentation>
       <bpmn:incoming>Flow_2</bpmn:incoming>
       <bpmn:outgoing>Flow_3</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="n_06_4_4" name="Compute monthly team cost &amp; blended CapEx %">
-      <bpmn:documentation>Catalog: 06.4.4. Outcome: team cost &amp; CapEx % per team</bpmn:documentation>
+    </bpmn:userTask>
+    <bpmn:task id="n_06_4_4" name="Maintain protected rates &amp; compute blended rates">
+      <bpmn:documentation>Catalog: 06.4.4. Outcome: blended rates by team/ART 3 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_3</bpmn:incoming>
       <bpmn:outgoing>Flow_4</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="n_06_4_5" name="Allocate team costs to work or towers">
-      <bpmn:documentation>Catalog: 06.4.5. Outcome: work-attached &amp; tower-attached labor costs 5 approaches on record (see catalog variants).</bpmn:documentation>
+    </bpmn:task>
+    <bpmn:serviceTask id="n_06_4_5" name="Publish blended rates to Targetprocess">
+      <bpmn:documentation>Catalog: 06.4.5. Outcome: rates available in ATP 3 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_4</bpmn:incoming>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="n_06_4_6" name="Generate audit-ready capitalization actuals">
-      <bpmn:documentation>Catalog: 06.4.6. Outcome: sAP-ready CapEx/OpEx actuals file 4 approaches on record (see catalog variants).</bpmn:documentation>
+    <bpmn:serviceTask id="n_06_4_6" name="Ingest workforce &amp; completed work data">
+      <bpmn:documentation>Catalog: 06.4.6. Outcome: labor model inputs 5 approaches on record (see catalog variants).</bpmn:documentation>
       <bpmn:incoming>Flow_5</bpmn:incoming>
       <bpmn:outgoing>Flow_6</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="n_end_implicit" name="">
+    <bpmn:serviceTask id="n_06_4_7" name="Compute monthly team cost &amp; blended CapEx %">
+      <bpmn:documentation>Catalog: 06.4.7. Outcome: team cost &amp; CapEx % per team</bpmn:documentation>
       <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="n_06_4_8" name="Allocate team costs to work or towers">
+      <bpmn:documentation>Catalog: 06.4.8. Outcome: work-attached &amp; tower-attached labor costs 5 approaches on record (see catalog variants).</bpmn:documentation>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="n_06_4_9" name="Generate audit-ready capitalization actuals">
+      <bpmn:documentation>Catalog: 06.4.9. Outcome: sAP-ready CapEx/OpEx actuals file 4 approaches on record (see catalog variants).</bpmn:documentation>
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:task id="n_06_4_10" name="Reconcile standard vs actual labor cost &amp; trigger rate revisions">
+      <bpmn:documentation>Catalog: 06.4.10. Outcome: a monthly proof that the portfolio numbers and the books describe the same labor cost</bpmn:documentation>
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="n_end_implicit" name="">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0" sourceRef="n_start_implicit" targetRef="n_06_4_1" />
     <bpmn:sequenceFlow id="Flow_1" sourceRef="n_06_4_1" targetRef="n_06_4_2" />
@@ -61,28 +85,40 @@
     <bpmn:sequenceFlow id="Flow_3" sourceRef="n_06_4_3" targetRef="n_06_4_4" />
     <bpmn:sequenceFlow id="Flow_4" sourceRef="n_06_4_4" targetRef="n_06_4_5" />
     <bpmn:sequenceFlow id="Flow_5" sourceRef="n_06_4_5" targetRef="n_06_4_6" />
-    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_06_4_6" targetRef="n_end_implicit" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="n_06_4_6" targetRef="n_06_4_7" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="n_06_4_7" targetRef="n_06_4_8" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="n_06_4_8" targetRef="n_06_4_9" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="n_06_4_9" targetRef="n_06_4_10" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="n_06_4_10" targetRef="n_end_implicit" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_G06_4">
     <bpmndi:BPMNPlane id="BPMNPlane_G06_4" bpmnElement="Collaboration_G06_4">
-      <bpmndi:BPMNShape id="Participant_G06_4_di" bpmnElement="Participant_G06_4" isHorizontal="true"><dc:Bounds x="0" y="0" width="1842" height="244" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_G06_4_0_di" bpmnElement="Lane_G06_4_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="1812" height="122" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_G06_4_1_di" bpmnElement="Lane_G06_4_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="1812" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_G06_4_di" bpmnElement="Participant_G06_4" isHorizontal="true"><dc:Bounds x="0" y="0" width="2674" height="244" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G06_4_0_di" bpmnElement="Lane_G06_4_0" isHorizontal="true"><dc:Bounds x="30" y="0" width="2644" height="122" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_G06_4_1_di" bpmnElement="Lane_G06_4_1" isHorizontal="true"><dc:Bounds x="30" y="122" width="2644" height="122" /></bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="n_start_implicit_di" bpmnElement="n_start_implicit"><dc:Bounds x="241" y="43" width="36" height="36" /></bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="n_06_4_1_di" bpmnElement="n_06_4_1"><dc:Bounds x="386" y="24" width="162" height="74" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="n_06_4_2_di" bpmnElement="n_06_4_2"><dc:Bounds x="594" y="146" width="162" height="74" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="n_06_4_3_di" bpmnElement="n_06_4_3"><dc:Bounds x="802" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_2_di" bpmnElement="n_06_4_2"><dc:Bounds x="594" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_3_di" bpmnElement="n_06_4_3"><dc:Bounds x="802" y="24" width="162" height="74" /></bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="n_06_4_4_di" bpmnElement="n_06_4_4"><dc:Bounds x="1010" y="24" width="162" height="74" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="n_06_4_5_di" bpmnElement="n_06_4_5"><dc:Bounds x="1218" y="24" width="162" height="74" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="n_06_4_6_di" bpmnElement="n_06_4_6"><dc:Bounds x="1426" y="24" width="162" height="74" /></bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="1697" y="43" width="36" height="36" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_5_di" bpmnElement="n_06_4_5"><dc:Bounds x="1218" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_6_di" bpmnElement="n_06_4_6"><dc:Bounds x="1426" y="146" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_7_di" bpmnElement="n_06_4_7"><dc:Bounds x="1634" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_8_di" bpmnElement="n_06_4_8"><dc:Bounds x="1842" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_9_di" bpmnElement="n_06_4_9"><dc:Bounds x="2050" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_06_4_10_di" bpmnElement="n_06_4_10"><dc:Bounds x="2258" y="24" width="162" height="74" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="n_end_implicit_di" bpmnElement="n_end_implicit"><dc:Bounds x="2529" y="43" width="36" height="36" /></bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0_di" bpmnElement="Flow_0"><di:waypoint x="277" y="61" /><di:waypoint x="386" y="61" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="571" y="61" /><di:waypoint x="571" y="183" /><di:waypoint x="594" y="183" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="183" /><di:waypoint x="802" y="183" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="183" /><di:waypoint x="987" y="183" /><di:waypoint x="987" y="61" /><di:waypoint x="1010" y="61" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="61" /><di:waypoint x="1218" y="61" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="61" /><di:waypoint x="1426" y="61" /></bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1588" y="61" /><di:waypoint x="1697" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="548" y="61" /><di:waypoint x="594" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="756" y="61" /><di:waypoint x="802" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="964" y="61" /><di:waypoint x="1010" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="1172" y="61" /><di:waypoint x="1195" y="61" /><di:waypoint x="1195" y="183" /><di:waypoint x="1218" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="1380" y="183" /><di:waypoint x="1426" y="183" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="1588" y="183" /><di:waypoint x="1611" y="183" /><di:waypoint x="1611" y="61" /><di:waypoint x="1634" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="1796" y="61" /><di:waypoint x="1842" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8"><di:waypoint x="2004" y="61" /><di:waypoint x="2050" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9"><di:waypoint x="2212" y="61" /><di:waypoint x="2258" y="61" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10"><di:waypoint x="2420" y="61" /><di:waypoint x="2529" y="61" /></bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

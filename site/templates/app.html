@@ -368,6 +368,9 @@ table.cal th,table.cal td{vertical-align:top;font-size:11.5px;min-width:88px} ta
 .cal-chip{display:block;font-size:11px;line-height:1.25;padding:3px 5px;margin:0 0 3px;border-radius:4px;background:var(--surface2);color:var(--ink);border-left:3px solid var(--rule)} .cal-chip.tobe{border-left-color:var(--accent);background:var(--accent-soft)}
 .frames{display:grid;gap:14px;margin-top:14px} .frame{border:1px solid var(--rule);border-radius:8px;background:var(--surface);padding:14px 16px;box-shadow:var(--shadow)} .frame .fhead{display:flex;gap:12px;align-items:flex-start;margin-bottom:8px} .frame .fn{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:600 13px/30px var(--mono);text-align:center} .frame h3{font:600 15px/1.3 var(--sans);margin:0 0 6px} .frame .prompt dd{font-weight:500;color:var(--accent)}
 .band.lenses .tiles{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.radar{display:block;margin:0 auto} .radar a{cursor:pointer} .radar-wrap .legend span i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.settings dd{margin-bottom:6px} .settings select{font:inherit;font-size:12.5px;border:1px solid var(--rule);border-radius:4px;background:var(--surface);color:var(--ink);padding:3px 6px} .settings .expand[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+@media (max-width:900px){.hubgrid{grid-template-columns:1fr}}
 @media (max-width:700px){.q{grid-template-columns:1fr} .q .qa{justify-content:flex-start}}
 .record.off .rhead::after{content:"Not on this profile's path";font-size:11px;color:var(--s-review);flex:1 0 100%}
 tr.off td{opacity:.5}
@@ -702,6 +705,7 @@ function hubHTML(){
     <section class="band"><div class="bhead"><h2>Flows across the chain</h2><span>"Targets down. Rates back. Actuals in. TCO up." — plus cloud-to-TBM, the investment loop and the ZBB re-base</span></div><div class="flows-band">${FLOWS.map(f=>`<a class="flowcard" href="#/flow/${f.id}"><span class="fid">${f.id}</span><span><span class="ft">${esc(f.name)}</span><span class="fs">${esc(f.title)} · ${f.steps.length} steps</span><span class="fp">${f.products.map(p=>`<i style="background:${PCOLOR[p]}" title="${p}"></i>`).join('')}</span></span></a>`).join('')}</div></section>
   </div>
   ${PERSONAS.length?`<section class="band lenses" style="margin:0 0 24px"><div class="bhead"><h2>Review by role, rhythm or scenario</h2><span>Start where a reviewer recognizes their own work</span></div><div class="tiles">${PERSONAS.map(p=>{ const l2s=personaL2s(p); return `<a class="tile small" data-p="All four" href="#/persona/${p.key}"><span class="n">Day in the life</span><span class="t">${esc(p.name)}</span><span class="sub">${l2s.length} processes${ASSESS?' · '+maturityChip(l2s):''}</span></a>`; }).join('')}${CALX?`<a class="tile small" data-p="Planning" href="#/calendar"><span class="n">Operating rhythm</span><span class="t">The year, month by month</span><span class="sub">Fiscal year starts ${esc(calMonth(1))}</span></a>`:''}${SCEN.length?`<a class="tile small" data-p="Targetprocess" href="#/scenario"><span class="n">Scenarios</span><span class="t">Walkthroughs with sample data</span><span class="sub">${SCEN.length} scenario${SCEN.length===1?'':'s'}</span></a>`:''}</div></section>`:''}
+  ${assessmentSection()}
   <div class="hubgrid">
     <section class="panel"><h2>Other ways in</h2><dl class="kv">
       <dt><a href="#/decisions">Decisions</a></dt><dd>The ${DECISIONS.length} design decisions a customer makes once — how labor effort is captured, which rate leaves Costing, how the budget is built, how work is funded — with the options, trade-offs and the ${ALL_L2.filter(x=>x.decisions).length} processes each one shapes. Choose options to render the catalog as that customer's profile.</dd>
@@ -1020,6 +1024,54 @@ function decisionsHTML(){
   ${DECISIONS.map(card).join('')}`;
 }
 function glossaryHTML(){ return `<div class="pagehead"><div><p class="eyebrow">Glossary</p><h1>Terms &amp; acronyms</h1><p class="lede">Every acronym used in the catalog. Business reviewers should be able to read any record with this page open beside it.</p></div></div><dl class="gloss">${DATA.glossary.map(([t,d])=>`<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('')}</dl>`; }
+// ---------- assessment radar and settings panel ----------
+function radarSVG(axes, opts={}){
+  // axes: [{label, value(1-5|null), target(1-5|null), href}] ; two series: current (accent) and target (dashed ink)
+  const n=axes.length; if(n<3) return '<p class="raw">Need at least three axes for a radar.</p>';
+  const W=opts.w||520, H=opts.h||420, cx=W/2, cy=H/2+8, R=Math.min(W,H)/2-70, max=5;
+  const ang=i=>-Math.PI/2+i*2*Math.PI/n, pt=(i,v)=>[cx+R*(v/max)*Math.cos(ang(i)), cy+R*(v/max)*Math.sin(ang(i))];
+  const rings=[1,2,3,4,5].map(v=>`<polygon points="${axes.map((_,i)=>pt(i,v).join(',')).join(' ')}" fill="none" stroke="currentColor" stroke-opacity="${v===5?.35:.14}" />`).join('');
+  const spokes=axes.map((_,i)=>{ const [x,y]=pt(i,max); return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="currentColor" stroke-opacity=".14"/>`; }).join('');
+  const ringLbl=[1,2,3,4,5].map(v=>`<text x="${cx+4}" y="${cy-R*(v/max)-2}" font-size="9" fill="currentColor" fill-opacity=".55">${v}</text>`).join('');
+  const poly=(key,stroke,dash,fill)=>{ const pts=axes.map((a,i)=>a[key]==null?null:pt(i,a[key])); if(pts.every(p=>!p)) return ''; const path=pts.map((p,i)=>p?`${i&&pts[i-1]?'L':'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`:'').join(' '); const closed=pts[0]&&pts[n-1]?path+' Z':path; return `<path d="${closed}" fill="${fill}" fill-opacity="${fill==='none'?0:.18}" stroke="${stroke}" stroke-width="2"${dash?' stroke-dasharray="6 4"':''} stroke-linejoin="round"/>${pts.map((p,i)=>p?`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4.5" fill="${stroke}" stroke="var(--surface)" stroke-width="2"><title>${esc(axes[i].label)}: ${key==='value'?'level':'target'} ${axes[i][key].toFixed(1)}</title></circle>`:'').join('')}`; };
+  const labels=axes.map((a,i)=>{ const [x,y]=pt(i,max+0.95); const anchor=Math.abs(Math.cos(ang(i)))<.2?'middle':(Math.cos(ang(i))>0?'start':'end'); const lines=wrapText(a.label,16,2); const t=`<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="${anchor}" font-size="11" fill="currentColor">${lines.map((l,k)=>`<tspan x="${x.toFixed(1)}" dy="${k?12:-(lines.length-1)*6}">${esc(l)}</tspan>`).join('')}<tspan x="${x.toFixed(1)}" dy="12" font-size="10" fill-opacity=".65">${a.value!=null?a.value.toFixed(1):'—'}${a.target!=null?' / '+a.target.toFixed(1):''}</tspan></text>`; return a.href?`<a href="${a.href}">${t}</a>`:t; }).join('');
+  return `<svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="Maturity radar: current level and target per axis" style="width:100%;max-width:${W}px;height:auto;color:var(--ink)">${rings}${spokes}${ringLbl}${poly('target','var(--ink3)',true,'none')}${poly('value','var(--accent)',false,'var(--accent)')}${labels}</svg>
+  <div class="legend" style="margin-top:6px"><span><i style="background:var(--accent)"></i>Current level (mean of scored processes)</span><span><i style="background:var(--ink3);height:0;border-top:2px dashed var(--ink3)"></i>Target</span></div>`;
+}
+let radarMode = ls.get('radar_mode','scope');
+function radarAxes(mode){
+  if(mode==='dimensions' && QN && QN.lens){ return QN.lens.dimensions.map(d=>{ const eids=[...new Set(QN.lens.questions.filter(q=>q.dimension===d).flatMap(q=>q.eids))]; const l2s=eids.map(e=>L2BYEID[e]).filter(Boolean); const t=l2s.map(targetOf).filter(x=>x!=null); return {label:d, value:maturity(l2s), target:t.length?t.reduce((a,b)=>a+b,0)/t.length:null}; }); }
+  if(mode==='capabilities' && QN){ return QN.yesno.capabilities.map(c=>{ const eids=[...new Set(QN.yesno.questions.filter(q=>q.cap===c.n).flatMap(q=>q.eids))]; const l2s=eids.map(e=>L2BYEID[e]).filter(Boolean); const t=l2s.map(targetOf).filter(x=>x!=null); return {label:c.n+' '+c.name, value:maturity(l2s), target:t.length?t.reduce((a,b)=>a+b,0)/t.length:null}; }); }
+  if(mode==='personas' && PERSONAS.length){ return PERSONAS.map(p=>{ const l2s=personaL2s(p).filter(x=>!CUST||!CUST.scope||inScope(x)); const t=l2s.map(targetOf).filter(x=>x!=null); return {label:p.short||p.name, value:maturity(l2s), target:t.length?t.reduce((a,b)=>a+b,0)/t.length:null, href:'#/persona/'+p.key}; }); }
+  const groups = CUST&&CUST.scope ? CUST.scope.groups.map(g=>Object.values(L1).find(x=>x.eid===g)).filter(Boolean) : L0S;
+  return groups.map(g=>{ const l2s=(g.l2s||g.l1s.flatMap(x=>x.l2s)).filter(x=>!CUST||!CUST.scope||inScope(x)); const t=l2s.map(targetOf).filter(x=>x!=null); return {label:(g.id?g.id+' ':'')+(g.short||g.name), value:maturity(l2s), target:t.length?t.reduce((a,b)=>a+b,0)/t.length:null, href:g.l2s?`#/l0/${g.l0}/${g.id}`:`#/l0/${g.id}`}; });
+}
+function radarBlock(){
+  if(!ASSESS) return '';
+  const modes=[['scope',CUST&&CUST.scope?'Engagement scope':'Process areas'],['personas','Roles']].concat(QN?[['dimensions','SPM dimensions'],['capabilities','Capabilities']]:[]);
+  if(!modes.some(m=>m[0]===radarMode)) radarMode='scope';
+  const axes=radarAxes(radarMode); const scored=axes.filter(a=>a.value!=null).length;
+  return `<div class="radar-wrap"><div class="meta" style="margin:0 0 6px"><label>Axes <select id="radar-mode">${modes.map(m=>`<option value="${m[0]}"${m[0]===radarMode?' selected':''}>${m[1]}</option>`).join('')}</select></label><span class="raw">${scored} of ${axes.length} axes have scores${unit?' · '+esc(unit):''}</span></div>${radarSVG(axes)}
+    <details style="margin-top:8px"><summary class="raw">Values as a table</summary><table class="steps"><thead><tr><th>Axis</th><th>Level</th><th>Target</th></tr></thead><tbody>${axes.map(a=>`<tr><td>${a.href?`<a href="${a.href}">${esc(a.label)}</a>`:esc(a.label)}</td><td>${a.value!=null?a.value.toFixed(1)+' '+esc(bandOf(a.value)):'—'}</td><td>${a.target!=null?a.target.toFixed(1):'—'}</td></tr>`).join('')}</tbody></table></details></div>`;
+}
+function settingsBlock(){
+  const rv = ls.get('review',{statuses:{}}); const nStat=Object.keys(rv.statuses||{}).length; const nAss=ASSESS?Object.keys(ls.get('assess_'+(ASSESS.round||'r'),{})).length:0; const nQa=ASSESS?Object.keys(ls.get(QA_KEY,{})).length:0;
+  return `<section class="panel settings"><h2>Settings</h2><dl class="kv">
+    <dt>Reviewing as</dt><dd><button type="button" class="expand" id="who2">${esc(reviewer||'— set your name')}</button> <span class="raw">attached to statuses, verdicts, comments and scores</span></dd>
+    <dt>Lens</dt><dd><button type="button" class="expand" data-lens="business"${lens==='business'?' aria-pressed="true"':''}>Business</button> <button type="button" class="expand" data-lens="sme"${lens==='sme'?' aria-pressed="true"':''}>SME</button> <span class="raw">Business hides configuration, evidence and framework detail</span></dd>
+    ${UNITS.length?`<dt>Business unit</dt><dd><select id="unit2">${UNITS.map(u=>`<option${u===unit?' selected':''}>${esc(u)}</option>`).join('')}</select> <span class="raw">scores and questionnaire answers are kept per unit</span></dd>`:''}
+    <dt>Customer profile</dt><dd><a href="#/decisions">${profileSet().length?profileSet().length+' decision'+(profileSet().length===1?'':'s')+' set':'default (nothing set)'}</a> <span class="raw">${profileSet().map(k=>DEC[k].id+' '+activeOpts(k).map(o=>(OPT(k,o)||{}).name).join(' + ')).join(' · ')}</span></dd>
+    ${ASSESS?`<dt>Assessment round</dt><dd>${esc(ASSESS.round)} · target profile ${esc(ASSESS.target_profile||'')} · base v${DATA.version}<br><span class="raw">${nAss} score${nAss===1?'':'s'} and ${nQa} answer${nQa===1?'':'s'} entered in this browser, ${nStat} review status${nStat===1?'':'es'}</span></dd>
+    <dt>Export</dt><dd><button type="button" class="expand" id="export-assess2">Assessment JSON</button> <button type="button" class="expand" id="gap-export2">Gap register CSV</button> <span class="raw">copies to the clipboard and downloads; commit the JSON to <code>assessment/</code></span></dd>
+    <dt>Import</dt><dd><textarea id="import-assess" rows="2" placeholder="Paste an exported assessment JSON to merge its scores and answers into this browser" style="width:100%;min-width:0;font:inherit;font-size:12px;border:1px solid var(--rule);border-radius:4px;padding:4px 6px;background:var(--surface);color:var(--ink)"></textarea><button type="button" class="expand" id="import-assess-btn">Merge</button> <span class="raw" id="import-msg"></span></dd>`:''}
+    <dt>Local data</dt><dd><button type="button" class="expand" id="reset-local" data-confirm="0">Clear this browser's review marks, scores and answers</button></dd>
+  </dl></section>`;
+}
+function assessmentSection(){
+  if(!ASSESS) return '';
+  return `<section class="band" style="margin:0 0 24px"><div class="bhead"><h2>Assessment &amp; settings</h2><span>Round ${esc(ASSESS.round)} · <a href="#/assessment">heat map and gaps</a> · <a href="#/questionnaire">questionnaire</a></span></div><div class="hubgrid"><section class="panel"><h2>Maturity radar</h2>${radarBlock()}</section>${settingsBlock()}</div></section>`;
+}
+
 // ---------- review lenses: day in the life, operating rhythm, scenarios ----------
 function personaHTML(key){
   if(!PERSONAS.length) return '<p class="notice">No personas in this build.</p>';
@@ -1132,7 +1184,8 @@ function assessmentHTML(){
   const unscored = pool.filter(x=>scoreOf(x)==null).length;
   return `<div class="pagehead"><div><p class="eyebrow">Assessment · ${esc(ASSESS.round)} · target profile ${esc(ASSESS.target_profile||'')}${unit?' · '+esc(unit):''}</p><h1>Maturity heat map &amp; gaps</h1><p class="lede">Process scores (1–5) roll up to the engagement scope, to the ten SPM capabilities and to the dimensions × lenses grid through the question mapping. Gaps are processes below their target, in the order the cross-tool flows run them.</p>
     <div class="meta"><span>${pool.length - unscored} of ${pool.length} ${inS.length?'in-scope ':''}processes scored</span>${ov&&ov.done?`<span>Questionnaire: ${ov.yes}/${ov.total}${ov.level?` · Level ${ov.level} ${esc(ov.levelName)}`:''}</span>`:''}<a class="expand" href="#/questionnaire">Questionnaire</a><button type="button" class="expand" id="gap-export">Export gap register (CSV)</button></div></div></div>
-    <h2 style="margin:0 0 10px">Engagement scope</h2>${scopeMap}
+    <h2 style="margin:0 0 10px">Maturity radar</h2>${radarBlock()}
+    <h2 style="margin:24px 0 10px">Engagement scope</h2>${scopeMap}
     ${QN?`<h2 style="margin:24px 0 10px">Capabilities</h2><div style="overflow-x:auto"><table class="steps heat"><thead><tr><th>#</th><th>Capability</th><th>Questionnaire</th><th>Level (yes/no)</th><th>Process maturity</th><th></th></tr></thead><tbody>${capRows}</tbody></table></div>`:''}
     ${lensGrid?`<h2 style="margin:24px 0 10px">Dimensions × lenses</h2>${lensGrid}`:''}
     <h2 style="margin:24px 0 10px">Gaps to target (${gaps.length})</h2><div style="overflow-x:auto"><table class="steps"><thead><tr><th>#</th><th>Process</th><th>Level → target</th><th>Gap note</th><th>Flows</th><th>Basis</th></tr></thead><tbody>${gapRows||'<tr><td colspan="6" style="color:var(--ink3)">No scored process is below its target yet.</td></tr>'}</tbody></table></div>`;
@@ -1243,6 +1296,12 @@ document.addEventListener('click', e=>{
   if(!e.target.closest('.search')) $('#qres').hidden=true;
   const a=e.target.closest('#qres a'); if(a){ $('#qres').hidden=true; $('#q').value=''; }
   if(e.target.id==='lens-business'||e.target.id==='lens-sme'){ lens=e.target.id==='lens-sme'?'sme':'business'; ls.set('lens',lens); setLens(); render(); }
+  if(e.target.closest('[data-lens]')){ lens=e.target.closest('[data-lens]').dataset.lens; ls.set('lens',lens); setLens(); render(); }
+  if(e.target.closest('#who2')){ const n=prompt('Your name, as it should appear on statuses, verdicts, comments and scores:', reviewer||''); if(n!=null){ reviewer=n.trim(); ls.set('reviewer',reviewer); setWho(); render(); } }
+  if(e.target.closest('#export-assess2')){ exportAssessment(); e.target.closest('#export-assess2').textContent='Assessment JSON copied'; }
+  if(e.target.closest('#gap-export2')){ exportGaps(); e.target.closest('#gap-export2').textContent='Gap register copied'; }
+  if(e.target.closest('#import-assess-btn')){ const ta=$('#import-assess'), msg=$('#import-msg'); try{ const j=JSON.parse(ta.value); let n=0; const local=ls.get('assess_'+(ASSESS.round||'r'),{}); Object.entries(j.scores||{}).forEach(([k,v])=>{ local[k]=Object.assign({},local[k]||{},v); assess[k]=local[k]; n++; }); ls.set('assess_'+(ASSESS.round||'r'), local); const qa=qaAll(); let m=0; Object.entries(j.answers||{}).forEach(([k,v])=>{ qa[k]=v; m++; }); ls.set(QA_KEY, qa); msg.textContent=`merged ${n} scores and ${m} answers`; ta.value=''; render(); }catch(err){ msg.textContent='not valid assessment JSON'; } }
+  if(e.target.closest('#reset-local')){ const b=e.target.closest('#reset-local'); if(b.dataset.confirm==='0'){ b.dataset.confirm='1'; b.textContent='Click again to clear — this cannot be undone'; } else { ['review','profile','assess_unit','radar_mode','cal_persona','cal_tobe'].forEach(k=>{ try{ localStorage.removeItem(k);}catch(e){} }); if(ASSESS){ try{ localStorage.removeItem('assess_'+(ASSESS.round||'r')); localStorage.removeItem(QA_KEY);}catch(e){} } location.reload(); } }
   if(e.target.closest('#qa-apply')){ const n=applyProvisional(); e.target.closest('#qa-apply').textContent=`Applied to ${n} process${n===1?'':'es'}`; }
   if(e.target.closest('#gap-export')){ exportGaps(); e.target.closest('#gap-export').textContent='Gap register copied'; }
   if(e.target.closest('[data-qa-clear]')){ qaSet(e.target.closest('[data-qa-clear]').dataset.qaClear, null); render(); }
@@ -1273,6 +1332,8 @@ document.addEventListener('change', e=>{
       else profile[k]=[t.value];
       if(profile[k] && profile[k].length===1 && profile[k][0]===d.default && !d.multi) { /* keep explicit choice even if it equals the default */ }
       saveProfile(); rerenderKeep(); } }
+  if(t.id==='radar-mode'){ radarMode=t.value; ls.set('radar_mode',radarMode); render(); }
+  if(t.id==='unit2'){ unit=t.value; ls.set('assess_unit',unit); if($('#unit')) $('#unit').value=unit; render(); }
   if(t.id==='cal-persona'){ ls.set('cal_persona', t.value); render(); }
   if(t.id==='cal-tobe'){ ls.set('cal_tobe', t.checked); render(); }
   if(t.id==='unit'){ unit=t.value; ls.set('assess_unit',unit); render(); }

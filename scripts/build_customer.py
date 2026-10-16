@@ -193,6 +193,11 @@ def build(cdir):
         if labels and A.get("questionnaire"): A["questionnaire"] = labtree(A["questionnaire"])
         CAT["assessment"] = A
     if R: CAT["review_seed"] = R
+    rp = os.path.join(cdir, "roadmap", "recommendations.json")
+    RM = load(rp) if os.path.exists(rp) else None
+    if RM:
+        if labels: RM = labtree(RM)
+        CAT["roadmap"] = RM
     CAT["changelog"] = [{"version": CAT["version"], "date": C.get("built", ""), "items": [
         f"{C['name']} instance built on base v{CAT['version']}: {len(C.get('overrides',{}))} overrides, {len(C.get('additions',[]))} additions, {len(sup)} suppressed, {len(labels)} vocabulary substitutions; "
         f"engagement scope “{scope['name']}” ({len(scope['eids'])} processes)" + (f"; assessment round {A['round']} ({len(A['scores'])} scored)" if A else "") + "."]}] + CAT["changelog"]
@@ -276,6 +281,17 @@ def build(cdir):
             rep.append(f"| {p['id']} {p['name']} | {u or units[0]} | {r['level']} {lvl(r['level'])} | {r.get('target','')} | {r.get('lens','')} | {r.get('method','')} | {r.get('confidence','')} | {r.get('evidence','')} | {r.get('gap','')} |")
         rep += ["", "## Method", "", "Scores are collected three ways and converge on one level per process: consultant-led workshop scoring on the site (evidence and gap note per record), the yes/no self-assessment questionnaire whose answers map to processes and produce provisional scores, and tool evidence checked against the costing and work-management tools. Capability and dimension × lens views are derived from process scores through `assessment/mapping.json`. This report is regenerated from the committed round; the site's *Export assessment* button produces the file to commit."]
         open(os.path.join(cdir, "docs/assessment-report.md"), "w", encoding="utf-8").write("\n".join(rep) + "\n")
+    # ---- docs/roadmap.md: Crawl / Walk / Run recommendations ----
+    if RM:
+        rm = [f"# {C['name']} — recommendations roadmap (Crawl / Walk / Run), round {RM.get('round','')}", "", RM.get("basis",""), ""]
+        th = {t["key"]: t["name"] for t in RM.get("themes", [])}
+        for st in RM["stages"]:
+            rm += [f"## {st['name']} — {st['reach']}", "", f"*{st['window']}.* {st['summary']}", "", "| # | Recommendation | Processes | Level | Theme | Owner | Effort | Depends on | What | Value |", "|---|---|---|---|---|---|---|---|---|---|"]
+            for it in [x for x in RM["items"] if x["stage"] == st["key"]]:
+                rm.append(f"| {it['id']} | {it['title']} | {', '.join(it['processes'])} | {it['from']} → {it['to']} | {th.get(it['theme'], it['theme'])} | {it['owner']} | {it['effort']} | {', '.join(it.get('depends', [])) or '—'} | {it['what']} | {it['value']} |")
+            rm.append("")
+        rm += ["## Milestones", "", "| FM | Date | Milestone |", "|---|---|---|"] + [f"| {m['fm']} | {m['date']} | {m['label']} |" for m in RM.get("milestones", [])]
+        open(os.path.join(cdir, "docs/roadmap.md"), "w", encoding="utf-8").write("\n".join(rm) + "\n")
     print(f"built {C['id']}: base v{CAT['version']} · scope {len(scope['eids']) if scope else 0} L2 · overrides {len(C.get('overrides',{}))} · assessment {A['round'] if A else 'none'} → {os.path.relpath(cdir, ROOT)}/site/index.html")
 
 DEFAULT_LEVELS = [

@@ -95,6 +95,22 @@ def build(cdir):
         for f in CAT["flows"]:
             f["summary"] = lab(f["summary"]); f["lanes"] = [lab(x) for x in f["lanes"]]
             for s in f["steps"]: s["task"] = lab(s["task"]); s["lane"] = lab(s["lane"]); s["note"] = lab(s.get("note","")) if s.get("note") else s.get("note")
+        # product names (chips, tiles, legend) follow the vocabulary too; the site maps colours for relabelled products
+        plab = lambda x: labels.get(x, x) if isinstance(x, str) else x
+        for p in L2.values():
+            p["products"] = [plab(x) for x in p.get("products", [])]; p["primary_product"] = plab(p.get("primary_product"))
+        for f in CAT["flows"]: f["products"] = [plab(x) for x in f.get("products", [])]
+        for l0 in CAT["l0s"]:
+            if "product" in l0: l0["product"] = plab(l0["product"])
+        for l0 in CAT["l0s"]:
+            for f in ("primary","description","name"):
+                if isinstance(l0.get(f), str): l0[f] = lab(l0[f]) if f != "primary" else plab(l0[f])
+        def labtree(o):
+            if isinstance(o, dict): return {k: (labtree(v) if k not in ("id","key","eid","eids") else v) for k, v in o.items()}
+            if isinstance(o, list): return [labtree(x) for x in o]
+            return lab(o) if isinstance(o, str) else o
+        CAT["decisions"] = labtree(CAT.get("decisions", []))
+        CAT["glossary"] = labtree(CAT.get("glossary", []))
 
     # ---- scope ----
     scope = C.get("scope")
@@ -164,12 +180,18 @@ def build(cdir):
     scen = []
     for sp in sorted(glob.glob(os.path.join(cdir, "scenarios", "*.json"))): scen.append(load(sp))
     if scen: CAT["scenarios"] = scen
+    if labels:
+        CAT["calendar"]["streams"] = labtree(CAT["calendar"]["streams"]); CAT["personas"] = labtree(CAT["personas"])
+        if scen: CAT["scenarios"] = labtree(scen)
 
     # ---- payload ----
     cust = {k: C[k] for k in ["id","name","title","short","fy_start","currency","profile","scope","base"] if k in C}
     cust["labels"] = labels
+    cust["product_labels"] = {k: v for k, v in labels.items() if k in ("Targetprocess","Costing","Planning","Cloudability")}
     CAT["customer"] = cust
-    if A: CAT["assessment"] = A
+    if A:
+        if labels and A.get("questionnaire"): A["questionnaire"] = labtree(A["questionnaire"])
+        CAT["assessment"] = A
     if R: CAT["review_seed"] = R
     CAT["changelog"] = [{"version": CAT["version"], "date": C.get("built", ""), "items": [
         f"{C['name']} instance built on base v{CAT['version']}: {len(C.get('overrides',{}))} overrides, {len(C.get('additions',[]))} additions, {len(sup)} suppressed, {len(labels)} vocabulary substitutions; "
